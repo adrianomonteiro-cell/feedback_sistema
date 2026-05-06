@@ -12,6 +12,9 @@ app.use(express.json());
 // conexão com banco
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
 
 // rota teste
@@ -30,18 +33,14 @@ app.get('/usuarios', async (req, res) => {
   }
 });
 
-// iniciar servidor
-app.listen(3000, () => {
-  console.log('Servidor rodando na porta 3000');
-});
-
+// ✅ ROTA POST CORRIGIDA (ÚNICA)
 app.post('/usuarios', async (req, res) => {
-  const { nome } = req.body;
+  const { nome, login, perfil, turno } = req.body;
 
   try {
     const result = await pool.query(
-      'INSERT INTO usuarios (nome) VALUES ($1) RETURNING *',
-      [nome]
+      'INSERT INTO usuarios (nome, login, perfil, turno) VALUES ($1, $2, $3, $4) RETURNING *',
+      [nome, login, perfil, turno]
     );
 
     res.json(result.rows[0]);
@@ -49,4 +48,11 @@ app.post('/usuarios', async (req, res) => {
     console.error(error);
     res.status(500).send('Erro ao salvar');
   }
+});
+
+// ✅ PORTA CORRETA PARA RAILWAY
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log('Servidor rodando');
 });
