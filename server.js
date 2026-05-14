@@ -17,16 +17,25 @@ const pool = new Pool({
   },
 });
 
+// testar conexão banco
 pool.connect()
-  .then(() => console.log("Banco conectado com sucesso"))
-  .catch(err => console.error("Erro ao conectar no banco:", err));
+  .then(() => console.log('Banco conectado com sucesso'))
+  .catch(err => console.error('Erro ao conectar no banco:', err));
 
-// rota teste
+// ✅ rota principal
 app.get('/', (req, res) => {
-  res.send('Servidor rodando 🚀');
+  res.send('API funcionando 🚀');
 });
 
-// rota GET usuarios
+// ✅ rota teste health
+app.get('/health', (req, res) => {
+  res.json({
+    status: 'online',
+    banco: 'ok',
+  });
+});
+
+// ✅ buscar usuários
 app.get('/usuarios', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM usuarios');
@@ -37,7 +46,7 @@ app.get('/usuarios', async (req, res) => {
   }
 });
 
-// ✅ ROTA POST CORRIGIDA (ÚNICA)
+// ✅ salvar usuários
 app.post('/usuarios', async (req, res) => {
   const { nome, login, perfil, turno } = req.body;
 
@@ -50,11 +59,20 @@ app.post('/usuarios', async (req, res) => {
     res.json(result.rows[0]);
   } catch (error) {
     console.error(error);
-    res.status(500).send('Erro ao salvar');
+    res.status(500).send('Erro ao salvar usuário');
   }
 });
 
-// ✅ PORTA CORRETA PARA RAILWAY
+// ✅ captura erros gerais
+process.on('uncaughtException', (err) => {
+  console.error('Erro não tratado:', err);
+});
+
+process.on('unhandledRejection', (err) => {
+  console.error('Promise rejeitada:', err);
+});
+
+// ✅ porta Railway
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
