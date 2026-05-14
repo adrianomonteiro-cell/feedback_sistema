@@ -9,7 +9,7 @@ async function salvar() {
     return;
   }
 
-  await fetch('https://feedbacksistema-production.up.railway.app/usuarios', {
+  await fetch('https://feedback-sistema.onrender.com/usuarios', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -21,7 +21,7 @@ async function salvar() {
 }
 
 async function carregar() {
-  const res = await fetch('https://feedbacksistema-production.up.railway.app/usuarios');
+  const res = await fetch('https://feedback-sistema.onrender.com/usuarios');
   const dados = await res.json();
 
   const lista = document.getElementById('lista-funcionarios');
