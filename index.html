@@ -9,6 +9,7 @@
   --green-900:#1a2e1b;--green-700:#2C3B2D;--green-600:#3B6D11;--green-500:#4a8a16;--green-100:#e8f5dc;
   --amber:#854F0B;--amber-bg:#FAEEDA;--red:#A32D2D;--red-bg:#FCEBEB;
   --blue:#1a5fa8;--blue-bg:#e6f1fb;--purple:#3C3489;--purple-bg:#EEEDFE;
+  --orange:#c0500a;--orange-bg:#fdeede;
   --sidebar-w:240px;--sidebar-mini:64px;
   --radius-sm:6px;--radius-md:10px;--radius-lg:14px;--radius-xl:20px;
   --transition:.25s cubic-bezier(.4,0,.2,1);
@@ -44,20 +45,9 @@ body{font-family:'Outfit',system-ui,sans-serif;background:var(--bg);color:var(--
 .nav-icon{font-size:18px;min-width:20px;text-align:center;flex-shrink:0}
 .nav-label{opacity:0;transition:opacity var(--transition);white-space:nowrap;overflow:hidden}
 .sidebar:hover .nav-label{opacity:1}
-/* ★ badge de contagem — sempre visível, mesmo mini */
-.nav-count{
-  background:var(--amber);color:#fff;
-  font-size:10px;font-weight:700;padding:2px 6px;border-radius:99px;
-  flex-shrink:0;
-  /* quando mini: posição absoluta no canto superior do ícone */
-  position:absolute;top:6px;right:6px;
-  transition:opacity var(--transition),top var(--transition),right var(--transition);
-}
-/* quando expandido: volta a ficar na linha, após o label */
-.sidebar:hover .nav-count{
-  position:static;margin-left:auto;
-}
-.nav-item::after{content:attr(data-label);position:absolute;left:calc(100% + 10px);top:50%;transform:translateY(-50%);background:#1c1c1e;color:#fff;font-size:12px;font-weight:500;padding:5px 10px;border-radius:var(--radius-sm);white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s;z-index:300}
+.nav-count{background:var(--amber);color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:99px;flex-shrink:0;position:absolute;top:6px;right:6px;transition:opacity var(--transition)}
+.sidebar:hover .nav-count{position:static;margin-left:auto}
+.nav-item::after{content:attr(data-label);position:absolute;left:calc(100% + 10px);top:50%;transform:translateY(-50%);background:#1c1c1e;color:#fff;font-size:12px;padding:5px 10px;border-radius:var(--radius-sm);white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s;z-index:300}
 .sidebar:not(:hover) .nav-item:hover::after{opacity:1}
 .sidebar-footer{padding:12px 10px;border-top:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;gap:2px}
 .sidebar-user{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--radius-md);cursor:pointer;transition:background var(--transition);overflow:hidden}
@@ -100,6 +90,7 @@ tr:hover td{background:var(--surface2)}
 .badge.danger{background:var(--red-bg);color:var(--red)}
 .badge.info{background:var(--blue-bg);color:var(--blue)}
 .badge.purple{background:var(--purple-bg);color:var(--purple)}
+.badge.orange{background:var(--orange-bg);color:var(--orange)}
 .form-label{font-size:12px;font-weight:600;color:var(--text3);display:block;margin-bottom:5px;margin-top:14px;text-transform:uppercase;letter-spacing:.04em}
 .form-input{width:100%;padding:9px 13px;font-size:14px;border-radius:var(--radius-md);border:1px solid var(--border2);background:var(--surface);color:var(--text);font-family:inherit;transition:border-color var(--transition),box-shadow var(--transition)}
 .form-input:focus{outline:none;border-color:var(--green-500);box-shadow:0 0 0 3px rgba(59,109,17,.12)}
@@ -141,6 +132,52 @@ textarea.form-input{resize:vertical}
 .relato-label{font-size:12px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;display:flex;align-items:center;gap:6px}
 .relato-input{width:100%;min-height:90px;padding:10px 13px;font-size:13px;border-radius:var(--radius-md);border:1px solid rgba(26,95,168,.25);background:var(--surface);color:var(--text);resize:vertical;font-family:inherit;line-height:1.6}
 .relato-input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,95,168,.1)}
+
+/* ══ PENALIDADE ══ */
+.penalidade-box{
+  margin-top:16px;
+  border:1.5px solid var(--orange);
+  border-radius:var(--radius-lg);
+  overflow:hidden;
+  background:var(--orange-bg);
+}
+body[data-theme="dark"] .penalidade-box{background:rgba(192,80,10,.08);border-color:rgba(192,80,10,.4)}
+.penalidade-header{
+  display:flex;align-items:center;gap:10px;
+  padding:12px 16px;
+  background:rgba(192,80,10,.12);
+  border-bottom:1px solid rgba(192,80,10,.2);
+}
+body[data-theme="dark"] .penalidade-header{background:rgba(192,80,10,.15)}
+.penalidade-header-icon{font-size:18px}
+.penalidade-header-title{font-size:13px;font-weight:700;color:var(--orange);text-transform:uppercase;letter-spacing:.05em}
+.penalidade-header-sub{font-size:12px;color:var(--orange);opacity:.75;margin-left:4px}
+.penalidade-body{padding:14px 16px}
+.pen-opcoes{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px}
+.pen-btn{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:9px 18px;font-size:13px;font-weight:600;
+  border-radius:var(--radius-md);border:2px solid transparent;
+  cursor:pointer;transition:all .15s;font-family:inherit;
+}
+/* NÃO */
+.pen-btn.nao-off{background:rgba(59,109,17,.1);color:var(--green-600);border-color:rgba(59,109,17,.2)}
+.pen-btn.nao-on{background:var(--green-600);color:#fff;border-color:var(--green-600);box-shadow:0 3px 10px rgba(59,109,17,.3)}
+/* SIM opções */
+.pen-btn.pen-off{background:rgba(192,80,10,.08);color:var(--orange);border-color:rgba(192,80,10,.25)}
+.pen-btn.pen-on{background:var(--orange);color:#fff;border-color:var(--orange);box-shadow:0 3px 12px rgba(192,80,10,.35)}
+.pen-btn:hover{filter:brightness(.92)}
+.pen-separador{display:flex;align-items:center;gap:8px;margin:10px 0 6px;font-size:11px;font-weight:700;color:var(--orange);text-transform:uppercase;letter-spacing:.06em;opacity:.7}
+.pen-separador::before,.pen-separador::after{content:'';flex:1;height:1px;background:rgba(192,80,10,.2)}
+/* resultado visual */
+.pen-resultado{
+  margin-top:12px;display:flex;align-items:center;gap:8px;
+  padding:10px 14px;border-radius:var(--radius-md);font-size:13px;font-weight:600;
+}
+.pen-resultado.nao{background:var(--tag-green-bg);color:var(--tag-green-text);border:1px solid rgba(59,109,17,.2)}
+.pen-resultado.sim{background:var(--orange-bg);color:var(--orange);border:1px solid rgba(192,80,10,.3)}
+body[data-theme="dark"] .pen-resultado.sim{background:rgba(192,80,10,.15)}
+
 .canais-box{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-lg);margin-bottom:16px;overflow:hidden}
 .canais-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;user-select:none;transition:background var(--transition)}
 .canais-header:hover{background:var(--surface2)}
@@ -199,7 +236,7 @@ body[data-theme="light"] .login-hint{color:var(--text3)}
 .fb-chevron{font-size:12px;color:var(--text3);transition:transform var(--transition)}
 .fb-chevron.open{transform:rotate(180deg)}
 .fb-body{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.4,0,.2,1)}
-.fb-body.open{max-height:1200px}
+.fb-body.open{max-height:1400px}
 .fb-body-inner{padding:0 18px 18px;border-top:1px solid var(--border)}
 .fb-section-title{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin:14px 0 8px}
 .fb-obs-item{background:rgba(163,45,45,.06);border-left:3px solid var(--red);padding:8px 12px;border-radius:0 var(--radius-sm) var(--radius-sm) 0;margin-bottom:6px;font-size:13px}
@@ -207,6 +244,8 @@ body[data-theme="light"] .login-hint{color:var(--text3)}
 .fb-feedback-box{background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius-md);padding:14px}
 .fb-feedback-existente{font-size:13px;color:var(--text);line-height:1.6;white-space:pre-wrap}
 .fb-concluido-info{background:var(--tag-green-bg);border:1px solid rgba(59,109,17,.2);border-radius:var(--radius-md);padding:12px 14px;font-size:13px;color:var(--tag-green-text);font-weight:500;margin-top:12px}
+.fb-penalidade-tag{display:inline-flex;align-items:center;gap:6px;background:var(--orange-bg);color:var(--orange);font-size:12px;font-weight:600;padding:4px 10px;border-radius:99px;border:1px solid rgba(192,80,10,.3);margin-top:6px}
+body[data-theme="dark"] .fb-penalidade-tag{background:rgba(192,80,10,.15)}
 .filter-row{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-bottom:16px}
 .filter-row .form-input{width:auto;flex:1;min-width:120px;padding:8px 12px}
 .vinculo-tag{display:inline-flex;align-items:center;gap:5px;background:var(--blue-bg);color:var(--blue);font-size:11px;font-weight:600;padding:3px 8px;border-radius:99px;border:1px solid rgba(26,95,168,.2)}
@@ -227,7 +266,7 @@ body[data-theme="light"] .login-hint{color:var(--text3)}
 <body data-theme="light">
 
 <!-- LOGIN -->
-<div id="login-screen">
+<div id="login-screen" class="hidden">
   <div class="login-page">
     <div class="login-card">
       <div class="login-head"><div class="login-icon">📋</div><h2>Avaliação de atendimento</h2><p>Sistema de gestão de qualidade</p></div>
@@ -262,19 +301,14 @@ body[data-theme="light"] .login-hint{color:var(--text3)}
 </div>
 
 <!-- SISTEMA -->
-<div id="main-screen" class="hidden">
+<div id="main-screen" class="">
   <div class="layout">
     <div class="sidebar" id="sidebar">
       <div class="sidebar-logo"><div class="logo-icon">📋</div><div class="logo-text">Avaliação<br>de Atendimento</div></div>
       <nav class="sidebar-nav">
-        <div class="nav-item active" data-label="Painel" onclick="showPage('dashboard',this)" id="nav-dashboard"><span class="nav-icon">🏠</span><span class="nav-label">Painel</span></div>
-        <div class="nav-item" data-label="Nova avaliação" onclick="showPage('avaliacao',this)" id="nav-avaliacao"><span class="nav-icon">✏️</span><span class="nav-label">Nova avaliação</span></div>
-        <div class="nav-item" data-label="Feedbacks" onclick="showPage('feedbacks',this)" id="nav-feedbacks">
-          <span class="nav-icon">💬</span>
-          <span class="nav-label">Feedbacks</span>
-          <!-- ★ badge sempre visível — valor calculado por permissão -->
-          <span class="nav-count hidden" id="fb-count-nav">0</span>
-        </div>
+        <div class="nav-item" data-label="Painel" onclick="showPage('dashboard',this)" id="nav-dashboard"><span class="nav-icon">🏠</span><span class="nav-label">Painel</span></div>
+        <div class="nav-item active" data-label="Nova avaliação" onclick="showPage('avaliacao',this)" id="nav-avaliacao"><span class="nav-icon">✏️</span><span class="nav-label">Nova avaliação</span></div>
+        <div class="nav-item" data-label="Feedbacks" onclick="showPage('feedbacks',this)" id="nav-feedbacks"><span class="nav-icon">💬</span><span class="nav-label">Feedbacks</span><span class="nav-count" id="fb-count-nav">5</span></div>
         <div class="nav-item" data-label="Histórico" onclick="showPage('historico',this)" id="nav-historico"><span class="nav-icon">📂</span><span class="nav-label">Histórico</span></div>
         <div class="nav-item" data-label="Relatórios" onclick="showPage('relatorios',this)" id="nav-relatorios"><span class="nav-icon">📊</span><span class="nav-label">Relatórios</span></div>
         <div class="nav-item" data-label="Cadastros" onclick="showPage('cadastro',this)" id="nav-cadastro"><span class="nav-icon">👥</span><span class="nav-label">Cadastros</span></div>
@@ -283,17 +317,17 @@ body[data-theme="light"] .login-hint{color:var(--text3)}
         <div class="nav-item" data-label="Minha conta" onclick="showPage('minha-conta',null)"><span class="nav-icon">⚙️</span><span class="nav-label">Minha conta</span></div>
         <div class="nav-item" data-label="Sair" onclick="fazerLogout()"><span class="nav-icon">🚪</span><span class="nav-label">Sair</span></div>
         <div class="sidebar-user" onclick="showPage('minha-conta',null)">
-          <div class="s-avatar" id="s-avatar">--</div>
-          <div class="s-info"><div class="s-name" id="s-nome">Usuário</div><div class="s-role" id="s-role">Perfil</div></div>
+          <div class="s-avatar" id="s-avatar">AS</div>
+          <div class="s-info"><div class="s-name" id="s-nome">Admin Sistema</div><div class="s-role" id="s-role">Admin</div></div>
         </div>
       </div>
     </div>
 
     <div class="main">
       <div class="topbar">
-        <div><div class="topbar-title" id="topbar-title">Painel</div><div class="topbar-sub" id="topbar-sub">Visão geral</div></div>
+        <div><div class="topbar-title" id="topbar-title">Nova avaliação</div><div class="topbar-sub" id="topbar-sub">Preencha todos os campos</div></div>
         <div style="display:flex;align-items:center;gap:10px">
-          <span id="topbar-perfil-badge"></span>
+          <span id="topbar-perfil-badge"><span class="badge perfil-admin">Admin</span></span>
           <div class="theme-toggle">
             <button class="theme-btn active" id="btn-light" onclick="setTheme('light')">☀️ Claro</button>
             <button class="theme-btn" id="btn-dark" onclick="setTheme('dark')">🌙 Escuro</button>
@@ -304,28 +338,32 @@ body[data-theme="light"] .login-hint{color:var(--text3)}
       <div class="page-wrap">
 
         <!-- PAINEL -->
-        <div class="page-section active" id="page-dashboard">
-          <div class="grid4" id="dash-metrics" style="margin-bottom:16px"></div>
+        <div class="page-section" id="page-dashboard">
+          <div class="grid4" id="dash-metrics" style="margin-bottom:16px">
+    <div class="metric-card"><span class="metric-icon">👥</span><div class="metric-label">Atendentes</div><div class="metric-value">3</div></div>
+    <div class="metric-card"><span class="metric-icon">📋</span><div class="metric-label">Avaliações este mês</div><div class="metric-value">0</div></div>
+    <div class="metric-card"><span class="metric-icon">💬</span><div class="metric-label">Feedbacks pendentes</div><div class="metric-value" style="color:var(--amber)">5</div></div>
+    <div class="metric-card"><span class="metric-icon">⭐</span><div class="metric-label">Média geral</div><div class="metric-value">87.4</div></div></div>
           <div class="grid2">
-            <div class="card"><div class="card-title">⏳ Pendentes este mês</div><div id="dash-pendentes"></div></div>
-            <div class="card"><div class="card-title">💬 Feedbacks pendentes</div><div id="dash-fb-pendentes"></div></div>
+            <div class="card"><div class="card-title">⏳ Pendentes este mês</div><div id="dash-pendentes"><div class="pend-item"><div><div style="font-weight:500">Ana Lima</div><div class="progress-bar" style="width:140px"><div class="progress-fill" style="width:0%;background:var(--amber)"></div></div></div><span class="badge danger">0/4</span></div><div class="pend-item"><div><div style="font-weight:500">Carlos Souza</div><div class="progress-bar" style="width:140px"><div class="progress-fill" style="width:0%;background:var(--amber)"></div></div></div><span class="badge danger">0/4</span></div><div class="pend-item"><div><div style="font-weight:500">Beatriz Costa</div><div class="progress-bar" style="width:140px"><div class="progress-fill" style="width:0%;background:var(--amber)"></div></div></div><span class="badge danger">0/4</span></div></div></div>
+            <div class="card"><div class="card-title">💬 Feedbacks pendentes</div><div id="dash-fb-pendentes"><div class="pend-item"><div><div style="font-weight:500">Ana Lima</div><div style="font-size:12px;color:var(--text3)">10/01/2026 · PROT-001</div></div><span class="badge warn">Pendente</span></div><div class="pend-item"><div><div style="font-weight:500">Ana Lima</div><div style="font-size:12px;color:var(--text3)">15/01/2026 · PROT-002</div></div><span class="badge warn">Pendente</span></div><div class="pend-item"><div><div style="font-weight:500">Carlos Souza</div><div style="font-size:12px;color:var(--text3)">14/02/2026 · PROT-003</div></div><span class="badge warn">Pendente</span></div><div class="pend-item"><div><div style="font-weight:500">Beatriz Costa</div><div style="font-size:12px;color:var(--text3)">05/02/2026 · PROT-004</div></div><span class="badge warn">Pendente</span></div><div class="pend-item"><div><div style="font-weight:500">Ana Lima</div><div style="font-size:12px;color:var(--text3)">05/04/2026 · PROT-005</div></div><span class="badge warn">Pendente</span></div></div></div>
           </div>
-          <div class="card"><div class="card-title">🕐 Últimas avaliações</div><div id="dash-ultimas"></div></div>
+          <div class="card"><div class="card-title">🕐 Últimas avaliações</div><div id="dash-ultimas"><div class="table-wrap"><table><thead><tr><th>Atendente</th><th>Data</th><th>Protocolo</th><th>Nota</th><th>Penalidade</th><th>Feedback</th></tr></thead><tbody><tr><td>Ana Lima</td><td>05/04/2026</td><td style="font-family:monospace;font-size:12px">PROT-005</td><td><span class="badge ok">✓ 95.0</span></td><td><span style="color:var(--text3);font-size:12px">—</span></td><td><span class="badge warn">Pendente</span></td></tr><tr><td>Beatriz Costa</td><td>05/02/2026</td><td style="font-family:monospace;font-size:12px">PROT-004</td><td><span class="badge ok">✓ 93.0</span></td><td><span style="color:var(--text3);font-size:12px">—</span></td><td><span class="badge warn">Pendente</span></td></tr><tr><td>Carlos Souza</td><td>14/02/2026</td><td style="font-family:monospace;font-size:12px">PROT-003</td><td><span class="badge warn">▲ 79.0</span></td><td><span class="badge orange">🗣 Advertência Verbal</span></td><td><span class="badge warn">Pendente</span></td></tr><tr><td>Ana Lima</td><td>15/01/2026</td><td style="font-family:monospace;font-size:12px">PROT-002</td><td><span class="badge warn">▲ 88.0</span></td><td><span style="color:var(--text3);font-size:12px">—</span></td><td><span class="badge warn">Pendente</span></td></tr><tr><td>Ana Lima</td><td>10/01/2026</td><td style="font-family:monospace;font-size:12px">PROT-001</td><td><span class="badge warn">▲ 82.0</span></td><td><span style="color:var(--text3);font-size:12px">—</span></td><td><span class="badge warn">Pendente</span></td></tr></tbody></table></div></div></div>
         </div>
 
         <!-- NOVA AVALIAÇÃO -->
-        <div class="page-section" id="page-avaliacao">
+        <div class="page-section active" id="page-avaliacao">
           <div id="av-alert"></div>
           <div class="card">
             <div class="card-title">📋 Informações do atendimento</div>
             <div class="grid2">
-              <div><div class="form-label">Gestor avaliador</div><select class="form-input" id="av-gestor"></select></div>
-              <div><div class="form-label">Atendente avaliado</div><select class="form-input" id="av-atendente"></select></div>
+              <div><div class="form-label">Gestor avaliador</div><select class="form-input" id="av-gestor"><option value="">Selecionar...</option><option value="1" selected="">Admin Sistema</option><option value="7">Sandra Melo</option><option value="2">Marcos Oliveira</option><option value="3">Fernanda Reis</option></select></div>
+              <div><div class="form-label">Atendente avaliado</div><select class="form-input" id="av-atendente"><option value="">Selecionar...</option><option value="4">Ana Lima</option><option value="5">Carlos Souza</option><option value="6">Beatriz Costa</option></select></div>
               <div><div class="form-label">Data e hora</div><input class="form-input" type="datetime-local" id="av-data"></div>
               <div><div class="form-label">Duração da ligação</div><input class="form-input" type="text" id="av-duracao" placeholder="ex: 5m 30s"></div>
               <div><div class="form-label">Número da gravação</div><input class="form-input" type="text" id="av-gravacao"></div>
               <div><div class="form-label">Número do protocolo</div><input class="form-input" type="text" id="av-protocolo"></div>
-              <div><div class="form-label">Canal de atendimento</div><select class="form-input" id="av-canal"></select></div>
+              <div><div class="form-label">Canal de atendimento</div><select class="form-input" id="av-canal"><option value="">Selecionar...</option><option>Telefone</option><option>Chat</option><option>E-mail</option><option>WhatsApp</option></select></div>
               <div><div class="form-label">Turno</div>
                 <select class="form-input" id="av-turno">
                   <option value="">Selecionar...</option>
@@ -334,30 +372,355 @@ body[data-theme="light"] .login-hint{color:var(--text3)}
                 </select>
               </div>
             </div>
+
+            <!-- RELATO -->
             <div class="relato-box">
               <div class="relato-label">📄 Relato do atendimento</div>
               <textarea class="relato-input" id="av-relato" placeholder="Cole ou digite aqui o relato/transcrição do atendimento..."></textarea>
             </div>
+
+            <!-- ★ PENALIDADE -->
+            <div class="penalidade-box">
+              <div class="penalidade-header">
+                <span class="penalidade-header-icon">⚠️</span>
+                <span class="penalidade-header-title">Este atendimento gerou alguma penalidade?</span>
+                <span class="penalidade-header-sub">Selecione uma opção abaixo</span>
+              </div>
+              <div class="penalidade-body">
+                <div class="pen-opcoes">
+                  <!-- NÃO -->
+                  <button class="pen-btn nao-off" id="pen-nao" onclick="selecionarPenalidade('nao')">
+                    ✓ Não
+                  </button>
+                </div>
+                <div class="pen-separador">Se sim, qual penalidade?</div>
+                <div class="pen-opcoes">
+                  <button class="pen-btn pen-off" id="pen-verbal" onclick="selecionarPenalidade('verbal')">
+                    🗣 Advertência Verbal
+                  </button>
+                  <button class="pen-btn pen-off" id="pen-escrita" onclick="selecionarPenalidade('escrita')">
+                    📝 Advertência Escrita
+                  </button>
+                  <button class="pen-btn pen-off" id="pen-suspensao" onclick="selecionarPenalidade('suspensao')">
+                    🚫 Suspensão
+                  </button>
+                </div>
+                <div id="pen-resultado" class="hidden"></div>
+              </div>
+            </div>
+
           </div>
+
+          <!-- CANAIS -->
           <div class="canais-box">
             <div class="canais-header" onclick="toggleCanais()">
-              <div class="canais-header-left"><span style="font-size:16px">📡</span><span class="canais-header-title">Gerenciar canais</span><div class="canais-chips-preview" id="canais-chips-preview"></div></div>
+              <div class="canais-header-left"><span style="font-size:16px">📡</span><span class="canais-header-title">Gerenciar canais</span><div class="canais-chips-preview" id="canais-chips-preview"><span class="canal-chip-mini">Telefone</span><span class="canal-chip-mini">Chat</span><span class="canal-chip-mini">E-mail</span><span class="canal-chip-mini">WhatsApp</span></div></div>
               <span class="canais-chevron" id="canais-chevron">▼</span>
             </div>
             <div class="canais-body" id="canais-body">
-              <table class="canal-table"><thead><tr><th>#</th><th>Canal</th><th style="text-align:right">Ações</th></tr></thead><tbody id="canal-tbody"></tbody></table>
+              <table class="canal-table"><thead><tr><th>#</th><th>Canal</th><th style="text-align:right">Ações</th></tr></thead><tbody id="canal-tbody"><tr><td style="color:var(--text3);width:28px">1</td><td>Telefone</td><td><div style="display:flex;gap:6px;justify-content:flex-end"><button class="btn sm" style="font-size:12px" onclick="editarCanal(0)">✎</button><button class="btn danger xs" onclick="excluirCanal(0)">✕</button></div></td></tr><tr><td style="color:var(--text3);width:28px">2</td><td>Chat</td><td><div style="display:flex;gap:6px;justify-content:flex-end"><button class="btn sm" style="font-size:12px" onclick="editarCanal(1)">✎</button><button class="btn danger xs" onclick="excluirCanal(1)">✕</button></div></td></tr><tr><td style="color:var(--text3);width:28px">3</td><td>E-mail</td><td><div style="display:flex;gap:6px;justify-content:flex-end"><button class="btn sm" style="font-size:12px" onclick="editarCanal(2)">✎</button><button class="btn danger xs" onclick="excluirCanal(2)">✕</button></div></td></tr><tr><td style="color:var(--text3);width:28px">4</td><td>WhatsApp</td><td><div style="display:flex;gap:6px;justify-content:flex-end"><button class="btn sm" style="font-size:12px" onclick="editarCanal(3)">✎</button><button class="btn danger xs" onclick="excluirCanal(3)">✕</button></div></td></tr></tbody></table>
               <div class="canal-add-row"><input class="form-input" type="text" id="canal-novo-input" placeholder="Nome do novo canal..."><button class="btn primary sm" onclick="adicionarCanal()">+ Adicionar</button></div>
             </div>
           </div>
+
+          <!-- QUESITOS -->
           <div class="card">
             <div class="card-title">📝 Quesitos de avaliação</div>
-            <div id="quesitos-list"></div>
+            <div id="quesitos-list">
+    <div class="qrow"><div class="qrow-main">
+      <span class="qname">Sabe interromper</span>
+      <span id="qpontos-0" style="font-size:12px;min-width:40px;text-align:center;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--text3)">—</span>
+      <span style="font-size:11px;color:var(--text3);min-width:30px">/5</span>
+      <div class="q-group">
+        <button class="q-btn sim-off" id="sim-0" onclick="marcar(0,true)">Sim</button>
+        <button class="q-btn nao-off" id="nao-0" onclick="marcar(0,false)">Não</button>
+      </div>
+    </div>
+    <div id="obs-wrap-0" style="display:none">
+      <div class="obs-box">
+        <div class="obs-label">📝 Observação <span style="font-weight:400;text-transform:none;opacity:.7">(opcional)</span></div>
+        <textarea class="obs-textarea" id="obs-0" maxlength="300" placeholder="Descreva o que foi observado..." oninput="observacoes[0]=this.value;document.getElementById('obs-char-0').textContent=this.value.length+'/300'"></textarea>
+        <div class="obs-char" id="obs-char-0">0/300</div>
+      </div>
+    </div></div>
+    <div class="qrow"><div class="qrow-main">
+      <span class="qname">Questionamentos necessários</span>
+      <span id="qpontos-1" style="font-size:12px;min-width:40px;text-align:center;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--text3)">—</span>
+      <span style="font-size:11px;color:var(--text3);min-width:30px">/7</span>
+      <div class="q-group">
+        <button class="q-btn sim-off" id="sim-1" onclick="marcar(1,true)">Sim</button>
+        <button class="q-btn nao-off" id="nao-1" onclick="marcar(1,false)">Não</button>
+      </div>
+    </div>
+    <div id="obs-wrap-1" style="display:none">
+      <div class="obs-box">
+        <div class="obs-label">📝 Observação <span style="font-weight:400;text-transform:none;opacity:.7">(opcional)</span></div>
+        <textarea class="obs-textarea" id="obs-1" maxlength="300" placeholder="Descreva o que foi observado..." oninput="observacoes[1]=this.value;document.getElementById('obs-char-1').textContent=this.value.length+'/300'"></textarea>
+        <div class="obs-char" id="obs-char-1">0/300</div>
+      </div>
+    </div></div>
+    <div class="qrow"><div class="qrow-main">
+      <span class="qname">Demonstra segurança</span>
+      <span id="qpontos-2" style="font-size:12px;min-width:40px;text-align:center;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--text3)">—</span>
+      <span style="font-size:11px;color:var(--text3);min-width:30px">/5</span>
+      <div class="q-group">
+        <button class="q-btn sim-off" id="sim-2" onclick="marcar(2,true)">Sim</button>
+        <button class="q-btn nao-off" id="nao-2" onclick="marcar(2,false)">Não</button>
+      </div>
+    </div>
+    <div id="obs-wrap-2" style="display:none">
+      <div class="obs-box">
+        <div class="obs-label">📝 Observação <span style="font-weight:400;text-transform:none;opacity:.7">(opcional)</span></div>
+        <textarea class="obs-textarea" id="obs-2" maxlength="300" placeholder="Descreva o que foi observado..." oninput="observacoes[2]=this.value;document.getElementById('obs-char-2').textContent=this.value.length+'/300'"></textarea>
+        <div class="obs-char" id="obs-char-2">0/300</div>
+      </div>
+    </div></div>
+    <div class="qrow"><div class="qrow-main">
+      <span class="qname">Uso correto do mute e fraseologias</span>
+      <span id="qpontos-3" style="font-size:12px;min-width:40px;text-align:center;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--text3)">—</span>
+      <span style="font-size:11px;color:var(--text3);min-width:30px">/5</span>
+      <div class="q-group">
+        <button class="q-btn sim-off" id="sim-3" onclick="marcar(3,true)">Sim</button>
+        <button class="q-btn nao-off" id="nao-3" onclick="marcar(3,false)">Não</button>
+      </div>
+    </div>
+    <div id="obs-wrap-3" style="display:none">
+      <div class="obs-box">
+        <div class="obs-label">📝 Observação <span style="font-weight:400;text-transform:none;opacity:.7">(opcional)</span></div>
+        <textarea class="obs-textarea" id="obs-3" maxlength="300" placeholder="Descreva o que foi observado..." oninput="observacoes[3]=this.value;document.getElementById('obs-char-3').textContent=this.value.length+'/300'"></textarea>
+        <div class="obs-char" id="obs-char-3">0/300</div>
+      </div>
+    </div></div>
+    <div class="qrow"><div class="qrow-main">
+      <span class="qname">Vocabulário</span>
+      <span id="qpontos-4" style="font-size:12px;min-width:40px;text-align:center;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--text3)">—</span>
+      <span style="font-size:11px;color:var(--text3);min-width:30px">/5</span>
+      <div class="q-group">
+        <button class="q-btn sim-off" id="sim-4" onclick="marcar(4,true)">Sim</button>
+        <button class="q-btn nao-off" id="nao-4" onclick="marcar(4,false)">Não</button>
+      </div>
+    </div>
+    <div id="obs-wrap-4" style="display:none">
+      <div class="obs-box">
+        <div class="obs-label">📝 Observação <span style="font-weight:400;text-transform:none;opacity:.7">(opcional)</span></div>
+        <textarea class="obs-textarea" id="obs-4" maxlength="300" placeholder="Descreva o que foi observado..." oninput="observacoes[4]=this.value;document.getElementById('obs-char-4').textContent=this.value.length+'/300'"></textarea>
+        <div class="obs-char" id="obs-char-4">0/300</div>
+      </div>
+    </div></div>
+    <div class="qrow"><div class="qrow-main">
+      <span class="qname">Tempo de atendimento</span>
+      <span id="qpontos-5" style="font-size:12px;min-width:40px;text-align:center;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--text3)">—</span>
+      <span style="font-size:11px;color:var(--text3);min-width:30px">/5</span>
+      <div class="q-group">
+        <button class="q-btn sim-off" id="sim-5" onclick="marcar(5,true)">Sim</button>
+        <button class="q-btn nao-off" id="nao-5" onclick="marcar(5,false)">Não</button>
+      </div>
+    </div>
+    <div id="obs-wrap-5" style="display:none">
+      <div class="obs-box">
+        <div class="obs-label">📝 Observação <span style="font-weight:400;text-transform:none;opacity:.7">(opcional)</span></div>
+        <textarea class="obs-textarea" id="obs-5" maxlength="300" placeholder="Descreva o que foi observado..." oninput="observacoes[5]=this.value;document.getElementById('obs-char-5').textContent=this.value.length+'/300'"></textarea>
+        <div class="obs-char" id="obs-char-5">0/300</div>
+      </div>
+    </div></div>
+    <div class="qrow"><div class="qrow-main">
+      <span class="qname">Atenção às informações e 1º toque</span>
+      <span id="qpontos-6" style="font-size:12px;min-width:40px;text-align:center;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--text3)">—</span>
+      <span style="font-size:11px;color:var(--text3);min-width:30px">/5</span>
+      <div class="q-group">
+        <button class="q-btn sim-off" id="sim-6" onclick="marcar(6,true)">Sim</button>
+        <button class="q-btn nao-off" id="nao-6" onclick="marcar(6,false)">Não</button>
+      </div>
+    </div>
+    <div id="obs-wrap-6" style="display:none">
+      <div class="obs-box">
+        <div class="obs-label">📝 Observação <span style="font-weight:400;text-transform:none;opacity:.7">(opcional)</span></div>
+        <textarea class="obs-textarea" id="obs-6" maxlength="300" placeholder="Descreva o que foi observado..." oninput="observacoes[6]=this.value;document.getElementById('obs-char-6').textContent=this.value.length+'/300'"></textarea>
+        <div class="obs-char" id="obs-char-6">0/300</div>
+      </div>
+    </div></div>
+    <div class="qrow"><div class="qrow-main">
+      <span class="qname">Informação correta ★★</span>
+      <span id="qpontos-7" style="font-size:12px;min-width:40px;text-align:center;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--text3)">—</span>
+      <span style="font-size:11px;color:var(--text3);min-width:30px">/7</span>
+      <div class="q-group">
+        <button class="q-btn sim-off" id="sim-7" onclick="marcar(7,true)">Sim</button>
+        <button class="q-btn nao-off" id="nao-7" onclick="marcar(7,false)">Não</button>
+      </div>
+    </div>
+    <div id="obs-wrap-7" style="display:none">
+      <div class="obs-box">
+        <div class="obs-label">📝 Observação <span style="font-weight:400;text-transform:none;opacity:.7">(opcional)</span></div>
+        <textarea class="obs-textarea" id="obs-7" maxlength="300" placeholder="Descreva o que foi observado..." oninput="observacoes[7]=this.value;document.getElementById('obs-char-7').textContent=this.value.length+'/300'"></textarea>
+        <div class="obs-char" id="obs-char-7">0/300</div>
+      </div>
+    </div></div>
+    <div class="qrow"><div class="qrow-main">
+      <span class="qname">Faz o registro conforme o relato</span>
+      <span id="qpontos-8" style="font-size:12px;min-width:40px;text-align:center;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--text3)">—</span>
+      <span style="font-size:11px;color:var(--text3);min-width:30px">/7</span>
+      <div class="q-group">
+        <button class="q-btn sim-off" id="sim-8" onclick="marcar(8,true)">Sim</button>
+        <button class="q-btn nao-off" id="nao-8" onclick="marcar(8,false)">Não</button>
+      </div>
+    </div>
+    <div id="obs-wrap-8" style="display:none">
+      <div class="obs-box">
+        <div class="obs-label">📝 Observação <span style="font-weight:400;text-transform:none;opacity:.7">(opcional)</span></div>
+        <textarea class="obs-textarea" id="obs-8" maxlength="300" placeholder="Descreva o que foi observado..." oninput="observacoes[8]=this.value;document.getElementById('obs-char-8').textContent=this.value.length+'/300'"></textarea>
+        <div class="obs-char" id="obs-char-8">0/300</div>
+      </div>
+    </div></div>
+    <div class="qrow"><div class="qrow-main">
+      <span class="qname">Dados no sistema / descrição</span>
+      <span id="qpontos-9" style="font-size:12px;min-width:40px;text-align:center;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--text3)">—</span>
+      <span style="font-size:11px;color:var(--text3);min-width:30px">/6</span>
+      <div class="q-group">
+        <button class="q-btn sim-off" id="sim-9" onclick="marcar(9,true)">Sim</button>
+        <button class="q-btn nao-off" id="nao-9" onclick="marcar(9,false)">Não</button>
+      </div>
+    </div>
+    <div id="obs-wrap-9" style="display:none">
+      <div class="obs-box">
+        <div class="obs-label">📝 Observação <span style="font-weight:400;text-transform:none;opacity:.7">(opcional)</span></div>
+        <textarea class="obs-textarea" id="obs-9" maxlength="300" placeholder="Descreva o que foi observado..." oninput="observacoes[9]=this.value;document.getElementById('obs-char-9').textContent=this.value.length+'/300'"></textarea>
+        <div class="obs-char" id="obs-char-9">0/300</div>
+      </div>
+    </div></div>
+    <div class="qrow"><div class="qrow-main">
+      <span class="qname">Informa número de protocolo</span>
+      <span id="qpontos-10" style="font-size:12px;min-width:40px;text-align:center;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--text3)">—</span>
+      <span style="font-size:11px;color:var(--text3);min-width:30px">/6</span>
+      <div class="q-group">
+        <button class="q-btn sim-off" id="sim-10" onclick="marcar(10,true)">Sim</button>
+        <button class="q-btn nao-off" id="nao-10" onclick="marcar(10,false)">Não</button>
+      </div>
+    </div>
+    <div id="obs-wrap-10" style="display:none">
+      <div class="obs-box">
+        <div class="obs-label">📝 Observação <span style="font-weight:400;text-transform:none;opacity:.7">(opcional)</span></div>
+        <textarea class="obs-textarea" id="obs-10" maxlength="300" placeholder="Descreva o que foi observado..." oninput="observacoes[10]=this.value;document.getElementById('obs-char-10').textContent=this.value.length+'/300'"></textarea>
+        <div class="obs-char" id="obs-char-10">0/300</div>
+      </div>
+    </div></div>
+    <div class="qrow"><div class="qrow-main">
+      <span class="qname">Leitura do registro para o usuário</span>
+      <span id="qpontos-11" style="font-size:12px;min-width:40px;text-align:center;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--text3)">—</span>
+      <span style="font-size:11px;color:var(--text3);min-width:30px">/5</span>
+      <div class="q-group">
+        <button class="q-btn sim-off" id="sim-11" onclick="marcar(11,true)">Sim</button>
+        <button class="q-btn nao-off" id="nao-11" onclick="marcar(11,false)">Não</button>
+      </div>
+    </div>
+    <div id="obs-wrap-11" style="display:none">
+      <div class="obs-box">
+        <div class="obs-label">📝 Observação <span style="font-weight:400;text-transform:none;opacity:.7">(opcional)</span></div>
+        <textarea class="obs-textarea" id="obs-11" maxlength="300" placeholder="Descreva o que foi observado..." oninput="observacoes[11]=this.value;document.getElementById('obs-char-11').textContent=this.value.length+'/300'"></textarea>
+        <div class="obs-char" id="obs-char-11">0/300</div>
+      </div>
+    </div></div>
+    <div class="qrow"><div class="qrow-main">
+      <span class="qname">Explicações pós-registro</span>
+      <span id="qpontos-12" style="font-size:12px;min-width:40px;text-align:center;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--text3)">—</span>
+      <span style="font-size:11px;color:var(--text3);min-width:30px">/5</span>
+      <div class="q-group">
+        <button class="q-btn sim-off" id="sim-12" onclick="marcar(12,true)">Sim</button>
+        <button class="q-btn nao-off" id="nao-12" onclick="marcar(12,false)">Não</button>
+      </div>
+    </div>
+    <div id="obs-wrap-12" style="display:none">
+      <div class="obs-box">
+        <div class="obs-label">📝 Observação <span style="font-weight:400;text-transform:none;opacity:.7">(opcional)</span></div>
+        <textarea class="obs-textarea" id="obs-12" maxlength="300" placeholder="Descreva o que foi observado..." oninput="observacoes[12]=this.value;document.getElementById('obs-char-12').textContent=this.value.length+'/300'"></textarea>
+        <div class="obs-char" id="obs-char-12">0/300</div>
+      </div>
+    </div></div>
+    <div class="qrow"><div class="qrow-main">
+      <span class="qname">Uso e encaminhamento correto ★★</span>
+      <span id="qpontos-13" style="font-size:12px;min-width:40px;text-align:center;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--text3)">—</span>
+      <span style="font-size:11px;color:var(--text3);min-width:30px">/7</span>
+      <div class="q-group">
+        <button class="q-btn sim-off" id="sim-13" onclick="marcar(13,true)">Sim</button>
+        <button class="q-btn nao-off" id="nao-13" onclick="marcar(13,false)">Não</button>
+      </div>
+    </div>
+    <div id="obs-wrap-13" style="display:none">
+      <div class="obs-box">
+        <div class="obs-label">📝 Observação <span style="font-weight:400;text-transform:none;opacity:.7">(opcional)</span></div>
+        <textarea class="obs-textarea" id="obs-13" maxlength="300" placeholder="Descreva o que foi observado..." oninput="observacoes[13]=this.value;document.getElementById('obs-char-13').textContent=this.value.length+'/300'"></textarea>
+        <div class="obs-char" id="obs-char-13">0/300</div>
+      </div>
+    </div></div>
+    <div class="qrow"><div class="qrow-main">
+      <span class="qname">Trata usuário pelo nome</span>
+      <span id="qpontos-14" style="font-size:12px;min-width:40px;text-align:center;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--text3)">—</span>
+      <span style="font-size:11px;color:var(--text3);min-width:30px">/4</span>
+      <div class="q-group">
+        <button class="q-btn sim-off" id="sim-14" onclick="marcar(14,true)">Sim</button>
+        <button class="q-btn nao-off" id="nao-14" onclick="marcar(14,false)">Não</button>
+      </div>
+    </div>
+    <div id="obs-wrap-14" style="display:none">
+      <div class="obs-box">
+        <div class="obs-label">📝 Observação <span style="font-weight:400;text-transform:none;opacity:.7">(opcional)</span></div>
+        <textarea class="obs-textarea" id="obs-14" maxlength="300" placeholder="Descreva o que foi observado..." oninput="observacoes[14]=this.value;document.getElementById('obs-char-14').textContent=this.value.length+'/300'"></textarea>
+        <div class="obs-char" id="obs-char-14">0/300</div>
+      </div>
+    </div></div>
+    <div class="qrow"><div class="qrow-main">
+      <span class="qname">Tom de voz adequado</span>
+      <span id="qpontos-15" style="font-size:12px;min-width:40px;text-align:center;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--text3)">—</span>
+      <span style="font-size:11px;color:var(--text3);min-width:30px">/6</span>
+      <div class="q-group">
+        <button class="q-btn sim-off" id="sim-15" onclick="marcar(15,true)">Sim</button>
+        <button class="q-btn nao-off" id="nao-15" onclick="marcar(15,false)">Não</button>
+      </div>
+    </div>
+    <div id="obs-wrap-15" style="display:none">
+      <div class="obs-box">
+        <div class="obs-label">📝 Observação <span style="font-weight:400;text-transform:none;opacity:.7">(opcional)</span></div>
+        <textarea class="obs-textarea" id="obs-15" maxlength="300" placeholder="Descreva o que foi observado..." oninput="observacoes[15]=this.value;document.getElementById('obs-char-15').textContent=this.value.length+'/300'"></textarea>
+        <div class="obs-char" id="obs-char-15">0/300</div>
+      </div>
+    </div></div>
+    <div class="qrow"><div class="qrow-main">
+      <span class="qname">Prestatividade</span>
+      <span id="qpontos-16" style="font-size:12px;min-width:40px;text-align:center;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--text3)">—</span>
+      <span style="font-size:11px;color:var(--text3);min-width:30px">/5</span>
+      <div class="q-group">
+        <button class="q-btn sim-off" id="sim-16" onclick="marcar(16,true)">Sim</button>
+        <button class="q-btn nao-off" id="nao-16" onclick="marcar(16,false)">Não</button>
+      </div>
+    </div>
+    <div id="obs-wrap-16" style="display:none">
+      <div class="obs-box">
+        <div class="obs-label">📝 Observação <span style="font-weight:400;text-transform:none;opacity:.7">(opcional)</span></div>
+        <textarea class="obs-textarea" id="obs-16" maxlength="300" placeholder="Descreva o que foi observado..." oninput="observacoes[16]=this.value;document.getElementById('obs-char-16').textContent=this.value.length+'/300'"></textarea>
+        <div class="obs-char" id="obs-char-16">0/300</div>
+      </div>
+    </div></div>
+    <div class="qrow"><div class="qrow-main">
+      <span class="qname">Educação</span>
+      <span id="qpontos-17" style="font-size:12px;min-width:40px;text-align:center;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--text3)">—</span>
+      <span style="font-size:11px;color:var(--text3);min-width:30px">/5</span>
+      <div class="q-group">
+        <button class="q-btn sim-off" id="sim-17" onclick="marcar(17,true)">Sim</button>
+        <button class="q-btn nao-off" id="nao-17" onclick="marcar(17,false)">Não</button>
+      </div>
+    </div>
+    <div id="obs-wrap-17" style="display:none">
+      <div class="obs-box">
+        <div class="obs-label">📝 Observação <span style="font-weight:400;text-transform:none;opacity:.7">(opcional)</span></div>
+        <textarea class="obs-textarea" id="obs-17" maxlength="300" placeholder="Descreva o que foi observado..." oninput="observacoes[17]=this.value;document.getElementById('obs-char-17').textContent=this.value.length+'/300'"></textarea>
+        <div class="obs-char" id="obs-char-17">0/300</div>
+      </div>
+    </div></div></div>
             <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px">
               <span style="font-size:13px;color:var(--text3)">Pontuação total</span>
-              <span id="score-label" style="font-size:15px;font-weight:700;font-family:'JetBrains Mono',monospace"></span>
+              <span id="score-label" style="font-size: 15px; font-weight: 700; font-family: &quot;JetBrains Mono&quot;, monospace; color: var(--red);">0 / 100</span>
             </div>
-            <div class="score-bar-bg"><div class="score-bar-fill" id="score-bar" style="width:0%"></div></div>
-            <div id="score-display" class="score-total" style="background:var(--surface2);color:var(--text)">0 / 100</div>
+            <div class="score-bar-bg"><div class="score-bar-fill" id="score-bar" style="width: 0%; background: var(--red);"></div></div>
+            <div id="score-display" class="score-total" style="background: var(--red-bg); color: var(--red);">0 / 100</div>
           </div>
           <div style="text-align:right;margin-top:4px"><button class="btn primary" style="padding:11px 28px;font-size:15px" onclick="salvarAvaliacao()">✓ Salvar avaliação</button></div>
         </div>
@@ -449,9 +812,12 @@ const TURNOS=['Manhã','Tarde','Noite','Madrugada','Período integral'];
 const ANO_ATUAL=new Date().getFullYear();
 const PERFIL_LABEL={admin:'Admin',master:'Master',gestor:'Gestor',atendente:'Atendente'};
 const PERFIL_CLASS={admin:'perfil-admin',master:'perfil-master',gestor:'perfil-gestor',atendente:'perfil-atendente'};
+const PEN_LABEL={nao:'Sem penalidade',verbal:'Advertência Verbal',escrita:'Advertência Escrita',suspensao:'Suspensão'};
+const PEN_ICON={nao:'✓',verbal:'🗣',escrita:'📝',suspensao:'🚫'};
 
 let respostas=new Array(QUESITOS.length).fill(null);
 let observacoes=new Array(QUESITOS.length).fill('');
+let penalidade=''; // '' = não selecionado, 'nao', 'verbal', 'escrita', 'suspensao'
 let editingCanalIdx=null;
 let canaisAberto=false;
 let fbAbertos={};
@@ -469,11 +835,11 @@ let state={
     {id:6,nome:'Beatriz Costa',login:'beatriz',senha:'123',perfil:'atendente',turno:'Noite',primeiroAcesso:true},
   ],
   avaliacoes:[
-    {id:1,atendenteId:4,gestorId:2,data:'2026-01-10T09:30',duracao:'4m 20s',gravacao:'GRV-001',protocolo:'PROT-001',canal:'Telefone',turno:'Manhã',nota:82,relato:'',observacoes:[]},
-    {id:2,atendenteId:4,gestorId:3,data:'2026-01-15T14:00',duracao:'6m',gravacao:'GRV-002',protocolo:'PROT-002',canal:'Telefone',turno:'Manhã',nota:88,relato:'Cliente elogiou o atendimento.',observacoes:[]},
-    {id:3,atendenteId:5,gestorId:2,data:'2026-02-14T16:30',duracao:'7m',gravacao:'GRV-003',protocolo:'PROT-003',canal:'WhatsApp',turno:'Tarde',nota:79,relato:'',observacoes:[{quesito:'Vocabulário',obs:'Usou gírias durante o atendimento'}]},
-    {id:4,atendenteId:6,gestorId:2,data:'2026-02-05T20:00',duracao:'5m 15s',gravacao:'GRV-004',protocolo:'PROT-004',canal:'Telefone',turno:'Noite',nota:93,relato:'Excelente atendimento noturno.',observacoes:[]},
-    {id:5,atendenteId:4,gestorId:2,data:'2026-04-05T10:00',duracao:'3m 50s',gravacao:'GRV-005',protocolo:'PROT-005',canal:'Telefone',turno:'Manhã',nota:95,relato:'',observacoes:[]},
+    {id:1,atendenteId:4,gestorId:2,data:'2026-01-10T09:30',duracao:'4m 20s',gravacao:'GRV-001',protocolo:'PROT-001',canal:'Telefone',turno:'Manhã',nota:82,relato:'',penalidade:'nao',observacoes:[]},
+    {id:2,atendenteId:4,gestorId:3,data:'2026-01-15T14:00',duracao:'6m',gravacao:'GRV-002',protocolo:'PROT-002',canal:'Telefone',turno:'Manhã',nota:88,relato:'Cliente elogiou o atendimento.',penalidade:'nao',observacoes:[]},
+    {id:3,atendenteId:5,gestorId:2,data:'2026-02-14T16:30',duracao:'7m',gravacao:'GRV-003',protocolo:'PROT-003',canal:'WhatsApp',turno:'Tarde',nota:79,relato:'',penalidade:'verbal',observacoes:[{quesito:'Vocabulário',obs:'Usou gírias durante o atendimento'}]},
+    {id:4,atendenteId:6,gestorId:2,data:'2026-02-05T20:00',duracao:'5m 15s',gravacao:'GRV-004',protocolo:'PROT-004',canal:'Telefone',turno:'Noite',nota:93,relato:'Excelente atendimento noturno.',penalidade:'nao',observacoes:[]},
+    {id:5,atendenteId:4,gestorId:2,data:'2026-04-05T10:00',duracao:'3m 50s',gravacao:'GRV-005',protocolo:'PROT-005',canal:'Telefone',turno:'Manhã',nota:95,relato:'',penalidade:'nao',observacoes:[]},
   ],
   feedbacks:{},nextId:8,usuarioLogado:null
 };
@@ -484,40 +850,58 @@ function getNome(id){const u=state.usuarios.find(x=>x.id===id);return u?u.nome:'
 function getIni(nome){return nome.split(' ').map(p=>p[0]).slice(0,2).join('').toUpperCase();}
 function getBadge(n){n=parseFloat(n);if(n>=90)return`<span class="badge ok">✓ ${n.toFixed(1)}</span>`;if(n>=75)return`<span class="badge warn">▲ ${n.toFixed(1)}</span>`;return`<span class="badge danger">✗ ${n.toFixed(1)}</span>`;}
 function getNota(n){n=parseFloat(n);const c=n>=90?'var(--green-600)':n>=75?'var(--amber)':'var(--red)';const bg=n>=90?'rgba(59,109,17,.1)':n>=75?'var(--amber-bg)':'var(--red-bg)';return`<span class="fb-nota" style="color:${c};background:${bg}">${n.toFixed(0)}</span>`;}
+function getPenBadge(p){if(!p||p==='nao')return'';return`<span class="badge orange">${PEN_ICON[p]||'⚠️'} ${PEN_LABEL[p]||p}</span>`;}
 function mediaAvs(avs){if(!avs.length)return null;return avs.reduce((s,a)=>s+a.nota,0)/avs.length;}
 function escapeHtml(t){return(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function calcTotal(){return respostas.reduce((s,r,i)=>s+(r===true?QUESITOS[i].max:0),0);}
 function meuPerfil(){return state.usuarioLogado?.perfil||'';}
-
 function atendentesVisiveis(){
   const eu=state.usuarioLogado;if(!eu)return[];
   if(eu.perfil==='admin'||eu.perfil==='master')return state.usuarios.filter(u=>u.perfil==='atendente');
   if(eu.perfil==='gestor')return state.usuarios.filter(u=>u.perfil==='atendente'&&(state.vinculos[u.id]||[]).includes(eu.id));
-  if(eu.perfil==='atendente')return[eu];
-  return[];
+  if(eu.perfil==='atendente')return[eu];return[];
 }
 function avaliacoesVisiveis(){
   const eu=state.usuarioLogado;if(!eu)return[];
   if(eu.perfil==='admin'||eu.perfil==='master')return state.avaliacoes;
   if(eu.perfil==='gestor'){const meus=atendentesVisiveis().map(a=>a.id);return state.avaliacoes.filter(a=>meus.includes(a.atendenteId)||a.gestorId===eu.id);}
-  if(eu.perfil==='atendente')return state.avaliacoes.filter(a=>a.atendenteId===eu.id);
-  return[];
+  if(eu.perfil==='atendente')return state.avaliacoes.filter(a=>a.atendenteId===eu.id);return[];
 }
 function inicializarFeedbacks(){state.avaliacoes.forEach(a=>{if(!state.feedbacks[a.id])state.feedbacks[a.id]={avaliacaoId:a.id,texto:'',status:'pendente',gestorId:null,dataConclusao:null};});}
+function fbPendCountVisiveis(){return avaliacoesVisiveis().filter(a=>state.feedbacks[a.id]?.status==='pendente').length;}
+function updateFbCountNav(){const c=fbPendCountVisiveis();const el=document.getElementById('fb-count-nav');if(el){el.textContent=c;el.classList.toggle('hidden',c===0);}}
 
-/* ★ CONTADOR DE FEEDBACKS — filtrado pelas avaliações visíveis do usuário logado */
-function fbPendCountVisiveis(){
-  return avaliacoesVisiveis().filter(a=>state.feedbacks[a.id]?.status==='pendente').length;
-}
-
-function updateFbCountNav(){
-  const c=fbPendCountVisiveis();
-  const el=document.getElementById('fb-count-nav');
-  if(el){
-    el.textContent=c;
-    // mostra badge apenas se houver pendências
-    el.classList.toggle('hidden',c===0);
+/* ══ PENALIDADE ══ */
+function selecionarPenalidade(val){
+  penalidade=val;
+  // reset todos os botões
+  ['pen-nao','pen-verbal','pen-escrita','pen-suspensao'].forEach(id=>{
+    const btn=document.getElementById(id);if(!btn)return;
+    if(id==='pen-nao'){btn.className='pen-btn '+(val==='nao'?'nao-on':'nao-off');}
+    else{btn.className='pen-btn '+(btn.id==='pen-'+val?'pen-on':'pen-off');}
+  });
+  // resultado
+  const res=document.getElementById('pen-resultado');
+  if(val){
+    res.classList.remove('hidden');
+    if(val==='nao'){
+      res.className='pen-resultado nao';
+      res.innerHTML=`✓ Sem penalidade registrada`;
+    } else {
+      res.className='pen-resultado sim';
+      res.innerHTML=`⚠️ Penalidade registrada: <strong>${PEN_LABEL[val]}</strong>`;
+    }
+  } else {
+    res.classList.add('hidden');
   }
+}
+function resetPenalidade(){
+  penalidade='';
+  ['pen-nao','pen-verbal','pen-escrita','pen-suspensao'].forEach(id=>{
+    const btn=document.getElementById(id);if(!btn)return;
+    btn.className=id==='pen-nao'?'pen-btn nao-off':'pen-btn pen-off';
+  });
+  const res=document.getElementById('pen-resultado');if(res)res.classList.add('hidden');
 }
 
 /* tema */
@@ -578,9 +962,7 @@ function entrarNoSistema(){
   document.getElementById('s-avatar').textContent=getIni(u.nome);
   document.getElementById('s-nome').textContent=u.nome;
   document.getElementById('s-role').textContent=PERFIL_LABEL[u.perfil]||u.perfil;
-  inicializarFeedbacks();
-  configurarMenu();
-  updateFbCountNav(); // ★ calcula já filtrado pelo perfil do usuário que acabou de logar
+  inicializarFeedbacks();configurarMenu();updateFbCountNav();
   if(u.perfil==='atendente'){showPage('feedbacks',document.getElementById('nav-feedbacks'));}
   else{renderDashboard();}
 }
@@ -611,7 +993,7 @@ function renderDashboard(){
   const cnt={};ats.forEach(a=>{cnt[a.id]=0;});avsM.forEach(a=>{cnt[a.atendenteId]=(cnt[a.atendenteId]||0)+1;});
   const pend=ats.filter(a=>(cnt[a.id]||0)<4).length;
   const mg=avsVis.length?(avsVis.reduce((s,a)=>s+a.nota,0)/avsVis.length).toFixed(1):'—';
-  const fbPend=fbPendCountVisiveis(); // ★ usa função filtrada
+  const fbPend=fbPendCountVisiveis();
   document.getElementById('dash-metrics').innerHTML=`
     <div class="metric-card"><span class="metric-icon">👥</span><div class="metric-label">Atendentes</div><div class="metric-value">${ats.length}</div></div>
     <div class="metric-card"><span class="metric-icon">📋</span><div class="metric-label">Avaliações este mês</div><div class="metric-value">${avsM.length}</div></div>
@@ -621,7 +1003,7 @@ function renderDashboard(){
   const fbList=avsVis.filter(a=>state.feedbacks[a.id]?.status==='pendente').slice(0,5);
   document.getElementById('dash-fb-pendentes').innerHTML=fbList.length===0?'<div style="text-align:center;color:var(--text3);padding:1rem;font-size:13px">✓ Nenhum feedback pendente!</div>':fbList.map(a=>`<div class="pend-item"><div><div style="font-weight:500">${getNome(a.atendenteId)}</div><div style="font-size:12px;color:var(--text3)">${new Date(a.data).toLocaleDateString('pt-BR')} · ${a.protocolo||'—'}</div></div><span class="badge warn">Pendente</span></div>`).join('');
   const ult=[...avsVis].reverse().slice(0,5);
-  document.getElementById('dash-ultimas').innerHTML=ult.length===0?'<div style="text-align:center;color:var(--text3);padding:1.5rem">Nenhuma avaliação ainda</div>':`<div class="table-wrap"><table><thead><tr><th>Atendente</th><th>Data</th><th>Protocolo</th><th>Nota</th><th>Feedback</th></tr></thead><tbody>`+ult.map(a=>`<tr><td>${getNome(a.atendenteId)}</td><td>${new Date(a.data).toLocaleDateString('pt-BR')}</td><td style="font-family:monospace;font-size:12px">${a.protocolo||'—'}</td><td>${getBadge(a.nota)}</td><td>${state.feedbacks[a.id]?.status==='concluido'?'<span class="badge ok">✓</span>':'<span class="badge warn">Pendente</span>'}</td></tr>`).join('')+`</tbody></table></div>`;
+  document.getElementById('dash-ultimas').innerHTML=ult.length===0?'<div style="text-align:center;color:var(--text3);padding:1.5rem">Nenhuma avaliação ainda</div>':`<div class="table-wrap"><table><thead><tr><th>Atendente</th><th>Data</th><th>Protocolo</th><th>Nota</th><th>Penalidade</th><th>Feedback</th></tr></thead><tbody>`+ult.map(a=>`<tr><td>${getNome(a.atendenteId)}</td><td>${new Date(a.data).toLocaleDateString('pt-BR')}</td><td style="font-family:monospace;font-size:12px">${a.protocolo||'—'}</td><td>${getBadge(a.nota)}</td><td>${a.penalidade&&a.penalidade!=='nao'?getPenBadge(a.penalidade):'<span style="color:var(--text3);font-size:12px">—</span>'}</td><td>${state.feedbacks[a.id]?.status==='concluido'?'<span class="badge ok">✓</span>':'<span class="badge warn">Pendente</span>'}</td></tr>`).join('')+`</tbody></table></div>`;
 }
 
 /* quesitos */
@@ -667,6 +1049,7 @@ function updateTotal(){
   const bar=document.getElementById('score-bar');if(bar){bar.style.width=t+'%';bar.style.background=cor;}
   const lbl=document.getElementById('score-label');if(lbl){lbl.textContent=t+' / 100';lbl.style.color=cor;}
 }
+
 function renderFormAvaliacao(){
   const eu=state.usuarioLogado;const ats=atendentesVisiveis();
   const gl=(eu.perfil==='admin'||eu.perfil==='master')?state.usuarios.filter(u=>u.perfil==='gestor'||u.perfil==='admin'||u.perfil==='master'):[eu];
@@ -674,25 +1057,28 @@ function renderFormAvaliacao(){
   document.getElementById('av-atendente').innerHTML='<option value="">Selecionar...</option>'+ats.map(a=>`<option value="${a.id}">${a.nome}</option>`).join('');
   ['av-data','av-duracao','av-gravacao','av-protocolo','av-relato'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   document.getElementById('av-canal').value='';document.getElementById('av-turno').value='';
+  resetPenalidade(); // ★ limpa penalidade
   editingCanalIdx=null;canaisAberto=false;
   document.getElementById('canais-body').classList.remove('open');document.getElementById('canais-chevron').classList.remove('open');
   renderCanalTabela();respostas=new Array(QUESITOS.length).fill(null);observacoes=new Array(QUESITOS.length).fill('');
   buildQuesitos();updateTotal();document.getElementById('av-alert').innerHTML='';
 }
+
 function salvarAvaliacao(){
   coletarTodasObs();
   const gId=parseInt(document.getElementById('av-gestor').value);const aId=parseInt(document.getElementById('av-atendente').value);
   const data=document.getElementById('av-data').value;const canal=document.getElementById('av-canal').value;const turno=document.getElementById('av-turno').value;
   if(!gId||!aId||!data||!canal||!turno){document.getElementById('av-alert').innerHTML='<div class="alert danger">⚠ Preencha todos os campos obrigatórios.</div>';return;}
   if(respostas.some(r=>r===null)){document.getElementById('av-alert').innerHTML='<div class="alert danger">⚠ Responda todos os 18 quesitos.</div>';return;}
+  if(!penalidade){document.getElementById('av-alert').innerHTML='<div class="alert danger">⚠ Informe se o atendimento gerou alguma penalidade.</div>';return;}
   const nota=calcTotal();const relato=document.getElementById('av-relato').value.trim();
   const obsReg=observacoes.map((o,i)=>({quesito:QUESITOS[i].nome,obs:o.trim()})).filter(x=>x.obs);
-  const novaAv={id:state.nextId++,atendenteId:aId,gestorId:gId,data,duracao:document.getElementById('av-duracao').value,gravacao:document.getElementById('av-gravacao').value,protocolo:document.getElementById('av-protocolo').value,canal,turno,nota,relato,observacoes:obsReg};
+  const novaAv={id:state.nextId++,atendenteId:aId,gestorId:gId,data,duracao:document.getElementById('av-duracao').value,gravacao:document.getElementById('av-gravacao').value,protocolo:document.getElementById('av-protocolo').value,canal,turno,nota,relato,penalidade,observacoes:obsReg};
   state.avaliacoes.push(novaAv);state.feedbacks[novaAv.id]={avaliacaoId:novaAv.id,texto:'',status:'pendente',gestorId:null,dataConclusao:null};
-  buildAnoSelect();
-  updateFbCountNav(); // ★ atualiza badge filtrado após nova avaliação
-  document.getElementById('av-alert').innerHTML=`<div class="alert success">✓ Avaliação salva! Nota: ${nota}/100</div>`;
-  setTimeout(()=>renderFormAvaliacao(),2200);
+  buildAnoSelect();updateFbCountNav();
+  const penMsg=penalidade!=='nao'?` · ⚠️ ${PEN_LABEL[penalidade]}`:'';
+  document.getElementById('av-alert').innerHTML=`<div class="alert success">✓ Avaliação salva! Nota: ${nota}/100${penMsg}</div>`;
+  setTimeout(()=>renderFormAvaliacao(),2500);
 }
 
 /* feedbacks */
@@ -728,13 +1114,15 @@ function renderFeedbacks(){
   document.getElementById('fb-lista').innerHTML=avs.map(a=>{
     const fb=state.feedbacks[a.id];const isPend=fb?.status==='pendente';
     const nomeAt=getNome(a.atendenteId);const isOpen=fbAbertos[a.id]||false;const podeEditar=!isAt;
+    const temPenalidade=a.penalidade&&a.penalidade!=='nao';
     const detalheHTML=`<div class="fb-detalhe">
       <span>${new Date(a.data).toLocaleDateString('pt-BR')}</span>
       <span class="fb-detalhe-sep">·</span><span>${a.canal}</span>
       <span class="fb-detalhe-sep">·</span><span>${a.turno}</span>
       <span class="fb-detalhe-sep">·</span><span>Grav: <strong>${a.gravacao||'—'}</strong></span>
-      <span class="fb-detalhe-sep">·</span><span class="fb-protocolo-tag">📋 ${a.protocolo||'—'}</span>
-    </div>`;
+      <span class="fb-detalhe-sep">·</span><span style="font-family:monospace;font-size:11px;background:var(--purple-bg);color:var(--purple);padding:2px 8px;border-radius:99px;font-weight:700">📋 ${a.protocolo||'—'}</span>
+    </div>
+    ${temPenalidade?`<div style="margin-top:5px"><span class="fb-penalidade-tag">${PEN_ICON[a.penalidade]} ${PEN_LABEL[a.penalidade]}</span></div>`:''}`;
     return`<div class="fb-card ${isPend?'pendente':'concluido'}">
       <div class="fb-header" onclick="toggleFb(${a.id})">
         <div class="fb-header-info">
@@ -755,14 +1143,7 @@ function renderFeedbacks(){
   }).join('');
 }
 function toggleFb(id){fbAbertos[id]=!fbAbertos[id];document.getElementById('fbbody-'+id)?.classList.toggle('open',fbAbertos[id]);document.getElementById('fbchev-'+id)?.classList.toggle('open',fbAbertos[id]);}
-function concluirFeedback(avId){
-  const ta=document.getElementById('fb-texto-'+avId);const texto=(ta?ta.value:'').trim();
-  if(!texto){alert('Digite o feedback antes de concluir.');ta?.focus();return;}
-  state.feedbacks[avId]={avaliacaoId:avId,texto,status:'concluido',gestorId:state.usuarioLogado?.id||null,dataConclusao:new Date().toISOString()};
-  fbAbertos[avId]=false;
-  updateFbCountNav(); // ★ atualiza badge após concluir
-  renderFbMetrics();renderFeedbacks();
-}
+function concluirFeedback(avId){const ta=document.getElementById('fb-texto-'+avId);const texto=(ta?ta.value:'').trim();if(!texto){alert('Digite o feedback antes de concluir.');ta?.focus();return;}state.feedbacks[avId]={avaliacaoId:avId,texto,status:'concluido',gestorId:state.usuarioLogado?.id||null,dataConclusao:new Date().toISOString()};fbAbertos[avId]=false;updateFbCountNav();renderFbMetrics();renderFeedbacks();}
 
 /* histórico */
 function populateFiltrosHist(){
@@ -776,7 +1157,7 @@ function renderHistorico(){
   const eu=state.usuarioLogado;const aId=eu.perfil==='atendente'?eu.id:(parseInt(document.getElementById('hist-atendente')?.value)||0);
   const mes=parseInt(document.getElementById('hist-mes')?.value)||0;
   let avs=[...avaliacoesVisiveis()];if(aId)avs=avs.filter(a=>a.atendenteId===aId);if(mes)avs=avs.filter(a=>new Date(a.data).getMonth()+1===mes);avs.reverse();
-  document.getElementById('historico-table').innerHTML=avs.length===0?'<div style="text-align:center;color:var(--text3);padding:2rem">Nenhuma avaliação encontrada.</div>':`<div class="table-wrap"><table><thead><tr><th>Atendente</th><th>Gestor</th><th>Data</th><th>Canal</th><th>Turno</th><th>Protocolo</th><th>Gravação</th><th>Nota</th><th>Feedback</th></tr></thead><tbody>`+avs.map(a=>`<tr><td>${getNome(a.atendenteId)}</td><td>${getNome(a.gestorId)}</td><td>${new Date(a.data).toLocaleDateString('pt-BR')}</td><td>${a.canal}</td><td>${a.turno}</td><td style="font-family:monospace;font-size:12px">${a.protocolo||'—'}</td><td style="font-family:monospace;font-size:12px">${a.gravacao||'—'}</td><td>${getBadge(a.nota)}</td><td>${state.feedbacks[a.id]?.status==='concluido'?'<span class="badge ok">✓</span>':'<span class="badge warn">Pendente</span>'}</td></tr>`).join('')+`</tbody></table></div>`;
+  document.getElementById('historico-table').innerHTML=avs.length===0?'<div style="text-align:center;color:var(--text3);padding:2rem">Nenhuma avaliação encontrada.</div>':`<div class="table-wrap"><table><thead><tr><th>Atendente</th><th>Gestor</th><th>Data</th><th>Canal</th><th>Turno</th><th>Protocolo</th><th>Gravação</th><th>Nota</th><th>Penalidade</th><th>Feedback</th></tr></thead><tbody>`+avs.map(a=>`<tr><td>${getNome(a.atendenteId)}</td><td>${getNome(a.gestorId)}</td><td>${new Date(a.data).toLocaleDateString('pt-BR')}</td><td>${a.canal}</td><td>${a.turno}</td><td style="font-family:monospace;font-size:12px">${a.protocolo||'—'}</td><td style="font-family:monospace;font-size:12px">${a.gravacao||'—'}</td><td>${getBadge(a.nota)}</td><td>${a.penalidade&&a.penalidade!=='nao'?getPenBadge(a.penalidade):'<span class="badge ok">Sem penalidade</span>'}</td><td>${state.feedbacks[a.id]?.status==='concluido'?'<span class="badge ok">✓</span>':'<span class="badge warn">Pendente</span>'}</td></tr>`).join('')+`</tbody></table></div>`;
 }
 
 /* relatórios */
@@ -879,8 +1260,6 @@ function alterarSenha(){
   setTimeout(()=>document.getElementById('mc-alert').innerHTML='',3000);
 }
 </script>
-
-<script src="script.js"></script>
 
 
 </body></html>
