@@ -9,36 +9,34 @@ async function salvar() {
     return;
   }
 
-  await fetch('https://feedback-sistema.onrender.com/usuarios', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ nome, login, perfil, turno })
-  });
+  try {
 
-  carregar();
+    const res = await fetch('https://feedback-sistema.onrender.com/usuarios', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        nome,
+        login,
+        perfil,
+        turno
+      })
+    });
+
+    const data = await res.json();
+
+    console.log(data);
+
+    alert('Usuário salvo com sucesso!');
+
+    carregar();
+
+  } catch (erro) {
+
+    console.error(erro);
+
+    alert('Erro ao salvar usuário');
+
+  }
 }
-
-async function carregar() {
-  const res = await fetch('https://feedback-sistema.onrender.com/usuarios');
-  const dados = await res.json();
-
-  const lista = document.getElementById('lista-funcionarios');
-  lista.innerHTML = '';
-
-  dados.forEach(user => {
-    const linha = `
-      <div style="display:grid; grid-template-columns: 2fr 1fr 1fr 1fr; padding:8px; border-bottom:1px solid #ddd;">
-        <div>${user.nome || '-'}</div>
-        <div>${user.login || '-'}</div>
-        <div>${user.perfil || '-'}</div>
-        <div>${user.turno || '-'}</div>
-      </div>
-    `;
-    lista.innerHTML += linha;
-  });
-}
-
-// roda ao abrir
-carregar();
