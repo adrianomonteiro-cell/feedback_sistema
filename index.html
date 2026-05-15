@@ -625,7 +625,7 @@ function salvarNovaSenha(){
   const u=state.usuarios.find(x=>x.id===state.usuarioLogado.id);u.senha=nova;u.primeiroAcesso=false;state.usuarioLogado=u;
   document.getElementById('change-pass-screen').classList.add('hidden');entrarNoSistema();
 }
-function entrarNoSistema(){
+async function entrarNoSistema(){ await carregarUsuarios();
   document.getElementById('login-screen').classList.add('hidden');
   document.getElementById('change-pass-screen').classList.add('hidden');
   document.getElementById('main-screen').classList.remove('hidden');
@@ -939,6 +939,28 @@ async function cadastrarFuncionario() {
 
   }
 }
+
+async function carregarUsuarios() {
+
+  try {
+
+    const res = await fetch('https://feedback-sistema.onrender.com/usuarios');
+
+    const usuariosBanco = await res.json();
+
+    state.usuarios = usuariosBanco;
+
+    console.log('Usuários carregados:', usuariosBanco);
+
+    renderListaFuncionarios();
+
+  } catch (erro) {
+
+    console.error('Erro ao carregar usuários', erro);
+
+  }
+}
+
   if(perfil==='atendente')state.vinculos[nId]=gs;
   alertEl.innerHTML='<div class="alert success">✓ Funcionário cadastrado! Senha padrão: 123</div>';setTimeout(()=>renderCadastro(),2000);
 }
