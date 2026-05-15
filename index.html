@@ -889,13 +889,56 @@ function onChangeCadPerfil(){
   const pf=document.getElementById('cad-perfil')?.value;const wrapper=document.getElementById('cad-vinculos-wrapper');if(!wrapper)return;
   if(pf==='atendente'){wrapper.style.display='block';const gl=state.usuarios.filter(u=>u.perfil==='gestor');document.getElementById('cad-gestores-checkboxes').innerHTML=gl.length===0?'<span style="color:var(--text3);font-size:13px">Nenhum gestor cadastrado ainda. Cadastre um gestor primeiro.</span>':gl.map(g=>`<label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px"><input type="checkbox" class="cad-gestor-cb" value="${g.id}" style="width:16px;height:16px"> ${g.nome} <span class="badge info">${g.turno||'—'}</span></label>`).join('');}else{wrapper.style.display='none';}
 }
-function cadastrarFuncionario(){
-  const nome=document.getElementById('cad-nome')?.value.trim();const login=document.getElementById('cad-login')?.value.trim();const perfil=document.getElementById('cad-perfil')?.value;const turno=document.getElementById('cad-turno')?.value;const alertEl=document.getElementById('cad-alert-inner');
-  if(!nome||!login||!perfil){alertEl.innerHTML='<div class="alert danger">⚠ Preencha nome, login e perfil.</div>';return;}
-  if(state.usuarios.find(u=>u.login===login)){alertEl.innerHTML='<div class="alert danger">⚠ Login já em uso.</div>';return;}
-  let gs=[];
-  if(perfil==='atendente'){const cbs=document.querySelectorAll('.cad-gestor-cb:checked');gs=[...cbs].map(cb=>parseInt(cb.value));if(gs.length===0){alertEl.innerHTML='<div class="alert danger">⚠ Selecione ao menos um gestor responsável.</div>';return;}if(gs.length>2){alertEl.innerHTML='<div class="alert danger">⚠ Máximo 2 gestores por atendente.</div>';return;}}
-  const nId=state.nextId++;state.usuarios.push({id:nId,nome,login,senha:'123',perfil,turno,primeiroAcesso:true});
+async function cadastrarFuncionario() {
+
+  const nome = document.getElementById('cad-nome')?.value.trim();
+  const login = document.getElementById('cad-login')?.value.trim();
+  const perfil = document.getElementById('cad-perfil')?.value;
+  const turno = document.getElementById('cad-turno')?.value;
+
+  const alertEl = document.getElementById('cad-alert-inner');
+
+  if (!nome || !login || !perfil) {
+
+    alertEl.innerHTML =
+      '<div class="alert danger">⚠ Preencha nome, login e perfil.</div>';
+
+    return;
+  }
+
+  try {
+
+    const res = await fetch('https://feedback-sistema.onrender.com/usuarios', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        nome,
+        login,
+        perfil,
+        turno
+      })
+    });
+
+    const data = await res.json();
+
+    console.log(data);
+
+    alertEl.innerHTML =
+      '<div class="alert success">✓ Funcionário cadastrado com sucesso!</div>';
+
+    carregarUsuarios();
+
+  } catch (erro) {
+
+    console.error(erro);
+
+    alertEl.innerHTML =
+      '<div class="alert danger">Erro ao salvar no banco.</div>';
+
+  }
+}
   if(perfil==='atendente')state.vinculos[nId]=gs;
   alertEl.innerHTML='<div class="alert success">✓ Funcionário cadastrado! Senha padrão: 123</div>';setTimeout(()=>renderCadastro(),2000);
 }
