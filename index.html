@@ -625,17 +625,30 @@ function salvarNovaSenha(){
   const u=state.usuarios.find(x=>x.id===state.usuarioLogado.id);u.senha=nova;u.primeiroAcesso=false;state.usuarioLogado=u;
   document.getElementById('change-pass-screen').classList.add('hidden');entrarNoSistema();
 }
-async function entrarNoSistema(){ await carregarUsuarios();
+async function entrarNoSistema(){
+
   document.getElementById('login-screen').classList.add('hidden');
   document.getElementById('change-pass-screen').classList.add('hidden');
   document.getElementById('main-screen').classList.remove('hidden');
-  const u=state.usuarioLogado;
-  document.getElementById('s-avatar').textContent=getIni(u.nome);
-  document.getElementById('s-nome').textContent=u.nome;
-  document.getElementById('s-role').textContent=PERFIL_LABEL[u.perfil]||u.perfil;
-  inicializarFeedbacks();configurarMenu();updateFbCountNav();
-  if(u.perfil==='atendente'){showPage('feedbacks',document.getElementById('nav-feedbacks'));}
-  else{renderDashboard();}
+
+  await carregarUsuarios();
+
+  const u = state.usuarioLogado;
+
+  document.getElementById('s-avatar').textContent = getIni(u.nome);
+  document.getElementById('s-nome').textContent = u.nome;
+  document.getElementById('s-role').textContent =
+    PERFIL_LABEL[u.perfil] || u.perfil;
+
+  inicializarFeedbacks();
+  configurarMenu();
+  updateFbCountNav();
+
+  if(u.perfil === 'atendente'){
+    showPage('feedbacks', document.getElementById('nav-feedbacks'));
+  } else {
+    renderDashboard();
+  }
 }
 function fazerLogout(){state.usuarioLogado=null;document.getElementById('main-screen').classList.add('hidden');document.getElementById('login-screen').classList.remove('hidden');document.getElementById('login-user').value='';document.getElementById('login-pass').value='';}
 
