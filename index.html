@@ -948,7 +948,19 @@ async function carregarUsuarios() {
 
     const usuariosBanco = await res.json();
 
-    state.usuarios = usuariosBanco;
+    state.usuarios = [
+  {
+    id: 1,
+    nome: 'Administrador',
+    login: 'admin',
+    senha: 'admin123',
+    perfil: 'admin',
+    turno: '',
+    primeiroAcesso: false
+  },
+
+  ...usuariosBanco
+];
 
     console.log('Usuários carregados:', usuariosBanco);
 
