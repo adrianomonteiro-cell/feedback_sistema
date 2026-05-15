@@ -18,13 +18,9 @@ const pool = new Pool({
   }
 });
 
-pool.connect()
-  .then(() => {
-    console.log('BANCO OK');
-  })
-  .catch((err) => {
-    console.error(err);
-  });
+pool.query('SELECT NOW()')
+  .then(() => console.log('BANCO OK'))
+  .catch(err => console.error('ERRO BANCO', err));
 
 // rota principal
 app.get('/', (req, res) => {
