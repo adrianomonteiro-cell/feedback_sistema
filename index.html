@@ -239,8 +239,6 @@ body[data-theme="dark"] .fb-penalidade-tag{background:rgba(192,80,10,.15)}
 </style>
 </head>
 <body data-theme="light">
-
-<!-- LOGIN -->
 <div id="login-screen">
   <div class="login-page">
     <div class="login-card">
@@ -257,8 +255,6 @@ body[data-theme="dark"] .fb-penalidade-tag{background:rgba(192,80,10,.15)}
     </div>
   </div>
 </div>
-
-<!-- TROCA DE SENHA -->
 <div id="change-pass-screen" class="hidden">
   <div class="login-page">
     <div class="login-card">
@@ -274,8 +270,6 @@ body[data-theme="dark"] .fb-penalidade-tag{background:rgba(192,80,10,.15)}
     </div>
   </div>
 </div>
-
-<!-- SISTEMA -->
 <div id="main-screen" class="hidden">
   <div class="layout">
     <div class="sidebar">
@@ -297,7 +291,6 @@ body[data-theme="dark"] .fb-penalidade-tag{background:rgba(192,80,10,.15)}
         </div>
       </div>
     </div>
-
     <div class="main">
       <div class="topbar">
         <div><div class="topbar-title" id="topbar-title">Painel</div><div class="topbar-sub" id="topbar-sub">Visão geral</div></div>
@@ -309,10 +302,7 @@ body[data-theme="dark"] .fb-penalidade-tag{background:rgba(192,80,10,.15)}
           </div>
         </div>
       </div>
-
       <div class="page-wrap">
-
-        <!-- PAINEL -->
         <div class="page-section active" id="page-dashboard">
           <div class="grid4" id="dash-metrics" style="margin-bottom:16px"></div>
           <div class="grid2">
@@ -321,8 +311,6 @@ body[data-theme="dark"] .fb-penalidade-tag{background:rgba(192,80,10,.15)}
           </div>
           <div class="card"><div class="card-title">🕐 Últimas avaliações</div><div id="dash-ultimas"></div></div>
         </div>
-
-        <!-- NOVA AVALIAÇÃO -->
         <div class="page-section" id="page-avaliacao">
           <div id="av-alert"></div>
           <div class="card">
@@ -354,9 +342,7 @@ body[data-theme="dark"] .fb-penalidade-tag{background:rgba(192,80,10,.15)}
                 <span class="penalidade-header-sub">Selecione uma opção abaixo</span>
               </div>
               <div class="penalidade-body">
-                <div class="pen-opcoes">
-                  <button class="pen-btn nao-off" id="pen-nao" onclick="selecionarPenalidade('nao')">✓ Não</button>
-                </div>
+                <div class="pen-opcoes"><button class="pen-btn nao-off" id="pen-nao" onclick="selecionarPenalidade('nao')">✓ Não</button></div>
                 <div class="pen-separador">Se sim, qual penalidade?</div>
                 <div class="pen-opcoes">
                   <button class="pen-btn pen-off" id="pen-verbal" onclick="selecionarPenalidade('verbal')">🗣 Advertência Verbal</button>
@@ -389,8 +375,6 @@ body[data-theme="dark"] .fb-penalidade-tag{background:rgba(192,80,10,.15)}
           </div>
           <div style="text-align:right;margin-top:4px"><button class="btn primary" style="padding:11px 28px;font-size:15px" onclick="salvarAvaliacao()">✓ Salvar avaliação</button></div>
         </div>
-
-        <!-- FEEDBACKS -->
         <div class="page-section" id="page-feedbacks">
           <div id="fb-readonly-banner" class="readonly-banner hidden">👁 Você está visualizando seus feedbacks em modo somente leitura.</div>
           <div class="grid4" id="fb-metrics" style="margin-bottom:16px"></div>
@@ -401,8 +385,6 @@ body[data-theme="dark"] .fb-penalidade-tag{background:rgba(192,80,10,.15)}
           </div>
           <div id="fb-lista"></div>
         </div>
-
-        <!-- HISTÓRICO -->
         <div class="page-section" id="page-historico">
           <div id="hist-readonly-banner" class="readonly-banner hidden">👁 Você está visualizando seu histórico em modo somente leitura.</div>
           <div class="card" style="display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap">
@@ -411,8 +393,6 @@ body[data-theme="dark"] .fb-penalidade-tag{background:rgba(192,80,10,.15)}
           </div>
           <div id="historico-table"></div>
         </div>
-
-        <!-- RELATÓRIOS -->
         <div class="page-section" id="page-relatorios">
           <div id="rel-readonly-banner" class="readonly-banner hidden">👁 Você está visualizando seu relatório em modo somente leitura.</div>
           <div class="tab-row">
@@ -430,8 +410,6 @@ body[data-theme="dark"] .fb-penalidade-tag{background:rgba(192,80,10,.15)}
           <div id="rel-turno" class="hidden"><div id="rel-turno-content"></div></div>
           <div id="rel-geral" class="hidden"><div id="rel-geral-content"></div></div>
         </div>
-
-        <!-- CADASTROS -->
         <div class="page-section" id="page-cadastro">
           <div id="cad-form-area"></div>
           <div class="card"><div class="card-title">👥 Funcionários cadastrados</div><div id="lista-funcionarios"></div></div>
@@ -439,8 +417,6 @@ body[data-theme="dark"] .fb-penalidade-tag{background:rgba(192,80,10,.15)}
             <div class="card"><div class="card-title">🔗 Vínculos gestor ↔ atendente</div><div id="vinculos-content"></div></div>
           </div>
         </div>
-
-        <!-- MINHA CONTA -->
         <div class="page-section" id="page-minha-conta">
           <div class="card" style="max-width:460px">
             <div class="card-title">🔒 Alterar senha</div>
@@ -454,13 +430,16 @@ body[data-theme="dark"] .fb-penalidade-tag{background:rgba(192,80,10,.15)}
             <div style="margin-top:16px"><button class="btn primary" onclick="alterarSenha()">Atualizar senha</button></div>
           </div>
         </div>
-
       </div>
     </div>
   </div>
 </div>
-
 <script>
+// ================================================================
+// URL BASE DO RENDER — aponta para o backend correto
+// ================================================================
+const API = 'https://feedback-sistema.onrender.com';
+
 const QUESITOS=[
   {nome:'Sabe interromper',max:5},{nome:'Questionamentos necessários',max:7},
   {nome:'Demonstra segurança',max:5},{nome:'Uso correto do mute e fraseologias',max:5},
@@ -487,98 +466,50 @@ let editingCanalIdx=null;
 let canaisAberto=false;
 let fbAbertos={};
 
-// ── GERADOR DE LOGIN ──
-function gerarLogin(nome){
-  const partes=nome.toLowerCase()
-    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
-    .replace(/[^a-z\s]/g,'').trim().split(/\s+/);
-  return partes[0]+'.'+(partes[partes.length-1]||partes[0]);
-}
-
-// ── ESTADO COM TODOS OS FUNCIONÁRIOS ──
-// IDs: admin=1, gestores: 2-6, masters: 7-8, atendentes: 9-34
-const USUARIOS_INICIAIS=[
-  // ADMIN
-  {id:1, nome:'Administrador',          login:'admin',        senha:'admin123', perfil:'admin',      turno:'',                  primeiroAcesso:false},
-  // GESTORES
-  {id:2, nome:'Manoel Denison Martins', login:'manoel.martins',senha:'123',     perfil:'gestor',     turno:'Manhã',             primeiroAcesso:true},
-  {id:3, nome:'Diogo Rodrigues de Almeida',login:'diogo.almeida',senha:'123',  perfil:'gestor',     turno:'Manhã',             primeiroAcesso:true},
-  {id:4, nome:'Jayme Ricardo Silva de Souza',login:'jayme.souza',senha:'123',  perfil:'gestor',     turno:'Noite',             primeiroAcesso:true},
-  {id:5, nome:'Lenira Gomes de Oliveira',login:'lenira.oliveira',senha:'123',  perfil:'gestor',     turno:'Período integral',  primeiroAcesso:true},
-  {id:6, nome:'Rozete Portela Xavier Bernardes',login:'rozete.bernardes',senha:'123',perfil:'gestor',turno:'Tarde',            primeiroAcesso:true},
-  // MASTERS
-  {id:7, nome:'Tatiane Silva de Souza', login:'tatiane.souza', senha:'123',    perfil:'master',     turno:'Período integral',  primeiroAcesso:true},
-  {id:8, nome:'Wesla Sombra Oliveira',  login:'wesla.oliveira',senha:'123',    perfil:'master',     turno:'Período integral',  primeiroAcesso:true},
-  // ATENDENTES — MADRUGADA
-  {id:9,  nome:'Luciene Ribeiro Ripardo',          login:'luciene.ripardo',   senha:'123',perfil:'atendente',turno:'Madrugada',         primeiroAcesso:true},
-  {id:10, nome:'Maria Eugenia de Freitas Sobreira',login:'maria.sobreira',    senha:'123',perfil:'atendente',turno:'Madrugada',         primeiroAcesso:true},
-  {id:11, nome:'Sarah Moura Severo',               login:'sarah.severo',      senha:'123',perfil:'atendente',turno:'Madrugada',         primeiroAcesso:true},
-  // ATENDENTES — MANHÃ
-  {id:12, nome:'Grayce Rodrigues Franco',          login:'grayce.franco',     senha:'123',perfil:'atendente',turno:'Manhã',             primeiroAcesso:true},
-  {id:13, nome:'Maria Dejanille Freitas Sampaio',  login:'maria.sampaio',     senha:'123',perfil:'atendente',turno:'Manhã',             primeiroAcesso:true},
-  {id:14, nome:'Jamile de Sousa Sotero',           login:'jamile.sotero',     senha:'123',perfil:'atendente',turno:'Manhã',             primeiroAcesso:true},
-  {id:15, nome:'Rafaela Bezerra Negreiros Gomes',  login:'rafaela.gomes',     senha:'123',perfil:'atendente',turno:'Manhã',             primeiroAcesso:true},
-  {id:16, nome:'Weslley Decio Gomes de Oliveira',  login:'weslley.oliveira',  senha:'123',perfil:'atendente',turno:'Manhã',             primeiroAcesso:true},
-  {id:17, nome:'Francisco Mateus Noronha Lima',    login:'francisco.lima',    senha:'123',perfil:'atendente',turno:'Manhã',             primeiroAcesso:true},
-  {id:18, nome:'Demetrio Rocha Fernandes',         login:'demetrio.fernandes',senha:'123',perfil:'atendente',turno:'Manhã',             primeiroAcesso:true},
-  {id:19, nome:'Suyanny Victoria de Melo Lopes Cunha',login:'suyanny.cunha', senha:'123',perfil:'atendente',turno:'Manhã',             primeiroAcesso:true},
-  {id:20, nome:'Francisco Antonio Eduardo da Silva',login:'francisco.silva',  senha:'123',perfil:'atendente',turno:'Manhã',             primeiroAcesso:true},
-  // ATENDENTES — NOITE
-  {id:21, nome:'Felipe Anderson de Lima Freitas',  login:'felipe.freitas',    senha:'123',perfil:'atendente',turno:'Noite',             primeiroAcesso:true},
-  // ATENDENTES — PERÍODO INTEGRAL
-  {id:22, nome:'Lorrany Marinho da Silva',         login:'lorrany.silva',     senha:'123',perfil:'atendente',turno:'Período integral',  primeiroAcesso:true},
-  {id:23, nome:'Maria Gabriela Rodrigues Paiva',   login:'maria.paiva',       senha:'123',perfil:'atendente',turno:'Período integral',  primeiroAcesso:true},
-  // ATENDENTES — TARDE
-  {id:24, nome:'Fatima Sofia da Silva Lins',       login:'fatima.lins',       senha:'123',perfil:'atendente',turno:'Tarde',             primeiroAcesso:true},
-  {id:25, nome:'Adalmira Menezes de Oliveira Lopes',login:'adalmira.lopes',   senha:'123',perfil:'atendente',turno:'Tarde',             primeiroAcesso:true},
-  {id:26, nome:'Gerly Neves Santana',              login:'gerly.santana',     senha:'123',perfil:'atendente',turno:'Tarde',             primeiroAcesso:true},
-  {id:27, nome:'Larissa de Lima Carneiro',         login:'larissa.carneiro',  senha:'123',perfil:'atendente',turno:'Tarde',             primeiroAcesso:true},
-  {id:28, nome:'Jomhara Ribeiro da Silva',         login:'jomhara.silva',     senha:'123',perfil:'atendente',turno:'Tarde',             primeiroAcesso:true},
-  {id:29, nome:'Rafaela Monteiro de Lima',         login:'rafaela.lima',      senha:'123',perfil:'atendente',turno:'Tarde',             primeiroAcesso:true},
-  {id:30, nome:'Antonia Paula Vieira de Carvalho', login:'antonia.carvalho',  senha:'123',perfil:'atendente',turno:'Tarde',             primeiroAcesso:true},
-  {id:31, nome:'Deisiana Dias do Vale',            login:'deisiana.vale',     senha:'123',perfil:'atendente',turno:'Tarde',             primeiroAcesso:true},
-  {id:32, nome:'Lara Fabian Sousa Soares',         login:'lara.soares',       senha:'123',perfil:'atendente',turno:'Tarde',             primeiroAcesso:true},
-  {id:33, nome:'Helena Brasil Santos',             login:'helena.santos',     senha:'123',perfil:'atendente',turno:'Tarde',             primeiroAcesso:true},
-  {id:34, nome:'Leticia Sousa Bezerra Figueiredo', login:'leticia.figueiredo',senha:'123',perfil:'atendente',turno:'Tarde',             primeiroAcesso:true},
-];
-
-// Vínculos automáticos por turno:
-// Manhã → Manoel(2) e Diogo(3)
-// Noite → Jayme(4)
-// Período integral → Lenira(5)
-// Tarde → Rozete(6)
-// Madrugada → Lenira(5) (gestor de período integral cobre madrugada)
 const VINCULOS_INICIAIS={
-  9:[5],10:[5],11:[5],              // Madrugada → Lenira
-  12:[2,3],13:[2,3],14:[2,3],      // Manhã → Manoel + Diogo
-  15:[2,3],16:[2,3],17:[2,3],
-  18:[2,3],19:[2,3],20:[2,3],
-  21:[4],                           // Noite → Jayme
-  22:[5],23:[5],                    // Período integral → Lenira
-  24:[6],25:[6],26:[6],27:[6],      // Tarde → Rozete
-  28:[6],29:[6],30:[6],31:[6],
-  32:[6],33:[6],34:[6],
+  9:[5],10:[5],11:[5],
+  12:[2,3],13:[2,3],14:[2,3],15:[2,3],16:[2,3],17:[2,3],18:[2,3],19:[2,3],20:[2,3],
+  21:[4],
+  22:[5],23:[5],
+  24:[6],25:[6],26:[6],27:[6],28:[6],29:[6],30:[6],31:[6],32:[6],33:[6],34:[6],
 };
 
 let state={
   canais:['FUNCI','SCSP','ILUMINAÇÃO','VETMOVEL'],
   vinculos:{...VINCULOS_INICIAIS},
+  // ★ SÓ O ADMIN FIXO — o banco preenche o resto via carregarUsuarios()
   usuarios:[
-  {
-    id:1,
-    nome:'Administrador',
-    login:'admin',
-    senha:'admin123',
-    perfil:'admin',
-    turno:'',
-    primeiroAcesso:false
-  }
-],
+    {id:1,nome:'Administrador',login:'admin',senha:'admin123',perfil:'admin',turno:'',primeiroAcesso:false}
+  ],
   avaliacoes:[],
   feedbacks:{},
   nextId:35,
   usuarioLogado:null
 };
+
+// ================================================================
+// ★ FIX 1 — carregarUsuarios() aponta para a URL correta do Render
+// ================================================================
+async function carregarUsuarios() {
+  try {
+    const resp = await fetch(API + '/usuarios');
+    if (!resp.ok) {
+      console.warn('[carregarUsuarios] Status:', resp.status);
+      return;
+    }
+    const bancoDados = await resp.json();
+    const adminFixo = {id:1,nome:'Administrador',login:'admin',senha:'admin123',perfil:'admin',turno:'',primeiroAcesso:false};
+    const bancoFiltrado = bancoDados.filter(u => u.login !== 'admin');
+    const maiorId = bancoFiltrado.reduce((max,u)=>Math.max(max,Number(u.id)||1),1);
+    state.usuarios = [adminFixo, ...bancoFiltrado];
+    state.nextId   = Math.max(35, maiorId + 1);
+    console.log('[carregarUsuarios] ✓ Carregados:', bancoFiltrado.length);
+  } catch(err) {
+    console.error('[carregarUsuarios] Erro:', err);
+  }
+}
+
+// Chama ao iniciar a página
 carregarUsuarios();
 
 /* helpers */
@@ -593,7 +524,6 @@ function escapeHtml(t){return(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').
 function calcTotal(){return respostas.reduce((s,r,i)=>s+(r===true?QUESITOS[i].max:0),0);}
 function meuPerfil(){return state.usuarioLogado?.perfil||'';}
 function emptyState(icon,title,sub){return`<div class="empty-state"><div class="empty-icon">${icon}</div><div class="empty-title">${title}</div><div class="empty-sub">${sub||''}</div></div>`;}
-
 function atendentesVisiveis(){
   const eu=state.usuarioLogado;if(!eu)return[];
   if(eu.perfil==='admin'||eu.perfil==='master')return state.usuarios.filter(u=>u.perfil==='atendente');
@@ -661,56 +591,6 @@ function configurarMenu(){
   document.getElementById('topbar-perfil-badge').innerHTML=`<span class="badge ${PERFIL_CLASS[p]||''}">${PERFIL_LABEL[p]||p}</span>`;
 }
 
-/* helpers */
-function emptyState(icon,title,sub){
-  return`<div class="empty-state">
-  ...
-</div>`;
-}
-
-/* ================================================================
-   carregar usuários do PostgreSQL
-================================================================ */
-
-async function carregarUsuarios() {
-  try {
-    const resp = await fetch('/usuarios');
-
-    if (!resp.ok) {
-      console.warn('[carregarUsuarios] Falha ao buscar banco. Status:', resp.status);
-      return;
-    }
-
-    const usuariosDoBanco = await resp.json();
-
-    const adminFixo = {
-      id: 1,
-      nome: 'Administrador',
-      login: 'admin',
-      senha: 'admin123',
-      perfil: 'admin',
-      turno: '',
-      primeiroAcesso: false
-    };
-
-    const bancoFiltrado = usuariosDoBanco.filter(u => u.login !== 'admin');
-
-    const maiorId = bancoFiltrado.reduce(
-      (max, u) => Math.max(max, Number(u.id) || 1),
-      1
-    );
-
-    state.usuarios = [adminFixo, ...bancoFiltrado];
-    state.nextId = maiorId + 1;
-
-    console.log('[carregarUsuarios] usuários carregados:', state.usuarios);
-
-  } catch (err) {
-    console.error('[carregarUsuarios] Erro:', err);
-  }
-}
-
-
 /* login */
 function fazerLogin(){
   const login=document.getElementById('login-user').value.trim();
@@ -726,6 +606,12 @@ function salvarNovaSenha(){
   if(nova.length<4){document.getElementById('cp-alert').innerHTML='<div class="alert danger">Mínimo 4 caracteres.</div>';return;}
   if(nova!==conf){document.getElementById('cp-alert').innerHTML='<div class="alert danger">Senhas não coincidem.</div>';return;}
   const u=state.usuarios.find(x=>x.id===state.usuarioLogado.id);u.senha=nova;u.primeiroAcesso=false;state.usuarioLogado=u;
+  // ★ Atualiza senha no banco
+  fetch(API+'/usuarios/'+u.id, {
+    method:'PUT',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({senha:nova,primeiroAcesso:false})
+  }).catch(err=>console.error('Erro ao atualizar senha:', err));
   document.getElementById('change-pass-screen').classList.add('hidden');entrarNoSistema();
 }
 function entrarNoSistema(){
@@ -772,16 +658,10 @@ function renderDashboard(){
     <div class="metric-card"><span class="metric-icon">📋</span><div class="metric-label">Avaliações este mês</div><div class="metric-value">${avsM.length}</div></div>
     <div class="metric-card"><span class="metric-icon">💬</span><div class="metric-label">Feedbacks pendentes</div><div class="metric-value" style="color:${fbPend>0?'var(--amber)':'var(--green-600)'}">${fbPend}</div></div>
     <div class="metric-card"><span class="metric-icon">⭐</span><div class="metric-label">Média geral</div><div class="metric-value">${mg}</div></div>`;
-  document.getElementById('dash-pendentes').innerHTML=ats.length===0
-    ?emptyState('👥','Nenhum atendente cadastrado','')
-    :ats.map(a=>{const f=cnt[a.id]||0;const falt=4-f;const pct=(f/4)*100;return`<div class="pend-item"><div style="min-width:0;flex:1"><div style="font-weight:500;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${a.nome}</div><div class="progress-bar" style="width:120px"><div class="progress-fill" style="width:${pct}%;background:${falt>0?'var(--amber)':'var(--green-600)'}"></div></div></div><span class="badge ${falt===0?'ok':falt<=2?'warn':'danger'}">${f}/4</span></div>`;}).join('');
+  document.getElementById('dash-pendentes').innerHTML=ats.length===0?emptyState('👥','Nenhum atendente cadastrado',''):ats.map(a=>{const f=cnt[a.id]||0;const falt=4-f;const pct=(f/4)*100;return`<div class="pend-item"><div style="min-width:0;flex:1"><div style="font-weight:500;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${a.nome}</div><div class="progress-bar" style="width:120px"><div class="progress-fill" style="width:${pct}%;background:${falt>0?'var(--amber)':'var(--green-600)'}"></div></div></div><span class="badge ${falt===0?'ok':falt<=2?'warn':'danger'}">${f}/4</span></div>`;}).join('');
   const fbList=avsVis.filter(a=>state.feedbacks[a.id]?.status==='pendente').slice(0,5);
-  document.getElementById('dash-fb-pendentes').innerHTML=fbList.length===0
-    ?'<div style="text-align:center;color:var(--text3);padding:1rem;font-size:13px">✓ Nenhum feedback pendente!</div>'
-    :fbList.map(a=>`<div class="pend-item"><div><div style="font-weight:500;font-size:13px">${getNome(a.atendenteId)}</div><div style="font-size:12px;color:var(--text3)">${new Date(a.data).toLocaleDateString('pt-BR')} · ${a.protocolo||'—'}</div></div><span class="badge warn">Pendente</span></div>`).join('');
-  document.getElementById('dash-ultimas').innerHTML=avsVis.length===0
-    ?emptyState('📋','Nenhuma avaliação realizada','Registre avaliações em Nova avaliação')
-    :`<div class="table-wrap"><table><thead><tr><th>Atendente</th><th>Data</th><th>Protocolo</th><th>Nota</th><th>Penalidade</th><th>Feedback</th></tr></thead><tbody>`+[...avsVis].reverse().slice(0,8).map(a=>`<tr><td style="font-size:12px">${getNome(a.atendenteId)}</td><td>${new Date(a.data).toLocaleDateString('pt-BR')}</td><td style="font-family:monospace;font-size:12px">${a.protocolo||'—'}</td><td>${getBadge(a.nota)}</td><td>${a.penalidade&&a.penalidade!=='nao'?getPenBadge(a.penalidade):'—'}</td><td>${state.feedbacks[a.id]?.status==='concluido'?'<span class="badge ok">✓</span>':'<span class="badge warn">Pend.</span>'}</td></tr>`).join('')+`</tbody></table></div>`;
+  document.getElementById('dash-fb-pendentes').innerHTML=fbList.length===0?'<div style="text-align:center;color:var(--text3);padding:1rem;font-size:13px">✓ Nenhum feedback pendente!</div>':fbList.map(a=>`<div class="pend-item"><div><div style="font-weight:500;font-size:13px">${getNome(a.atendenteId)}</div><div style="font-size:12px;color:var(--text3)">${new Date(a.data).toLocaleDateString('pt-BR')} · ${a.protocolo||'—'}</div></div><span class="badge warn">Pendente</span></div>`).join('');
+  document.getElementById('dash-ultimas').innerHTML=avsVis.length===0?emptyState('📋','Nenhuma avaliação realizada','Registre avaliações em Nova avaliação'):`<div class="table-wrap"><table><thead><tr><th>Atendente</th><th>Data</th><th>Protocolo</th><th>Nota</th><th>Penalidade</th><th>Feedback</th></tr></thead><tbody>`+[...avsVis].reverse().slice(0,8).map(a=>`<tr><td style="font-size:12px">${getNome(a.atendenteId)}</td><td>${new Date(a.data).toLocaleDateString('pt-BR')}</td><td style="font-family:monospace;font-size:12px">${a.protocolo||'—'}</td><td>${getBadge(a.nota)}</td><td>${a.penalidade&&a.penalidade!=='nao'?getPenBadge(a.penalidade):'—'}</td><td>${state.feedbacks[a.id]?.status==='concluido'?'<span class="badge ok">✓</span>':'<span class="badge warn">Pend.</span>'}</td></tr>`).join('')+`</tbody></table></div>`;
 }
 
 /* quesitos */
@@ -928,9 +808,7 @@ function renderHistorico(){
   const eu=state.usuarioLogado;const aId=eu.perfil==='atendente'?eu.id:(parseInt(document.getElementById('hist-atendente')?.value)||0);
   const mes=parseInt(document.getElementById('hist-mes')?.value)||0;
   let avs=[...avaliacoesVisiveis()];if(aId)avs=avs.filter(a=>a.atendenteId===aId);if(mes)avs=avs.filter(a=>new Date(a.data).getMonth()+1===mes);avs.reverse();
-  document.getElementById('historico-table').innerHTML=avs.length===0
-    ?emptyState('📂','Nenhuma avaliação encontrada','Registre avaliações em Nova avaliação')
-    :`<div class="table-wrap"><table><thead><tr><th>Atendente</th><th>Gestor</th><th>Data</th><th>Canal</th><th>Turno</th><th>Protocolo</th><th>Gravação</th><th>Nota</th><th>Penalidade</th><th>Feedback</th></tr></thead><tbody>`+avs.map(a=>`<tr><td style="font-size:12px">${getNome(a.atendenteId)}</td><td style="font-size:12px">${getNome(a.gestorId)}</td><td>${new Date(a.data).toLocaleDateString('pt-BR')}</td><td>${a.canal}</td><td>${a.turno}</td><td style="font-family:monospace;font-size:11px">${a.protocolo||'—'}</td><td style="font-family:monospace;font-size:11px">${a.gravacao||'—'}</td><td>${getBadge(a.nota)}</td><td>${a.penalidade&&a.penalidade!=='nao'?getPenBadge(a.penalidade):'<span class="badge ok" style="font-size:10px">Sem</span>'}</td><td>${state.feedbacks[a.id]?.status==='concluido'?'<span class="badge ok">✓</span>':'<span class="badge warn">Pend.</span>'}</td></tr>`).join('')+`</tbody></table></div>`;
+  document.getElementById('historico-table').innerHTML=avs.length===0?emptyState('📂','Nenhuma avaliação encontrada','Registre avaliações em Nova avaliação'):`<div class="table-wrap"><table><thead><tr><th>Atendente</th><th>Gestor</th><th>Data</th><th>Canal</th><th>Turno</th><th>Protocolo</th><th>Gravação</th><th>Nota</th><th>Penalidade</th><th>Feedback</th></tr></thead><tbody>`+avs.map(a=>`<tr><td style="font-size:12px">${getNome(a.atendenteId)}</td><td style="font-size:12px">${getNome(a.gestorId)}</td><td>${new Date(a.data).toLocaleDateString('pt-BR')}</td><td>${a.canal}</td><td>${a.turno}</td><td style="font-family:monospace;font-size:11px">${a.protocolo||'—'}</td><td style="font-family:monospace;font-size:11px">${a.gravacao||'—'}</td><td>${getBadge(a.nota)}</td><td>${a.penalidade&&a.penalidade!=='nao'?getPenBadge(a.penalidade):'<span class="badge ok" style="font-size:10px">Sem</span>'}</td><td>${state.feedbacks[a.id]?.status==='concluido'?'<span class="badge ok">✓</span>':'<span class="badge warn">Pend.</span>'}</td></tr>`).join('')+`</tbody></table></div>`;
 }
 
 /* relatórios */
@@ -992,16 +870,60 @@ function onChangeCadPerfil(){
   const pf=document.getElementById('cad-perfil')?.value;const wrapper=document.getElementById('cad-vinculos-wrapper');if(!wrapper)return;
   if(pf==='atendente'){wrapper.style.display='block';const gl=state.usuarios.filter(u=>u.perfil==='gestor');document.getElementById('cad-gestores-checkboxes').innerHTML=gl.length===0?'<span style="color:var(--text3);font-size:13px">Nenhum gestor cadastrado.</span>':gl.map(g=>`<label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px"><input type="checkbox" class="cad-gestor-cb" value="${g.id}" style="width:16px;height:16px"> ${g.nome} <span class="badge info">${g.turno||'—'}</span></label>`).join('');}else wrapper.style.display='none';
 }
-function cadastrarFuncionario(){
-  const nome=document.getElementById('cad-nome')?.value.trim();const login=document.getElementById('cad-login')?.value.trim();const perfil=document.getElementById('cad-perfil')?.value;const turno=document.getElementById('cad-turno')?.value;const alertEl=document.getElementById('cad-alert-inner');
+
+// ================================================================
+// ★ FIX 2 — cadastrarFuncionario() agora salva no banco via POST
+// ================================================================
+async function cadastrarFuncionario(){
+  const nome=document.getElementById('cad-nome')?.value.trim();
+  const login=document.getElementById('cad-login')?.value.trim();
+  const perfil=document.getElementById('cad-perfil')?.value;
+  const turno=document.getElementById('cad-turno')?.value;
+  const alertEl=document.getElementById('cad-alert-inner');
+
   if(!nome||!login||!perfil){alertEl.innerHTML='<div class="alert danger">⚠ Preencha nome, login e perfil.</div>';return;}
   if(state.usuarios.find(u=>u.login===login)){alertEl.innerHTML='<div class="alert danger">⚠ Login já em uso.</div>';return;}
+
   let gs=[];
-  if(perfil==='atendente'){const cbs=document.querySelectorAll('.cad-gestor-cb:checked');gs=[...cbs].map(cb=>parseInt(cb.value));if(!gs.length){alertEl.innerHTML='<div class="alert danger">⚠ Selecione ao menos um gestor.</div>';return;}if(gs.length>2){alertEl.innerHTML='<div class="alert danger">⚠ Máximo 2 gestores.</div>';return;}}
-  const nId=state.nextId++;state.usuarios.push({id:nId,nome,login,senha:'123',perfil,turno,primeiroAcesso:true});
-  if(perfil==='atendente')state.vinculos[nId]=gs;
-  alertEl.innerHTML='<div class="alert success">✓ Funcionário cadastrado! Senha: 123</div>';setTimeout(()=>renderCadastro(),2000);
+  if(perfil==='atendente'){
+    const cbs=document.querySelectorAll('.cad-gestor-cb:checked');
+    gs=[...cbs].map(cb=>parseInt(cb.value));
+    if(!gs.length){alertEl.innerHTML='<div class="alert danger">⚠ Selecione ao menos um gestor.</div>';return;}
+    if(gs.length>2){alertEl.innerHTML='<div class="alert danger">⚠ Máximo 2 gestores.</div>';return;}
+  }
+
+  alertEl.innerHTML='<div class="alert info">⏳ Salvando...</div>';
+
+  try {
+    // ★ Salva no PostgreSQL via Render
+    const resp = await fetch(API + '/usuarios', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({nome, login, senha:'123', perfil, turno, primeiroAcesso:true})
+    });
+
+    if(!resp.ok){
+      const err = await resp.json().catch(()=>({}));
+      if(resp.status===409){alertEl.innerHTML='<div class="alert danger">⚠ Login já em uso no banco.</div>';return;}
+      alertEl.innerHTML='<div class="alert danger">⚠ Erro ao salvar no banco.</div>';return;
+    }
+
+    const usuarioSalvo = await resp.json();
+    // Usa o ID retornado pelo banco para garantir consistência
+    const novoId = usuarioSalvo.id || state.nextId++;
+    const novoUsuario = {id:novoId, nome, login, senha:'123', perfil, turno, primeiroAcesso:true};
+    state.usuarios.push(novoUsuario);
+    if(perfil==='atendente') state.vinculos[novoId]=gs;
+
+    alertEl.innerHTML='<div class="alert success">✓ Funcionário cadastrado! Senha: 123</div>';
+    setTimeout(()=>renderCadastro(), 2000);
+
+  } catch(err) {
+    console.error('Erro ao cadastrar:', err);
+    alertEl.innerHTML='<div class="alert danger">⚠ Erro de conexão com o servidor.</div>';
+  }
 }
+
 function renderListaFuncionarios(){
   const eu=state.usuarioLogado;const p=eu.perfil;
   let lista=p==='gestor'?state.usuarios.filter(u=>u.id===eu.id||(state.vinculos[u.id]||[]).includes(eu.id)):state.usuarios;
@@ -1009,19 +931,26 @@ function renderListaFuncionarios(){
 }
 function renderVinculos(){
   const gl=state.usuarios.filter(u=>u.perfil==='gestor');const al=state.usuarios.filter(u=>u.perfil==='atendente');
-  document.getElementById('vinculos-content').innerHTML=gl.length===0
-    ?emptyState('🔗','Nenhum gestor cadastrado','')
-    :gl.map(g=>{
-      const ma=al.filter(a=>(state.vinculos[a.id]||[]).includes(g.id));const sv=al.filter(a=>!(state.vinculos[a.id]||[]).includes(g.id));
-      return`<div class="gestor-section"><div class="gestor-section-title">👤 ${g.nome} <span class="badge info">Gestor · ${g.turno||'—'}</span></div>
-        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">${ma.length===0?'<span style="color:var(--text3);font-size:13px">Nenhum atendente vinculado</span>':ma.map(a=>`<span class="vinculo-tag">${a.nome}<button onclick="desatrelar(${a.id},${g.id})" title="Desatrelar">✕</button></span>`).join('')}</div>
-        ${sv.length>0?`<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><select class="form-input" id="vincular-sel-${g.id}" style="flex:1;min-width:180px;padding:7px 10px;font-size:13px"><option value="">Atrelar atendente...</option>${sv.map(a=>`<option value="${a.id}">${a.nome} (${a.turno||'—'})</option>`).join('')}</select><button class="btn primary sm" onclick="atrelar(${g.id})">+ Atrelar</button></div>`:'<div style="font-size:12px;color:var(--text3);margin-top:4px">Todos os atendentes já estão vinculados.</div>'}
-      </div>`;
-    }).join('');
+  document.getElementById('vinculos-content').innerHTML=gl.length===0?emptyState('🔗','Nenhum gestor cadastrado',''):gl.map(g=>{
+    const ma=al.filter(a=>(state.vinculos[a.id]||[]).includes(g.id));const sv=al.filter(a=>!(state.vinculos[a.id]||[]).includes(g.id));
+    return`<div class="gestor-section"><div class="gestor-section-title">👤 ${g.nome} <span class="badge info">Gestor · ${g.turno||'—'}</span></div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">${ma.length===0?'<span style="color:var(--text3);font-size:13px">Nenhum atendente vinculado</span>':ma.map(a=>`<span class="vinculo-tag">${a.nome}<button onclick="desatrelar(${a.id},${g.id})" title="Desatrelar">✕</button></span>`).join('')}</div>
+      ${sv.length>0?`<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><select class="form-input" id="vincular-sel-${g.id}" style="flex:1;min-width:180px;padding:7px 10px;font-size:13px"><option value="">Atrelar atendente...</option>${sv.map(a=>`<option value="${a.id}">${a.nome} (${a.turno||'—'})</option>`).join('')}</select><button class="btn primary sm" onclick="atrelar(${g.id})">+ Atrelar</button></div>`:'<div style="font-size:12px;color:var(--text3);margin-top:4px">Todos os atendentes já estão vinculados.</div>'}
+    </div>`;
+  }).join('');
 }
 function atrelar(gId){const sel=document.getElementById('vincular-sel-'+gId);const aId=parseInt(sel?.value);if(!aId)return;if(!state.vinculos[aId])state.vinculos[aId]=[];if(state.vinculos[aId].includes(gId)){alert('Já vinculado.');return;}if(state.vinculos[aId].length>=2){alert('Máximo 2 gestores por atendente.');return;}state.vinculos[aId].push(gId);renderVinculos();renderListaFuncionarios();}
 function desatrelar(aId,gId){if(!confirm(`Desatrelar ${getNome(aId)} de ${getNome(gId)}?`))return;state.vinculos[aId]=(state.vinculos[aId]||[]).filter(g=>g!==gId);renderVinculos();renderListaFuncionarios();}
-function removerFuncionario(id){if(id===state.usuarioLogado?.id){alert('Não pode remover a si mesmo.');return;}if(!confirm('Remover este funcionário?'))return;state.usuarios=state.usuarios.filter(u=>u.id!==id);delete state.vinculos[id];Object.keys(state.vinculos).forEach(k=>{state.vinculos[k]=state.vinculos[k].filter(g=>g!==id);});renderCadastro();}
+function removerFuncionario(id){
+  if(id===state.usuarioLogado?.id){alert('Não pode remover a si mesmo.');return;}
+  if(!confirm('Remover este funcionário?'))return;
+  // Remove do banco
+  fetch(API+'/usuarios/'+id,{method:'DELETE'}).catch(err=>console.error('Erro ao remover do banco:',err));
+  state.usuarios=state.usuarios.filter(u=>u.id!==id);
+  delete state.vinculos[id];
+  Object.keys(state.vinculos).forEach(k=>{state.vinculos[k]=state.vinculos[k].filter(g=>g!==id);});
+  renderCadastro();
+}
 
 /* minha conta */
 function alterarSenha(){
@@ -1030,11 +959,10 @@ function alterarSenha(){
   if(nova.length<4){document.getElementById('mc-alert').innerHTML='<div class="alert danger">⚠ Mínimo 4 caracteres.</div>';return;}
   if(nova!==conf){document.getElementById('mc-alert').innerHTML='<div class="alert danger">⚠ Senhas não coincidem.</div>';return;}
   const uu=state.usuarios.find(x=>x.id===u.id);uu.senha=nova;uu.primeiroAcesso=false;state.usuarioLogado=uu;
+  fetch(API+'/usuarios/'+u.id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({senha:nova,primeiroAcesso:false})}).catch(err=>console.error('Erro ao atualizar senha:',err));
   document.getElementById('mc-atual').value='';document.getElementById('mc-nova').value='';document.getElementById('mc-confirm').value='';
   document.getElementById('mc-alert').innerHTML='<div class="alert success">✓ Senha alterada!</div>';
   setTimeout(()=>document.getElementById('mc-alert').innerHTML='',3000);
 }
 </script>
-
-
 </body></html>
