@@ -509,8 +509,8 @@ async function carregarUsuarios() {
   }
 }
 
-// Chama ao iniciar a página
-carregarUsuarios();
+// Carrega usuários ao iniciar — guarda a Promise para fazerLogin() aguardar
+const _usuariosCarregados = carregarUsuarios();
 
 /* helpers */
 function togglePw(id,btn){const el=document.getElementById(id);if(el.type==='password'){el.type='text';btn.textContent='ocultar';}else{el.type='password';btn.textContent='mostrar';}}
