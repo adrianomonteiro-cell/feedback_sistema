@@ -563,12 +563,23 @@ const VINCULOS_INICIAIS={
 let state={
   canais:['FUNCI','SCSP','ILUMINAÇÃO','VETMOVEL'],
   vinculos:{...VINCULOS_INICIAIS},
-  usuarios:USUARIOS_INICIAIS.map(u=>({...u})),
+  usuarios:[
+  {
+    id:1,
+    nome:'Administrador',
+    login:'admin',
+    senha:'admin123',
+    perfil:'admin',
+    turno:'',
+    primeiroAcesso:false
+  }
+],
   avaliacoes:[],
   feedbacks:{},
   nextId:35,
   usuarioLogado:null
 };
+carregarUsuarios();
 
 /* helpers */
 function togglePw(id,btn){const el=document.getElementById(id);if(el.type==='password'){el.type='text';btn.textContent='ocultar';}else{el.type='password';btn.textContent='mostrar';}}
@@ -649,6 +660,56 @@ function configurarMenu(){
   document.getElementById('nav-cadastro').classList.toggle('hidden',p==='atendente');
   document.getElementById('topbar-perfil-badge').innerHTML=`<span class="badge ${PERFIL_CLASS[p]||''}">${PERFIL_LABEL[p]||p}</span>`;
 }
+
+/* helpers */
+function emptyState(icon,title,sub){
+  return`<div class="empty-state">
+  ...
+</div>`;
+}
+
+/* ================================================================
+   carregar usuários do PostgreSQL
+================================================================ */
+
+async function carregarUsuarios() {
+  try {
+    const resp = await fetch('/usuarios');
+
+    if (!resp.ok) {
+      console.warn('[carregarUsuarios] Falha ao buscar banco. Status:', resp.status);
+      return;
+    }
+
+    const usuariosDoBanco = await resp.json();
+
+    const adminFixo = {
+      id: 1,
+      nome: 'Administrador',
+      login: 'admin',
+      senha: 'admin123',
+      perfil: 'admin',
+      turno: '',
+      primeiroAcesso: false
+    };
+
+    const bancoFiltrado = usuariosDoBanco.filter(u => u.login !== 'admin');
+
+    const maiorId = bancoFiltrado.reduce(
+      (max, u) => Math.max(max, Number(u.id) || 1),
+      1
+    );
+
+    state.usuarios = [adminFixo, ...bancoFiltrado];
+    state.nextId = maiorId + 1;
+
+    console.log('[carregarUsuarios] usuários carregados:', state.usuarios);
+
+  } catch (err) {
+    console.error('[carregarUsuarios] Erro:', err);
+  }
+}
+
 
 /* login */
 function fazerLogin(){
