@@ -14,7 +14,7 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false }
 });
 
-// Garante tabelas ao iniciar
+// Cria todas as tabelas se não existirem
 pool.query(`
   CREATE TABLE IF NOT EXISTS usuarios (
     id              SERIAL PRIMARY KEY,
@@ -30,8 +30,32 @@ pool.query(`
     id           SERIAL PRIMARY KEY,
     atendente_id INTEGER NOT NULL,
     gestor_id    INTEGER NOT NULL,
-    criado_em    TIMESTAMP DEFAULT NOW(),
     UNIQUE(atendente_id, gestor_id)
+  );
+  CREATE TABLE IF NOT EXISTS avaliacoes (
+    id            SERIAL PRIMARY KEY,
+    atendente_id  INTEGER NOT NULL,
+    gestor_id     INTEGER NOT NULL,
+    data          TIMESTAMP NOT NULL,
+    duracao       TEXT    DEFAULT '',
+    gravacao      TEXT    DEFAULT '',
+    protocolo     TEXT    DEFAULT '',
+    canal         TEXT    DEFAULT '',
+    turno         TEXT    DEFAULT '',
+    nota          NUMERIC(5,2) NOT NULL DEFAULT 0,
+    relato        TEXT    DEFAULT '',
+    penalidade    TEXT    DEFAULT 'nao',
+    observacoes   JSONB   DEFAULT '[]',
+    criado_em     TIMESTAMP DEFAULT NOW()
+  );
+  CREATE TABLE IF NOT EXISTS feedbacks (
+    id              SERIAL PRIMARY KEY,
+    avaliacao_id    INTEGER NOT NULL UNIQUE,
+    texto           TEXT    DEFAULT '',
+    status          TEXT    NOT NULL DEFAULT 'pendente',
+    gestor_id       INTEGER,
+    data_conclusao  TIMESTAMP,
+    criado_em       TIMESTAMP DEFAULT NOW()
   );
 `)
   .then(() => console.log('TABELAS OK'))
@@ -45,134 +69,158 @@ pool.query('SELECT NOW()')
 app.get('/', (req, res) => res.send('API funcionando'));
 app.get('/health', (req, res) => res.json({ status: 'online' }));
 
-// ── GET /usuarios ──────────────────────────────────────────────
+// ================================================================
+// USUARIOS
+// ================================================================
 app.get('/usuarios', async (req, res) => {
   try {
-    const result = await pool.query(
-      'SELECT id, nome, login, senha, perfil, turno, primeiro_acesso FROM usuarios ORDER BY id'
-    );
-    const usuarios = result.rows.map(u => ({
-      id:             u.id,
-      nome:           u.nome,
-      login:          u.login,
-      senha:          u.senha,
-      perfil:         u.perfil,
-      turno:          u.turno || '',
-      primeiroAcesso: u.primeiro_acesso !== null ? u.primeiro_acesso : true
-    }));
-    res.json(usuarios);
-  } catch (err) {
-    console.error('GET /usuarios erro:', err);
-    res.status(500).json({ erro: 'Erro ao buscar usuários' });
-  }
+    const r = await pool.query('SELECT id,nome,login,senha,perfil,turno,primeiro_acesso FROM usuarios ORDER BY id');
+    res.json(r.rows.map(u => ({
+      id: u.id, nome: u.nome, login: u.login, senha: u.senha,
+      perfil: u.perfil, turno: u.turno||'', primeiroAcesso: u.primeiro_acesso ?? true
+    })));
+  } catch(err) { console.error(err); res.status(500).json({erro:'Erro ao buscar usuários'}); }
 });
 
-// ── POST /usuarios ─────────────────────────────────────────────
 app.post('/usuarios', async (req, res) => {
-  const { nome, login, senha = '123', perfil = 'atendente', turno = '', primeiroAcesso = true } = req.body;
+  const { nome, login, senha='123', perfil='atendente', turno='', primeiroAcesso=true } = req.body;
   try {
-    const result = await pool.query(
-      `INSERT INTO usuarios (nome, login, senha, perfil, turno, primeiro_acesso)
-       VALUES ($1, $2, $3, $4, $5, $6)
-       RETURNING id, nome, login, senha, perfil, turno, primeiro_acesso`,
+    const r = await pool.query(
+      `INSERT INTO usuarios (nome,login,senha,perfil,turno,primeiro_acesso)
+       VALUES ($1,$2,$3,$4,$5,$6) RETURNING id,nome,login,senha,perfil,turno,primeiro_acesso`,
       [nome, login, senha, perfil, turno, primeiroAcesso]
     );
-    const u = result.rows[0];
-    res.json({
-      id: u.id, nome: u.nome, login: u.login, senha: u.senha,
-      perfil: u.perfil, turno: u.turno || '', primeiroAcesso: u.primeiro_acesso
-    });
-  } catch (err) {
-    console.error('POST /usuarios erro:', err);
-    if (err.code === '23505') return res.status(409).json({ erro: 'Login já está em uso' });
-    res.status(500).json({ erro: 'Erro ao salvar usuário' });
+    const u = r.rows[0];
+    res.json({ id:u.id, nome:u.nome, login:u.login, senha:u.senha,
+               perfil:u.perfil, turno:u.turno||'', primeiroAcesso:u.primeiro_acesso });
+  } catch(err) {
+    if(err.code==='23505') return res.status(409).json({erro:'Login já em uso'});
+    console.error(err); res.status(500).json({erro:'Erro ao salvar usuário'});
   }
 });
 
-// ── PUT /usuarios/:id ──────────────────────────────────────────
 app.put('/usuarios/:id', async (req, res) => {
-  const { id } = req.params;
   const { senha, primeiroAcesso } = req.body;
   try {
     await pool.query(
-      `UPDATE usuarios SET
-         senha           = COALESCE($1, senha),
-         primeiro_acesso = COALESCE($2, primeiro_acesso)
-       WHERE id = $3`,
-      [senha || null, primeiroAcesso !== undefined ? primeiroAcesso : null, id]
+      `UPDATE usuarios SET senha=COALESCE($1,senha), primeiro_acesso=COALESCE($2,primeiro_acesso) WHERE id=$3`,
+      [senha||null, primeiroAcesso!==undefined ? primeiroAcesso : null, req.params.id]
     );
-    res.json({ ok: true });
-  } catch (err) {
-    console.error('PUT /usuarios/:id erro:', err);
-    res.status(500).json({ erro: 'Erro ao atualizar usuário' });
-  }
+    res.json({ok:true});
+  } catch(err) { console.error(err); res.status(500).json({erro:'Erro ao atualizar usuário'}); }
 });
 
-// ── DELETE /usuarios/:id ───────────────────────────────────────
 app.delete('/usuarios/:id', async (req, res) => {
   const { id } = req.params;
   try {
-    // Remove vínculos do usuário primeiro
-    await pool.query('DELETE FROM vinculos WHERE atendente_id = $1 OR gestor_id = $1', [id]);
-    await pool.query('DELETE FROM usuarios WHERE id = $1', [id]);
-    res.json({ ok: true });
-  } catch (err) {
-    console.error('DELETE /usuarios/:id erro:', err);
-    res.status(500).json({ erro: 'Erro ao remover usuário' });
-  }
+    await pool.query('DELETE FROM vinculos WHERE atendente_id=$1 OR gestor_id=$1', [id]);
+    await pool.query('DELETE FROM usuarios WHERE id=$1', [id]);
+    res.json({ok:true});
+  } catch(err) { console.error(err); res.status(500).json({erro:'Erro ao remover usuário'}); }
 });
 
-// ── GET /vinculos ──────────────────────────────────────────────
-// Retorna todos os vínculos como { atendenteId: [gestorId, ...] }
+// ================================================================
+// VINCULOS
+// ================================================================
 app.get('/vinculos', async (req, res) => {
   try {
-    const result = await pool.query('SELECT atendente_id, gestor_id FROM vinculos ORDER BY atendente_id');
-    // Agrupa em objeto { atendenteId: [gestorId1, gestorId2] }
+    const r = await pool.query('SELECT atendente_id, gestor_id FROM vinculos ORDER BY atendente_id');
     const vinculos = {};
-    result.rows.forEach(row => {
+    r.rows.forEach(row => {
       const aId = row.atendente_id;
-      const gId = row.gestor_id;
       if (!vinculos[aId]) vinculos[aId] = [];
-      vinculos[aId].push(gId);
+      vinculos[aId].push(row.gestor_id);
     });
     res.json(vinculos);
-  } catch (err) {
-    console.error('GET /vinculos erro:', err);
-    res.status(500).json({ erro: 'Erro ao buscar vínculos' });
-  }
+  } catch(err) { console.error(err); res.status(500).json({erro:'Erro ao buscar vínculos'}); }
 });
 
-// ── POST /vinculos ─────────────────────────────────────────────
-// Body: { atendenteId, gestorId }
 app.post('/vinculos', async (req, res) => {
   const { atendenteId, gestorId } = req.body;
   try {
     await pool.query(
-      `INSERT INTO vinculos (atendente_id, gestor_id) VALUES ($1, $2)
-       ON CONFLICT (atendente_id, gestor_id) DO NOTHING`,
+      `INSERT INTO vinculos (atendente_id,gestor_id) VALUES ($1,$2) ON CONFLICT DO NOTHING`,
       [atendenteId, gestorId]
     );
-    res.json({ ok: true });
-  } catch (err) {
-    console.error('POST /vinculos erro:', err);
-    res.status(500).json({ erro: 'Erro ao criar vínculo' });
-  }
+    res.json({ok:true});
+  } catch(err) { console.error(err); res.status(500).json({erro:'Erro ao criar vínculo'}); }
 });
 
-// ── DELETE /vinculos ───────────────────────────────────────────
-// Body: { atendenteId, gestorId }
 app.delete('/vinculos', async (req, res) => {
   const { atendenteId, gestorId } = req.body;
   try {
-    await pool.query(
-      'DELETE FROM vinculos WHERE atendente_id = $1 AND gestor_id = $2',
-      [atendenteId, gestorId]
+    await pool.query('DELETE FROM vinculos WHERE atendente_id=$1 AND gestor_id=$2', [atendenteId, gestorId]);
+    res.json({ok:true});
+  } catch(err) { console.error(err); res.status(500).json({erro:'Erro ao remover vínculo'}); }
+});
+
+// ================================================================
+// AVALIACOES
+// ================================================================
+app.get('/avaliacoes', async (req, res) => {
+  try {
+    const r = await pool.query('SELECT * FROM avaliacoes ORDER BY id');
+    res.json(r.rows.map(a => ({
+      id: a.id,
+      atendenteId: a.atendente_id,
+      gestorId:    a.gestor_id,
+      data:        a.data,
+      duracao:     a.duracao||'',
+      gravacao:    a.gravacao||'',
+      protocolo:   a.protocolo||'',
+      canal:       a.canal||'',
+      turno:       a.turno||'',
+      nota:        parseFloat(a.nota),
+      relato:      a.relato||'',
+      penalidade:  a.penalidade||'nao',
+      observacoes: a.observacoes||[]
+    })));
+  } catch(err) { console.error(err); res.status(500).json({erro:'Erro ao buscar avaliações'}); }
+});
+
+app.post('/avaliacoes', async (req, res) => {
+  const { atendenteId, gestorId, data, duracao, gravacao, protocolo, canal, turno, nota, relato, penalidade, observacoes } = req.body;
+  try {
+    const r = await pool.query(
+      `INSERT INTO avaliacoes (atendente_id,gestor_id,data,duracao,gravacao,protocolo,canal,turno,nota,relato,penalidade,observacoes)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) RETURNING id`,
+      [atendenteId, gestorId, data, duracao||'', gravacao||'', protocolo||'', canal||'', turno||'', nota, relato||'', penalidade||'nao', JSON.stringify(observacoes||[])]
     );
-    res.json({ ok: true });
-  } catch (err) {
-    console.error('DELETE /vinculos erro:', err);
-    res.status(500).json({ erro: 'Erro ao remover vínculo' });
-  }
+    res.json({ id: r.rows[0].id });
+  } catch(err) { console.error(err); res.status(500).json({erro:'Erro ao salvar avaliação'}); }
+});
+
+// ================================================================
+// FEEDBACKS
+// ================================================================
+app.get('/feedbacks', async (req, res) => {
+  try {
+    const r = await pool.query('SELECT * FROM feedbacks ORDER BY avaliacao_id');
+    const feedbacks = {};
+    r.rows.forEach(f => {
+      feedbacks[f.avaliacao_id] = {
+        avaliacaoId:    f.avaliacao_id,
+        texto:          f.texto||'',
+        status:         f.status||'pendente',
+        gestorId:       f.gestor_id,
+        dataConclusao:  f.data_conclusao
+      };
+    });
+    res.json(feedbacks);
+  } catch(err) { console.error(err); res.status(500).json({erro:'Erro ao buscar feedbacks'}); }
+});
+
+app.post('/feedbacks', async (req, res) => {
+  const { avaliacaoId, texto='', status='pendente', gestorId=null, dataConclusao=null } = req.body;
+  try {
+    await pool.query(
+      `INSERT INTO feedbacks (avaliacao_id,texto,status,gestor_id,data_conclusao)
+       VALUES ($1,$2,$3,$4,$5)
+       ON CONFLICT (avaliacao_id) DO UPDATE SET texto=$2, status=$3, gestor_id=$4, data_conclusao=$5`,
+      [avaliacaoId, texto, status, gestorId, dataConclusao]
+    );
+    res.json({ok:true});
+  } catch(err) { console.error(err); res.status(500).json({erro:'Erro ao salvar feedback'}); }
 });
 
 const PORT = process.env.PORT || 3000;
