@@ -494,7 +494,7 @@ let bancoPronto=false; // flag: banco já respondeu?
 
 // STATE — admin fixo, resto vem do banco
 let state={
-  canais:['FUNCI','SCSP','ILUMINAÇÃO','VETMOVEL'],
+  canais:[],
   vinculos:{},
   usuarios:[{id:1,nome:'Administrador',login:'admin',senha:'admin123',perfil:'admin',turno:'',primeiroAcesso:false}],
   avaliacoes:[],
@@ -549,6 +549,26 @@ async function carregarUsuarios(){
   state.nextId=Math.max(state.nextId,maiorId+1);
 }
 
+async function carregarCanais(){
+  try{
+    const r=await fetchComTimeout(API+'/canais');
+    if(!r.ok)return;
+    const dados=await r.json();
+    state.canais=dados.map(c=>({id:c.id,nome:c.nome}));
+    if(state.canais.length===0){
+      const padroes=['FUNCI','SCSP','ILUMINACAO','VETMOVEL'];
+      for(const nome of padroes){
+        try{
+          const rp=await fetchComTimeout(API+'/canais',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nome})});
+          if(rp.ok){const d=await rp.json();state.canais.push({id:d.id,nome:d.nome});}
+        }catch(e){state.canais.push({id:null,nome});}
+      }
+    }
+  }catch(e){
+    console.error('carregarCanais:',e);
+    state.canais=[{id:null,nome:'FUNCI'},{id:null,nome:'SCSP'},{id:null,nome:'ILUMINACAO'},{id:null,nome:'VETMOVEL'}];
+  }
+}
 async function carregarVinculos(){
   const r=await fetchComTimeout(API+'/vinculos');
   if(!r.ok)return;
@@ -588,12 +608,36 @@ async function carregarFeedbacks(){
 // Inicia carregamento em background SEM bloquear o login
 async function inicializarBackground(){
   syncShow('Conectando ao servidor...');
+
+  // PASSO 1 — acorda o Render com pings repetidos (até 90s)
+  let serverOnline = false;
+  for(let tentativa=1; tentativa<=18; tentativa++){
+    try{
+      syncShow(`Aguardando servidor... (${tentativa}/18)`);
+      const r = await Promise.race([
+        fetch(API+'/health'),
+        new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),5000))
+      ]);
+      if(r.ok){ serverOnline=true; break; }
+    }catch(e){
+      // servidor ainda dormindo — espera 5s e tenta de novo
+      await new Promise(r=>setTimeout(r,5000));
+    }
+  }
+
+  if(!serverOnline){
+    console.warn('Servidor não respondeu após 90s');
+    syncOk('⚠ Servidor offline — usando dados locais');
+    return;
+  }
+
+  // PASSO 2 — servidor acordou, carrega todos os dados
+  syncShow('Carregando dados...');
   try{
-    await Promise.all([carregarUsuarios(),carregarVinculos(),carregarAvaliacoes()]);
+    await Promise.all([carregarUsuarios(),carregarVinculos(),carregarAvaliacoes(),carregarCanais()]);
     await carregarFeedbacks();
     bancoPronto=true;
     syncOk('✓ Dados sincronizados');
-    // Se já estiver logado, atualiza a tela atual
     if(state.usuarioLogado){
       updateFbCountNav();
       const paginaAtiva=document.querySelector('.page-section.active')?.id?.replace('page-','');
@@ -601,7 +645,7 @@ async function inicializarBackground(){
     }
   }catch(e){
     console.error('Erro ao carregar banco:',e);
-    syncOk('⚠ Servidor offline — dados locais');
+    syncOk('⚠ Erro ao carregar dados');
   }
 }
 
@@ -743,20 +787,82 @@ function fazerLogout(){state.usuarioLogado=null;document.getElementById('main-sc
 // CANAIS
 // ================================================================
 function toggleCanais(){canaisAberto=!canaisAberto;document.getElementById('canais-body').classList.toggle('open',canaisAberto);document.getElementById('canais-chevron').classList.toggle('open',canaisAberto);document.getElementById('canais-chips-preview').style.display=canaisAberto?'none':'flex';}
-function renderChipsPreview(){const el=document.getElementById('canais-chips-preview');if(!el)return;el.innerHTML=state.canais.map(c=>`<span class="canal-chip-mini">${c}</span>`).join('');}
-function syncCanalSelect(){const sel=document.getElementById('av-canal');if(!sel)return;const cur=sel.value;sel.innerHTML='<option value="">Selecionar...</option>'+state.canais.map(c=>`<option${c===cur?' selected':''}>${c}</option>`).join('');}
+// helpers de canais — nome extraído do objeto
+function cNome(c){return typeof c==='object'?c.nome:c;}
+function cId(c){return typeof c==='object'?c.id:null;}
+
+function renderChipsPreview(){
+  const el=document.getElementById('canais-chips-preview');if(!el)return;
+  el.innerHTML=state.canais.map(c=>`<span class="canal-chip-mini">${cNome(c)}</span>`).join('');
+}
+function syncCanalSelect(){
+  const sel=document.getElementById('av-canal');if(!sel)return;
+  const cur=sel.value;
+  sel.innerHTML='<option value="">Selecionar...</option>'+state.canais.map(c=>`<option value="${cNome(c)}"${cNome(c)===cur?' selected':''}>${cNome(c)}</option>`).join('');
+}
 function renderCanalTabela(){
   const tbody=document.getElementById('canal-tbody');if(!tbody)return;
   tbody.innerHTML=state.canais.map((c,i)=>{
-    if(editingCanalIdx===i)return`<tr><td style="color:var(--text3);width:28px">${i+1}</td><td><input class="form-input" type="text" id="canal-edit-input" value="${c}" style="padding:5px 8px;font-size:13px"></td><td><div style="display:flex;gap:6px;justify-content:flex-end"><button class="btn primary xs" onclick="salvarEdicaoCanal(${i})">Salvar</button><button class="btn xs" onclick="cancelarEdicao()">Cancelar</button></div></td></tr>`;
-    return`<tr><td style="color:var(--text3);width:28px">${i+1}</td><td style="font-weight:500">${c}</td><td><div style="display:flex;gap:6px;justify-content:flex-end"><button class="btn sm" onclick="editarCanal(${i})">✎</button><button class="btn danger xs" onclick="excluirCanal(${i})">✕</button></div></td></tr>`;
-  }).join('');syncCanalSelect();renderChipsPreview();
+    const nome=cNome(c);
+    if(editingCanalIdx===i)return`<tr>
+      <td style="color:var(--text3);width:28px">${i+1}</td>
+      <td><input class="form-input" type="text" id="canal-edit-input" value="${nome}" style="padding:5px 8px;font-size:13px"></td>
+      <td><div style="display:flex;gap:6px;justify-content:flex-end">
+        <button class="btn primary xs" onclick="salvarEdicaoCanal(${i})">Salvar</button>
+        <button class="btn xs" onclick="cancelarEdicao()">Cancelar</button>
+      </div></td></tr>`;
+    return`<tr>
+      <td style="color:var(--text3);width:28px">${i+1}</td>
+      <td style="font-weight:500">${nome}</td>
+      <td><div style="display:flex;gap:6px;justify-content:flex-end">
+        <button class="btn sm" onclick="editarCanal(${i})">✎</button>
+        <button class="btn danger xs" onclick="excluirCanal(${i})">✕</button>
+      </div></td></tr>`;
+  }).join('');
+  syncCanalSelect();renderChipsPreview();
 }
-function adicionarCanal(){const inp=document.getElementById('canal-novo-input');const nome=(inp.value||'').trim().toUpperCase();if(!nome)return;if(state.canais.map(c=>c.toLowerCase()).includes(nome.toLowerCase())){alert('Canal já existe.');return;}state.canais.push(nome);inp.value='';renderCanalTabela();}
-function excluirCanal(i){if(state.canais.length<=1){alert('Mantenha ao menos um canal.');return;}if(!confirm(`Excluir "${state.canais[i]}"?`))return;state.canais.splice(i,1);editingCanalIdx=null;renderCanalTabela();}
+
+async function adicionarCanal(){
+  const inp=document.getElementById('canal-novo-input');
+  const nome=(inp.value||'').trim().toUpperCase();
+  if(!nome)return;
+  if(state.canais.map(c=>cNome(c).toLowerCase()).includes(nome.toLowerCase())){alert('Canal já existe.');return;}
+  try{
+    const r=await fetchComTimeout(API+'/canais',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nome})});
+    if(r.status===409){alert('Canal já existe no banco.');return;}
+    const d=await r.json();
+    state.canais.push({id:d.id,nome:d.nome});
+    inp.value='';renderCanalTabela();
+  }catch(e){
+    // fallback: salva em memória
+    state.canais.push({id:null,nome});inp.value='';renderCanalTabela();
+  }
+}
+
+async function excluirCanal(i){
+  if(state.canais.length<=1){alert('Mantenha ao menos um canal.');return;}
+  const c=state.canais[i];
+  if(!confirm(`Excluir "${cNome(c)}"?`))return;
+  try{
+    if(cId(c)) await fetchComTimeout(API+'/canais/'+cId(c),{method:'DELETE'});
+    state.canais.splice(i,1);editingCanalIdx=null;renderCanalTabela();
+  }catch(e){state.canais.splice(i,1);editingCanalIdx=null;renderCanalTabela();}
+}
+
 function editarCanal(i){editingCanalIdx=i;renderCanalTabela();setTimeout(()=>document.getElementById('canal-edit-input')?.focus(),50);}
-function salvarEdicaoCanal(i){const inp=document.getElementById('canal-edit-input');const novo=(inp?inp.value:'').trim().toUpperCase();if(!novo)return;state.canais[i]=novo;editingCanalIdx=null;renderCanalTabela();}
+
+async function salvarEdicaoCanal(i){
+  const inp=document.getElementById('canal-edit-input');
+  const novo=(inp?inp.value:'').trim().toUpperCase();if(!novo)return;
+  const c=state.canais[i];
+  try{
+    if(cId(c)) await fetchComTimeout(API+'/canais/'+cId(c),{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({nome:novo})});
+    state.canais[i]={id:cId(c),nome:novo};editingCanalIdx=null;renderCanalTabela();
+  }catch(e){state.canais[i]={id:cId(c),nome:novo};editingCanalIdx=null;renderCanalTabela();}
+}
+
 function cancelarEdicao(){editingCanalIdx=null;renderCanalTabela();}
+
 
 // ================================================================
 // DASHBOARD
