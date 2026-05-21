@@ -194,6 +194,12 @@ body[data-theme="light"] .login-body .form-label{color:var(--text3)}
 body[data-theme="light"] .login-body .form-input{background:var(--surface);border-color:var(--border2);color:var(--text)}
 .login-hint{font-size:12px;color:rgba(255,255,255,.35);text-align:center;margin-top:14px}
 body[data-theme="light"] .login-hint{color:var(--text3)}
+/* Banner de carregamento em segundo plano */
+.sync-banner{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#1a2e1b;color:#d4e8d4;font-size:12px;font-weight:500;padding:8px 16px;border-radius:99px;display:flex;align-items:center;gap:8px;box-shadow:0 4px 20px rgba(0,0,0,.3);z-index:500;transition:opacity .4s}
+.sync-banner.hidden{opacity:0;pointer-events:none}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:var(--amber);animation:pulse 1s infinite}
+.sync-dot.ok{background:var(--green-500);animation:none}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 .fb-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:12px;overflow:hidden}
 .fb-card.pendente{border-left:4px solid var(--amber)}
 .fb-card.concluido{border-left:4px solid var(--green-600)}
@@ -235,10 +241,6 @@ body[data-theme="dark"] .fb-penalidade-tag{background:rgba(192,80,10,.15)}
 .empty-state{text-align:center;padding:3rem 1rem;color:var(--text3)}
 .empty-state .empty-icon{font-size:40px;margin-bottom:12px;opacity:.5}
 .empty-state .empty-title{font-size:15px;font-weight:600;color:var(--text2);margin-bottom:6px}
-.loading-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:16px}
-.loading-overlay .spinner{width:44px;height:44px;border:4px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite}
-.loading-overlay p{color:#fff;font-size:15px;font-weight:500}
-@keyframes spin{to{transform:rotate(360deg)}}
 .hidden{display:none!important}
 ::-webkit-scrollbar{width:6px;height:6px}
 ::-webkit-scrollbar-track{background:transparent}
@@ -247,14 +249,14 @@ body[data-theme="dark"] .fb-penalidade-tag{background:rgba(192,80,10,.15)}
 </head>
 <body data-theme="light">
 
-<!-- LOADING OVERLAY -->
-<div class="loading-overlay" id="loading-overlay">
-  <div class="spinner"></div>
-  <p>Carregando sistema...</p>
+<!-- Banner de sincronização em segundo plano -->
+<div class="sync-banner hidden" id="sync-banner">
+  <div class="sync-dot" id="sync-dot"></div>
+  <span id="sync-msg">Sincronizando dados...</span>
 </div>
 
-<!-- LOGIN -->
-<div id="login-screen" class="hidden">
+<!-- LOGIN — aparece imediatamente -->
+<div id="login-screen">
   <div class="login-page">
     <div class="login-card">
       <div class="login-head"><div class="login-icon">📋</div><h2>Avaliação de atendimento</h2><p>Sistema de gestão de qualidade</p></div>
@@ -264,7 +266,7 @@ body[data-theme="dark"] .fb-penalidade-tag{background:rgba(192,80,10,.15)}
         <input class="form-input" type="text" id="login-user" placeholder="Digite seu login" onkeydown="if(event.key==='Enter')fazerLogin()">
         <div class="form-label" style="margin-top:12px">Senha</div>
         <div class="pw-row"><input class="form-input" type="password" id="login-pass" placeholder="Digite sua senha" onkeydown="if(event.key==='Enter')fazerLogin()"><button class="pw-toggle" onclick="togglePw('login-pass',this)">mostrar</button></div>
-        <button class="btn primary full" style="margin-top:20px" onclick="fazerLogin()">Entrar</button>
+        <button class="btn primary full" style="margin-top:20px" id="btn-entrar" onclick="fazerLogin()">Entrar</button>
         <div class="login-hint">Senha padrão de primeiro acesso: <strong>123</strong></div>
       </div>
     </div>
@@ -322,7 +324,6 @@ body[data-theme="dark"] .fb-penalidade-tag{background:rgba(192,80,10,.15)}
         </div>
       </div>
       <div class="page-wrap">
-        <!-- PAINEL -->
         <div class="page-section active" id="page-dashboard">
           <div class="grid4" id="dash-metrics" style="margin-bottom:16px"></div>
           <div class="grid2">
@@ -331,7 +332,6 @@ body[data-theme="dark"] .fb-penalidade-tag{background:rgba(192,80,10,.15)}
           </div>
           <div class="card"><div class="card-title">🕐 Últimas avaliações</div><div id="dash-ultimas"></div></div>
         </div>
-        <!-- NOVA AVALIAÇÃO -->
         <div class="page-section" id="page-avaliacao">
           <div id="av-alert"></div>
           <div class="card">
@@ -341,7 +341,6 @@ body[data-theme="dark"] .fb-penalidade-tag{background:rgba(192,80,10,.15)}
               <div><div class="form-label">Atendente avaliado</div><select class="form-input" id="av-atendente"></select></div>
               <div><div class="form-label">Data e hora</div><input class="form-input" type="datetime-local" id="av-data"></div>
               <div><div class="form-label">Duração da ligação</div><input class="form-input" type="text" id="av-duracao" placeholder="ex: 5m 30s"></div>
-              <div><div class="form-label">Número da gravação</div><input class="form-input" type="text" id="av-gravacao"></div>
               <div><div class="form-label">Número do protocolo</div><input class="form-input" type="text" id="av-protocolo"></div>
               <div><div class="form-label">Canal de atendimento</div><select class="form-input" id="av-canal"></select></div>
               <div><div class="form-label">Turno</div>
@@ -385,7 +384,10 @@ body[data-theme="dark"] .fb-penalidade-tag{background:rgba(192,80,10,.15)}
             </div>
           </div>
           <div class="card">
-            <div class="card-title">📝 Quesitos de avaliação</div>
+            <div class="card-title" style="justify-content:space-between">
+              <span>📝 Quesitos de avaliação</span>
+              <button class="btn sm primary" onclick="marcarTodosSimm()">✓ Marcar todos como SIM</button>
+            </div>
             <div id="quesitos-list"></div>
             <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px">
               <span style="font-size:13px;color:var(--text3)">Pontuação total</span>
@@ -396,7 +398,6 @@ body[data-theme="dark"] .fb-penalidade-tag{background:rgba(192,80,10,.15)}
           </div>
           <div style="text-align:right;margin-top:4px"><button class="btn primary" style="padding:11px 28px;font-size:15px" onclick="salvarAvaliacao()">✓ Salvar avaliação</button></div>
         </div>
-        <!-- FEEDBACKS -->
         <div class="page-section" id="page-feedbacks">
           <div id="fb-readonly-banner" class="readonly-banner hidden">👁 Você está visualizando seus feedbacks em modo somente leitura.</div>
           <div class="grid4" id="fb-metrics" style="margin-bottom:16px"></div>
@@ -407,7 +408,6 @@ body[data-theme="dark"] .fb-penalidade-tag{background:rgba(192,80,10,.15)}
           </div>
           <div id="fb-lista"></div>
         </div>
-        <!-- HISTÓRICO -->
         <div class="page-section" id="page-historico">
           <div id="hist-readonly-banner" class="readonly-banner hidden">👁 Você está visualizando seu histórico em modo somente leitura.</div>
           <div class="card" style="display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap">
@@ -416,7 +416,6 @@ body[data-theme="dark"] .fb-penalidade-tag{background:rgba(192,80,10,.15)}
           </div>
           <div id="historico-table"></div>
         </div>
-        <!-- RELATÓRIOS -->
         <div class="page-section" id="page-relatorios">
           <div id="rel-readonly-banner" class="readonly-banner hidden">👁 Você está visualizando seu relatório em modo somente leitura.</div>
           <div class="tab-row">
@@ -434,7 +433,6 @@ body[data-theme="dark"] .fb-penalidade-tag{background:rgba(192,80,10,.15)}
           <div id="rel-turno" class="hidden"><div id="rel-turno-content"></div></div>
           <div id="rel-geral" class="hidden"><div id="rel-geral-content"></div></div>
         </div>
-        <!-- CADASTROS -->
         <div class="page-section" id="page-cadastro">
           <div id="cad-form-area"></div>
           <div class="card"><div class="card-title">👥 Funcionários cadastrados</div><div id="lista-funcionarios"></div></div>
@@ -442,7 +440,6 @@ body[data-theme="dark"] .fb-penalidade-tag{background:rgba(192,80,10,.15)}
             <div class="card"><div class="card-title">🔗 Vínculos gestor ↔ atendente</div><div id="vinculos-content"></div></div>
           </div>
         </div>
-        <!-- MINHA CONTA -->
         <div class="page-section" id="page-minha-conta">
           <div class="card" style="max-width:460px">
             <div class="card-title">🔒 Alterar senha</div>
@@ -463,9 +460,10 @@ body[data-theme="dark"] .fb-penalidade-tag{background:rgba(192,80,10,.15)}
 
 <script>
 // ================================================================
-// URL DO BACKEND (Render)
+// CONFIGURAÇÃO
 // ================================================================
 const API = 'https://feedback-sistema.onrender.com';
+const TIMEOUT_MS = 60000; // 60s para acordar o Render
 
 const QUESITOS=[
   {nome:'Sabe interromper',max:5},{nome:'Questionamentos necessários',max:7},
@@ -492,8 +490,9 @@ let penalidade='';
 let editingCanalIdx=null;
 let canaisAberto=false;
 let fbAbertos={};
+let bancoPronto=false; // flag: banco já respondeu?
 
-// STATE — tudo vem do banco ao iniciar
+// STATE — admin fixo, resto vem do banco
 let state={
   canais:['FUNCI','SCSP','ILUMINAÇÃO','VETMOVEL'],
   vinculos:{},
@@ -505,82 +504,117 @@ let state={
 };
 
 // ================================================================
-// FUNÇÕES DE CARREGAMENTO DO BANCO
+// SYNC BANNER — mostra progresso sem bloquear a tela
+// ================================================================
+function syncShow(msg){
+  const b=document.getElementById('sync-banner');
+  const d=document.getElementById('sync-dot');
+  const m=document.getElementById('sync-msg');
+  if(b)b.classList.remove('hidden');
+  if(d){d.classList.remove('ok');}
+  if(m)m.textContent=msg;
+}
+function syncOk(msg){
+  const b=document.getElementById('sync-banner');
+  const d=document.getElementById('sync-dot');
+  const m=document.getElementById('sync-msg');
+  if(d)d.classList.add('ok');
+  if(m)m.textContent=msg;
+  setTimeout(()=>b&&b.classList.add('hidden'),3000);
+}
+function syncHide(){
+  const b=document.getElementById('sync-banner');
+  if(b)b.classList.add('hidden');
+}
+
+// ================================================================
+// FETCH COM TIMEOUT — evita travar indefinidamente
+// ================================================================
+async function fetchComTimeout(url, opts={}, ms=TIMEOUT_MS){
+  const controller=new AbortController();
+  const timer=setTimeout(()=>controller.abort(),ms);
+  try{
+    const r=await fetch(url,{...opts,signal:controller.signal});
+    clearTimeout(timer);
+    return r;
+  }catch(e){
+    clearTimeout(timer);
+    throw e;
+  }
+}
+
+// ================================================================
+// CARREGAMENTO EM SEGUNDO PLANO — não bloqueia o login
 // ================================================================
 async function carregarUsuarios(){
-  try{
-    const r=await fetch(API+'/usuarios');
-    if(!r.ok)return;
-    const dados=await r.json();
-    const admin={id:1,nome:'Administrador',login:'admin',senha:'admin123',perfil:'admin',turno:'',primeiroAcesso:false};
-    const filtrado=dados.filter(u=>u.login!=='admin');
-    const maiorId=filtrado.reduce((m,u)=>Math.max(m,Number(u.id)||1),1);
-    state.usuarios=[admin,...filtrado];
-    state.nextId=Math.max(state.nextId,maiorId+1);
-  }catch(e){console.error('carregarUsuarios:',e);}
+  const r=await fetchComTimeout(API+'/usuarios');
+  if(!r.ok)return;
+  const dados=await r.json();
+  const admin={id:1,nome:'Administrador',login:'admin',senha:'admin123',perfil:'admin',turno:'',primeiroAcesso:false};
+  const filtrado=dados.filter(u=>u.login!=='admin');
+  const maiorId=filtrado.reduce((m,u)=>Math.max(m,Number(u.id)||1),1);
+  state.usuarios=[admin,...filtrado];
+  state.nextId=Math.max(state.nextId,maiorId+1);
 }
 
 async function carregarVinculos(){
-  try{
-    const r=await fetch(API+'/vinculos');
-    if(!r.ok)return;
-    const dados=await r.json();
-    // Converte chaves string para number
-    state.vinculos={};
-    Object.entries(dados).forEach(([aId,gestores])=>{
-      state.vinculos[Number(aId)]=gestores.map(Number);
-    });
-  }catch(e){console.error('carregarVinculos:',e);}
+  const r=await fetchComTimeout(API+'/vinculos');
+  if(!r.ok)return;
+  const dados=await r.json();
+  state.vinculos={};
+  Object.entries(dados).forEach(([aId,gs])=>{
+    state.vinculos[Number(aId)]=gs.map(Number);
+  });
 }
 
 async function carregarAvaliacoes(){
-  try{
-    const r=await fetch(API+'/avaliacoes');
-    if(!r.ok)return;
-    const dados=await r.json();
-    state.avaliacoes=dados.map(a=>({
-      ...a,
-      id:Number(a.id),
-      atendenteId:Number(a.atendenteId),
-      gestorId:Number(a.gestorId),
-      nota:parseFloat(a.nota)
-    }));
-    const maiorId=state.avaliacoes.reduce((m,a)=>Math.max(m,a.id),0);
-    state.nextId=Math.max(state.nextId,maiorId+1);
-  }catch(e){console.error('carregarAvaliacoes:',e);}
+  const r=await fetchComTimeout(API+'/avaliacoes');
+  if(!r.ok)return;
+  const dados=await r.json();
+  state.avaliacoes=dados.map(a=>({
+    ...a,id:Number(a.id),atendenteId:Number(a.atendenteId),
+    gestorId:Number(a.gestorId),nota:parseFloat(a.nota)
+  }));
+  const maiorId=state.avaliacoes.reduce((m,a)=>Math.max(m,a.id),0);
+  state.nextId=Math.max(state.nextId,maiorId+1);
 }
 
 async function carregarFeedbacks(){
-  try{
-    const r=await fetch(API+'/feedbacks');
-    if(!r.ok)return;
-    const dados=await r.json();
-    // dados é { avaliacaoId: {...} }
-    state.feedbacks={};
-    Object.entries(dados).forEach(([avId,fb])=>{
-      state.feedbacks[Number(avId)]=fb;
-    });
-    // Garante feedback pendente para avaliações sem feedback
-    state.avaliacoes.forEach(a=>{
-      if(!state.feedbacks[a.id]){
-        state.feedbacks[a.id]={avaliacaoId:a.id,texto:'',status:'pendente',gestorId:null,dataConclusao:null};
-      }
-    });
-  }catch(e){console.error('carregarFeedbacks:',e);}
+  const r=await fetchComTimeout(API+'/feedbacks');
+  if(!r.ok)return;
+  const dados=await r.json();
+  state.feedbacks={};
+  Object.entries(dados).forEach(([avId,fb])=>{
+    state.feedbacks[Number(avId)]=fb;
+  });
+  state.avaliacoes.forEach(a=>{
+    if(!state.feedbacks[a.id])
+      state.feedbacks[a.id]={avaliacaoId:a.id,texto:'',status:'pendente',gestorId:null,dataConclusao:null};
+  });
 }
 
-// Carrega TUDO e depois exibe a tela de login
-async function inicializar(){
+// Inicia carregamento em background SEM bloquear o login
+async function inicializarBackground(){
+  syncShow('Conectando ao servidor...');
   try{
-    await Promise.all([carregarUsuarios(), carregarVinculos(), carregarAvaliacoes()]);
-    await carregarFeedbacks(); // depende de avaliacoes
-  }catch(e){console.error('inicializar:',e);}
-  // Esconde loading, exibe login
-  document.getElementById('loading-overlay').classList.add('hidden');
-  document.getElementById('login-screen').classList.remove('hidden');
+    await Promise.all([carregarUsuarios(),carregarVinculos(),carregarAvaliacoes()]);
+    await carregarFeedbacks();
+    bancoPronto=true;
+    syncOk('✓ Dados sincronizados');
+    // Se já estiver logado, atualiza a tela atual
+    if(state.usuarioLogado){
+      updateFbCountNav();
+      const paginaAtiva=document.querySelector('.page-section.active')?.id?.replace('page-','');
+      if(paginaAtiva)showPage(paginaAtiva,null);
+    }
+  }catch(e){
+    console.error('Erro ao carregar banco:',e);
+    syncOk('⚠ Servidor offline — dados locais');
+  }
 }
 
-inicializar();
+// Inicia IMEDIATAMENTE em background (sem await na tela)
+inicializarBackground();
 
 // ================================================================
 // HELPERS
@@ -596,7 +630,6 @@ function escapeHtml(t){return(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').
 function calcTotal(){return respostas.reduce((s,r,i)=>s+(r===true?QUESITOS[i].max:0),0);}
 function meuPerfil(){return state.usuarioLogado?.perfil||'';}
 function emptyState(icon,title,sub){return`<div class="empty-state"><div class="empty-icon">${icon}</div><div class="empty-title">${title}</div><div class="empty-sub">${sub||''}</div></div>`;}
-
 function atendentesVisiveis(){
   const eu=state.usuarioLogado;if(!eu)return[];
   if(eu.perfil==='admin'||eu.perfil==='master')return state.usuarios.filter(u=>u.perfil==='atendente');
@@ -623,7 +656,7 @@ function selecionarPenalidade(val){
     else btn.className='pen-btn '+(btn.id==='pen-'+val?'pen-on':'pen-off');
   });
   const res=document.getElementById('pen-resultado');
-  if(val){res.classList.remove('hidden');if(val==='nao'){res.className='pen-resultado nao';res.innerHTML='✓ Sem penalidade registrada';}else{res.className='pen-resultado sim';res.innerHTML=`⚠️ Penalidade registrada: <strong>${PEN_LABEL[val]}</strong>`;}}
+  if(val){res.classList.remove('hidden');if(val==='nao'){res.className='pen-resultado nao';res.innerHTML='✓ Sem penalidade registrada';}else{res.className='pen-resultado sim';res.innerHTML=`⚠️ Penalidade: <strong>${PEN_LABEL[val]}</strong>`;}}
   else res.classList.add('hidden');
 }
 function resetPenalidade(){
@@ -636,7 +669,6 @@ function resetPenalidade(){
 // TEMA / NAVEGAÇÃO
 // ================================================================
 function setTheme(t){document.body.setAttribute('data-theme',t);document.getElementById('btn-light').classList.toggle('active',t==='light');document.getElementById('btn-dark').classList.toggle('active',t==='dark');}
-
 const PAGE_INFO={
   dashboard:{title:'Painel',sub:'Visão geral'},avaliacao:{title:'Nova avaliação',sub:'Preencha todos os campos'},
   feedbacks:{title:'Feedbacks',sub:'Aplique e acompanhe feedbacks'},historico:{title:'Histórico',sub:'Consulte avaliações anteriores'},
@@ -646,7 +678,7 @@ const PAGE_INFO={
 function showPage(name,el){
   document.querySelectorAll('.page-section').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  document.getElementById('page-'+name).classList.add('active');
+  const pg=document.getElementById('page-'+name);if(pg)pg.classList.add('active');
   if(el)el.classList.add('active');
   const info=PAGE_INFO[name]||{title:name,sub:''};
   document.getElementById('topbar-title').textContent=info.title;
@@ -669,21 +701,36 @@ function configurarMenu(){
 // ================================================================
 // LOGIN
 // ================================================================
-function fazerLogin(){
+async function fazerLogin(){
   const login=document.getElementById('login-user').value.trim();
   const senha=document.getElementById('login-pass').value;
+  const btn=document.getElementById('btn-entrar');
+
+  // Se banco ainda não carregou, espera até 30s antes de negar
+  if(!bancoPronto && login !== 'admin'){
+    btn.textContent='⏳ Aguardando banco...';btn.disabled=true;
+    syncShow('Aguardando servidor acordar...');
+    let tentativas=0;
+    while(!bancoPronto && tentativas<30){
+      await new Promise(r=>setTimeout(r,1000));
+      tentativas++;
+    }
+    btn.textContent='Entrar';btn.disabled=false;
+  }
+
   const u=state.usuarios.find(u=>u.login===login&&u.senha===senha);
   if(!u){document.getElementById('login-alert').innerHTML='<div class="alert danger">⚠ Usuário ou senha incorretos.</div>';return;}
   state.usuarioLogado=u;document.getElementById('login-alert').innerHTML='';
   if(u.primeiroAcesso){document.getElementById('login-screen').classList.add('hidden');document.getElementById('change-pass-screen').classList.remove('hidden');}
   else entrarNoSistema();
 }
+
 function salvarNovaSenha(){
   const nova=document.getElementById('cp-new').value;const conf=document.getElementById('cp-confirm').value;
   if(nova.length<4){document.getElementById('cp-alert').innerHTML='<div class="alert danger">Mínimo 4 caracteres.</div>';return;}
   if(nova!==conf){document.getElementById('cp-alert').innerHTML='<div class="alert danger">Senhas não coincidem.</div>';return;}
   const u=state.usuarios.find(x=>x.id===state.usuarioLogado.id);u.senha=nova;u.primeiroAcesso=false;state.usuarioLogado=u;
-  fetch(API+'/usuarios/'+u.id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({senha:nova,primeiroAcesso:false})}).catch(console.error);
+  fetchComTimeout(API+'/usuarios/'+u.id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({senha:nova,primeiroAcesso:false})}).catch(console.error);
   document.getElementById('change-pass-screen').classList.add('hidden');entrarNoSistema();
 }
 function entrarNoSistema(){
@@ -741,7 +788,7 @@ function renderDashboard(){
 }
 
 // ================================================================
-// QUESITOS
+// QUESITOS + MARCAR TODOS
 // ================================================================
 function buildQuesitos(){
   document.getElementById('quesitos-list').innerHTML=QUESITOS.map((q,i)=>`
@@ -762,6 +809,9 @@ function buildQuesitos(){
         <div class="obs-char" id="obs-char-${i}">0/300</div>
       </div>
     </div></div>`).join('');
+}
+function marcarTodosSimm(){
+  QUESITOS.forEach((_,i)=>{ if(respostas[i]!==true) marcar(i,true); });
 }
 function marcar(i,val){
   const ta=document.getElementById('obs-'+i);if(ta)observacoes[i]=ta.value;
@@ -794,14 +844,13 @@ function renderFormAvaliacao(){
   const gl=(eu.perfil==='admin'||eu.perfil==='master')?state.usuarios.filter(u=>u.perfil==='gestor'||u.perfil==='admin'||u.perfil==='master'):[eu];
   document.getElementById('av-gestor').innerHTML='<option value="">Selecionar...</option>'+gl.map(g=>`<option value="${g.id}"${g.id===eu.id?' selected':''}>${g.nome}</option>`).join('');
   document.getElementById('av-atendente').innerHTML='<option value="">Selecionar...</option>'+ats.map(a=>`<option value="${a.id}">${a.nome}</option>`).join('');
-  ['av-data','av-duracao','av-gravacao','av-protocolo','av-relato'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['av-data','av-duracao','av-protocolo','av-relato'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   document.getElementById('av-canal').value='';document.getElementById('av-turno').value='';
   resetPenalidade();editingCanalIdx=null;canaisAberto=false;
   document.getElementById('canais-body').classList.remove('open');document.getElementById('canais-chevron').classList.remove('open');
   renderCanalTabela();respostas=new Array(QUESITOS.length).fill(null);observacoes=new Array(QUESITOS.length).fill('');
   buildQuesitos();updateTotal();document.getElementById('av-alert').innerHTML='';
 }
-
 async function salvarAvaliacao(){
   coletarTodasObs();
   const gId=parseInt(document.getElementById('av-gestor').value);
@@ -812,15 +861,316 @@ async function salvarAvaliacao(){
   if(!gId||!aId||!data||!canal||!turno){document.getElementById('av-alert').innerHTML='<div class="alert danger">⚠ Preencha todos os campos obrigatórios.</div>';return;}
   if(respostas.some(r=>r===null)){document.getElementById('av-alert').innerHTML='<div class="alert danger">⚠ Responda todos os 18 quesitos.</div>';return;}
   if(!penalidade){document.getElementById('av-alert').innerHTML='<div class="alert danger">⚠ Informe se houve alguma penalidade.</div>';return;}
-
   const nota=calcTotal();
   const relato=document.getElementById('av-relato').value.trim();
   const obsReg=observacoes.map((o,i)=>({quesito:QUESITOS[i].nome,obs:o.trim()})).filter(x=>x.obs);
-
   document.getElementById('av-alert').innerHTML='<div class="alert info">⏳ Salvando avaliação...</div>';
-
   try{
-    // Salva avaliação no banco
-    const r=await fetch(API+'/avaliacoes',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({atendenteId:aId,gestorId:
+    const r=await fetchComTimeout(API+'/avaliacoes',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({atendenteId:aId,gestorId:gId,data,
+        duracao:document.getElementById('av-duracao').value,
+        protocolo:document.getElementById('av-protocolo').value,
+        canal,turno,nota,relato,penalidade,observacoes:obsReg})});
+    if(!r.ok)throw new Error('erro');
+    const {id:novoId}=await r.json();
+    await fetchComTimeout(API+'/feedbacks',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({avaliacaoId:novoId,texto:'',status:'pendente',gestorId:null,dataConclusao:null})});
+    const novaAv={id:novoId,atendenteId:aId,gestorId:gId,data,
+      duracao:document.getElementById('av-duracao').value,
+      protocolo:document.getElementById('av-protocolo').value,
+      canal,turno,nota,relato,penalidade,observacoes:obsReg};
+    state.avaliacoes.push(novaAv);
+    state.feedbacks[novoId]={avaliacaoId:novoId,texto:'',status:'pendente',gestorId:null,dataConclusao:null};
+    buildAnoSelect();updateFbCountNav();
+    const penMsg=penalidade!=='nao'?` · ⚠️ ${PEN_LABEL[penalidade]}`:'';
+    document.getElementById('av-alert').innerHTML=`<div class="alert success">✓ Avaliação salva! Nota: ${nota}/100${penMsg}</div>`;
+    setTimeout(()=>renderFormAvaliacao(),2500);
+  }catch(e){
+    document.getElementById('av-alert').innerHTML='<div class="alert danger">⚠ Erro ao salvar. Verifique a conexão.</div>';
+  }
+}
+
+// ================================================================
+// FEEDBACKS
+// ================================================================
+function renderFeedbacksPage(){
+  const eu=state.usuarioLogado;const isAt=eu.perfil==='atendente';
+  document.getElementById('fb-readonly-banner').classList.toggle('hidden',!isAt);
+  document.getElementById('fb-filtros').classList.toggle('hidden',isAt);
+  const fa=document.getElementById('fb-filtro-atendente');
+  if(fa)fa.innerHTML='<option value="">Todos</option>'+atendentesVisiveis().map(a=>`<option value="${a.id}">${a.nome}</option>`).join('');
+  renderFbMetrics();renderFeedbacks();
+}
+function renderFbMetrics(){
+  const avsVis=avaliacoesVisiveis();const total=avsVis.length;
+  const pend=avsVis.filter(a=>state.feedbacks[a.id]?.status==='pendente').length;
+  const conc=avsVis.filter(a=>state.feedbacks[a.id]?.status==='concluido').length;
+  const pct=total>0?Math.round((conc/total)*100):0;
+  document.getElementById('fb-metrics').innerHTML=`
+    <div class="metric-card"><span class="metric-icon">📋</span><div class="metric-label">Total avaliações</div><div class="metric-value">${total}</div></div>
+    <div class="metric-card"><span class="metric-icon">⏳</span><div class="metric-label">Feedbacks pendentes</div><div class="metric-value" style="color:${pend>0?'var(--amber)':'var(--green-600)'}">${pend}</div></div>
+    <div class="metric-card"><span class="metric-icon">✅</span><div class="metric-label">Feedbacks concluídos</div><div class="metric-value" style="color:var(--green-600)">${conc}</div></div>
+    <div class="metric-card"><span class="metric-icon">📊</span><div class="metric-label">Taxa de conclusão</div><div class="metric-value" style="color:${pct>=80?'var(--green-600)':pct>=50?'var(--amber)':'var(--red)'}">${pct}%</div></div>`;
+}
+function renderFeedbacks(){
+  const eu=state.usuarioLogado;const isAt=eu.perfil==='atendente';
+  const aId=isAt?eu.id:(parseInt(document.getElementById('fb-filtro-atendente')?.value)||0);
+  const status=isAt?'':(document.getElementById('fb-filtro-status')?.value||'');
+  const mes=parseInt(document.getElementById('fb-filtro-mes')?.value)||0;
+  let avs=[...avaliacoesVisiveis()].reverse();
+  if(aId)avs=avs.filter(a=>a.atendenteId===aId);
+  if(mes)avs=avs.filter(a=>new Date(a.data).getMonth()+1===mes);
+  if(status)avs=avs.filter(a=>state.feedbacks[a.id]?.status===status);
+  if(!avs.length){document.getElementById('fb-lista').innerHTML=emptyState('💬','Nenhum feedback encontrado','As avaliações registradas aparecerão aqui');return;}
+  document.getElementById('fb-lista').innerHTML=avs.map(a=>{
+    const fb=state.feedbacks[a.id];const isPend=fb?.status==='pendente';
+    const nomeAt=getNome(a.atendenteId);const nomeGestor=getNome(a.gestorId);
+    const isOpen=fbAbertos[a.id]||false;const podeEditar=!isAt;
+    const temPen=a.penalidade&&a.penalidade!=='nao';
+    const detalhe=`<div class="fb-detalhe">
+      <span>${new Date(a.data).toLocaleDateString('pt-BR')}</span>
+      <span class="fb-detalhe-sep">·</span><span>Gestor: <strong>${nomeGestor}</strong></span>
+      <span class="fb-detalhe-sep">·</span><span>${a.canal}</span>
+      <span class="fb-detalhe-sep">·</span><span>${a.turno}</span>
+      <span class="fb-detalhe-sep">·</span><span class="fb-protocolo-tag">📋 ${a.protocolo||'—'}</span>
+    </div>${temPen?`<div style="margin-top:5px"><span class="fb-penalidade-tag">${PEN_ICON[a.penalidade]} ${PEN_LABEL[a.penalidade]}</span></div>`:''}`;
+    return`<div class="fb-card ${isPend?'pendente':'concluido'}">
+      <div class="fb-header" onclick="toggleFb(${a.id})">
+        <div class="fb-header-info"><div class="fb-avatar">${getIni(nomeAt)}</div><div class="fb-meta"><div class="fb-atendente">${nomeAt}</div>${detalhe}</div></div>
+        <div class="fb-right">${getNota(a.nota)}<span class="badge ${isPend?'warn':'ok'}">${isPend?'⏳ Pendente':'✓ Concluído'}</span><span class="fb-chevron ${isOpen?'open':''}" id="fbchev-${a.id}">▼</span></div>
+      </div>
+      <div class="fb-body ${isOpen?'open':''}" id="fbbody-${a.id}">
+        <div class="fb-body-inner">
+          ${a.relato?`<div class="fb-section-title">📄 Relato</div><div class="fb-relato-box">${escapeHtml(a.relato)}</div>`:''}
+          ${a.observacoes?.length?`<div class="fb-section-title">⚠ Pontos de atenção</div>${a.observacoes.map(o=>`<div class="fb-obs-item"><div style="font-weight:600;color:var(--red);font-size:12px;margin-bottom:3px">${o.quesito}</div><div>${o.obs}</div></div>`).join('')}`:''}
+          <div class="fb-section-title">💬 Feedback do avaliador</div>
+          ${isPend&&podeEditar?
+            `<div class="fb-feedback-box"><textarea class="form-input" id="fb-texto-${a.id}" style="min-height:80px;resize:vertical" placeholder="Registre o feedback para ${nomeAt}...">${fb?.texto||''}</textarea></div>
+             <div style="display:flex;justify-content:flex-end;margin-top:12px"><button class="btn primary" onclick="concluirFeedback(${a.id})">✅ Feedback concluído</button></div>`
+          :isPend&&!podeEditar?
+            `<div class="fb-feedback-box" style="color:var(--text3);font-style:italic;font-size:13px">Aguardando feedback do gestor...</div>`
+          :`<div class="fb-feedback-box"><div class="fb-feedback-existente">${escapeHtml(fb?.texto||'(sem texto)')}</div></div>
+            <div class="fb-concluido-info">✓ Feedback aplicado por ${getNome(fb.gestorId)} em ${fb.dataConclusao?new Date(fb.dataConclusao).toLocaleDateString('pt-BR'):'—'}</div>`}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function toggleFb(id){fbAbertos[id]=!fbAbertos[id];document.getElementById('fbbody-'+id)?.classList.toggle('open',fbAbertos[id]);document.getElementById('fbchev-'+id)?.classList.toggle('open',fbAbertos[id]);}
+async function concluirFeedback(avId){
+  const ta=document.getElementById('fb-texto-'+avId);const texto=(ta?ta.value:'').trim();
+  if(!texto){alert('Digite o feedback antes de concluir.');ta?.focus();return;}
+  const agora=new Date().toISOString();
+  try{
+    await fetchComTimeout(API+'/feedbacks',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({avaliacaoId:avId,texto,status:'concluido',gestorId:state.usuarioLogado?.id||null,dataConclusao:agora})});
+    state.feedbacks[avId]={avaliacaoId:avId,texto,status:'concluido',gestorId:state.usuarioLogado?.id||null,dataConclusao:agora};
+    fbAbertos[avId]=false;updateFbCountNav();renderFbMetrics();renderFeedbacks();
+  }catch(e){alert('Erro ao salvar feedback.');}
+}
+
+// ================================================================
+// HISTÓRICO
+// ================================================================
+function populateFiltrosHist(){
+  const eu=state.usuarioLogado;const isAt=eu.perfil==='atendente';
+  document.getElementById('hist-readonly-banner').classList.toggle('hidden',!isAt);
+  const filtroAt=document.getElementById('hist-atendente');
+  if(isAt){filtroAt.innerHTML=`<option value="${eu.id}">${eu.nome}</option>`;filtroAt.disabled=true;}
+  else{filtroAt.disabled=false;filtroAt.innerHTML='<option value="">Todos</option>'+atendentesVisiveis().map(a=>`<option value="${a.id}">${a.nome}</option>`).join('');}
+}
+function renderHistorico(){
+  const eu=state.usuarioLogado;
+  const aId=eu.perfil==='atendente'?eu.id:(parseInt(document.getElementById('hist-atendente')?.value)||0);
+  const mes=parseInt(document.getElementById('hist-mes')?.value)||0;
+  let avs=[...avaliacoesVisiveis()];
+  if(aId)avs=avs.filter(a=>a.atendenteId===aId);
+  if(mes)avs=avs.filter(a=>new Date(a.data).getMonth()+1===mes);
+  avs.reverse();
+  document.getElementById('historico-table').innerHTML=avs.length===0?emptyState('📂','Nenhuma avaliação encontrada','')
+    :`<div class="table-wrap"><table><thead><tr><th>Atendente</th><th>Gestor</th><th>Data</th><th>Canal</th><th>Turno</th><th>Protocolo</th><th>Nota</th><th>Penalidade</th><th>Feedback</th></tr></thead><tbody>`
+    +avs.map(a=>`<tr>
+      <td style="font-size:12px">${getNome(a.atendenteId)}</td>
+      <td style="font-size:12px">${getNome(a.gestorId)}</td>
+      <td>${new Date(a.data).toLocaleDateString('pt-BR')}</td>
+      <td>${a.canal}</td><td>${a.turno}</td>
+      <td style="font-family:monospace;font-size:11px">${a.protocolo||'—'}</td>
+      <td>${getBadge(a.nota)}</td>
+      <td>${a.penalidade&&a.penalidade!=='nao'?getPenBadge(a.penalidade):'<span class="badge ok" style="font-size:10px">Sem</span>'}</td>
+      <td>${state.feedbacks[a.id]?.status==='concluido'?'<span class="badge ok">✓</span>':'<span class="badge warn">Pend.</span>'}</td>
+    </tr>`).join('')+`</tbody></table></div>`;
+}
+
+// ================================================================
+// RELATÓRIOS
+// ================================================================
+function setupRelatorios(){
+  const eu=state.usuarioLogado;const isAt=eu.perfil==='atendente';
+  document.getElementById('rel-readonly-banner').classList.toggle('hidden',!isAt);
+  document.getElementById('rel-tab-turno').classList.toggle('hidden',isAt);
+  document.getElementById('rel-tab-geral').classList.toggle('hidden',isAt);
+  const ra=document.getElementById('rel-atendente');
+  if(isAt){ra.innerHTML=`<option value="${eu.id}">${eu.nome}</option>`;ra.disabled=true;}
+  else{ra.disabled=false;ra.innerHTML='<option value="">Selecionar...</option>'+atendentesVisiveis().map(a=>`<option value="${a.id}">${a.nome}</option>`).join('');}
+  buildAnoSelect();
+}
+function buildAnoSelect(){const sel=document.getElementById('rel-ano');if(!sel)return;const set=new Set(avaliacoesVisiveis().map(a=>new Date(a.data).getFullYear()));set.add(ANO_ATUAL);sel.innerHTML=[...set].sort((a,b)=>b-a).map(a=>`<option value="${a}"${a===ANO_ATUAL?' selected':''}>${a}</option>`).join('');}
+function showRel(type,btn){document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.getElementById('rel-individual').classList.toggle('hidden',type!=='individual');document.getElementById('rel-turno').classList.toggle('hidden',type!=='turno');document.getElementById('rel-geral').classList.toggle('hidden',type!=='geral');if(type==='turno')renderRelTurno();if(type==='geral')renderRelGeral();}
+function renderRelInd(){
+  const eu=state.usuarioLogado;
+  const aId=eu.perfil==='atendente'?eu.id:(parseInt(document.getElementById('rel-atendente')?.value)||0);
+  const ano=parseInt(document.getElementById('rel-ano')?.value)||ANO_ATUAL;
+  const el=document.getElementById('rel-ind-content');
+  if(!aId){el.innerHTML=emptyState('📊','Selecione um atendente','');return;}
+  const avsAno=avaliacoesVisiveis().filter(a=>a.atendenteId===aId&&new Date(a.data).getFullYear()===ano);
+  const mMap={};avsAno.forEach(a=>{const m=new Date(a.data).getMonth();if(!mMap[m])mMap[m]=[];mMap[m].push(a);});
+  const mt=Object.keys(mMap).length;const mm=Object.values(mMap).map(a=>mediaAvs(a)).filter(x=>x!==null);const ma=mm.length?(mm.reduce((s,x)=>s+x,0)/mm.length).toFixed(1):'—';
+  let rows='';for(let m=0;m<12;m++){const avs=mMap[m]||[];const med=avs.length?(avs.reduce((s,a)=>s+a.nota,0)/avs.length).toFixed(1):null;const f=Math.max(0,4-avs.length);rows+=`<tr><td>${MESES[m]}</td><td>${avs.length}/4</td><td>${med?getBadge(parseFloat(med)):'<span style="color:var(--text3)">—</span>'}</td><td>${f>0?`<span class="badge warn">${f} pend.</span>`:'<span class="badge ok">✓</span>'}</td></tr>`;}
+  el.innerHTML=`<div class="grid3" style="margin-bottom:16px"><div class="metric-card"><div class="metric-label">Total</div><div class="metric-value">${avsAno.length}</div></div><div class="metric-card"><div class="metric-label">Meses</div><div class="metric-value">${mt}</div></div><div class="metric-card"><div class="metric-label">Média anual</div><div class="metric-value">${ma}</div></div></div><div class="table-wrap"><table><thead><tr><th>Mês</th><th>Avaliações</th><th>Média</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+function renderRelTurno(){const rows=TURNOS.map(t=>{const ats=atendentesVisiveis().filter(a=>a.turno===t);const avs=avaliacoesVisiveis().filter(a=>a.turno===t);const m=mediaAvs(avs);return`<tr><td>${t}</td><td>${ats.length}</td><td>${avs.length}</td><td>${m!==null?getBadge(m):'—'}</td></tr>`;}).join('');document.getElementById('rel-turno-content').innerHTML=`<div class="table-wrap"><table><thead><tr><th>Turno</th><th>Atendentes</th><th>Avaliações</th><th>Média</th></tr></thead><tbody>${rows}</tbody></table></div>`;}
+function renderRelGeral(){const rows=atendentesVisiveis().map(a=>{const avs=avaliacoesVisiveis().filter(av=>av.atendenteId===a.id);const m=mediaAvs(avs);const meses=new Set(avs.map(av=>new Date(av.data).getMonth()+'-'+new Date(av.data).getFullYear())).size;return`<tr><td style="font-size:12px;font-weight:500">${a.nome}</td><td>${a.turno||'—'}</td><td>${avs.length}</td><td>${meses}</td><td>${m!==null?getBadge(m):'—'}</td></tr>`;}).join('');const tg=mediaAvs(avaliacoesVisiveis());document.getElementById('rel-geral-content').innerHTML=`<div class="metric-card" style="margin-bottom:16px"><div class="metric-label">Média geral</div><div class="metric-value">${tg!==null?tg.toFixed(1):'—'}</div></div><div class="table-wrap"><table><thead><tr><th>Atendente</th><th>Turno</th><th>Avaliações</th><th>Meses</th><th>Média</th></tr></thead><tbody>${rows||'<tr><td colspan="5" style="text-align:center;color:var(--text3);padding:2rem">Nenhuma avaliação ainda</td></tr>'}</tbody></table></div>`;}
+
+// ================================================================
+// CADASTROS
+// ================================================================
+function renderCadastro(){
+  const eu=state.usuarioLogado;const p=eu.perfil;
+  const perfisPermitidos=[];
+  if(p==='admin')perfisPermitidos.push('admin','master','gestor','atendente');
+  else if(p==='master')perfisPermitidos.push('gestor','atendente');
+  else if(p==='gestor')perfisPermitidos.push('atendente');
+  const formArea=document.getElementById('cad-form-area');const vinculosArea=document.getElementById('vinculos-area');
+  if(!perfisPermitidos.length){formArea.innerHTML='';vinculosArea.classList.add('hidden');renderListaFuncionarios();return;}
+  formArea.innerHTML=`
+    <div id="cad-alert-inner"></div>
+    <div class="card">
+      <div class="card-title">👤 Novo funcionário</div>
+      <div class="grid2">
+        <div><div class="form-label">Nome completo</div><input class="form-input" type="text" id="cad-nome" placeholder="Nome do funcionário"></div>
+        <div><div class="form-label">Login</div><input class="form-input" type="text" id="cad-login" placeholder="ex: joao.silva"></div>
+        <div><div class="form-label">Perfil</div><select class="form-input" id="cad-perfil" onchange="onChangeCadPerfil()"><option value="">Selecionar...</option>${perfisPermitidos.map(pf=>`<option value="${pf}">${PERFIL_LABEL[pf]}</option>`).join('')}</select></div>
+        <div><div class="form-label">Turno</div><select class="form-input" id="cad-turno"><option value="">—</option><option>Manhã</option><option>Tarde</option><option>Noite</option><option>Madrugada</option><option>Período integral</option></select></div>
+      </div>
+      <div id="cad-vinculos-wrapper" style="display:none;margin-top:14px">
+        <div class="form-label">Gestores responsáveis (selecione até 2)</div>
+        <div id="cad-gestores-checkboxes" style="display:flex;flex-direction:column;gap:8px;margin-top:8px;background:var(--surface2);padding:12px;border-radius:var(--radius-md);border:1px solid var(--border)"></div>
+      </div>
+      <p style="font-size:12px;color:var(--text3);margin-top:12px">Senha padrão <strong>123</strong> — alterada no primeiro acesso.</p>
+      <div style="margin-top:12px;text-align:right"><button class="btn primary" onclick="cadastrarFuncionario()">Cadastrar funcionário</button></div>
+    </div>`;
+  if(p==='admin'||p==='master'){vinculosArea.classList.remove('hidden');renderVinculos();}
+  else vinculosArea.classList.add('hidden');
+  renderListaFuncionarios();
+}
+function onChangeCadPerfil(){
+  const pf=document.getElementById('cad-perfil')?.value;const wrapper=document.getElementById('cad-vinculos-wrapper');if(!wrapper)return;
+  if(pf==='atendente'){wrapper.style.display='block';const gl=state.usuarios.filter(u=>u.perfil==='gestor');document.getElementById('cad-gestores-checkboxes').innerHTML=gl.length===0?'<span style="color:var(--text3);font-size:13px">Nenhum gestor cadastrado.</span>':gl.map(g=>`<label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px"><input type="checkbox" class="cad-gestor-cb" value="${g.id}" style="width:16px;height:16px"> ${g.nome} <span class="badge info">${g.turno||'—'}</span></label>`).join('');}
+  else wrapper.style.display='none';
+}
+async function cadastrarFuncionario(){
+  const nome=document.getElementById('cad-nome')?.value.trim();
+  const login=document.getElementById('cad-login')?.value.trim();
+  const perfil=document.getElementById('cad-perfil')?.value;
+  const turno=document.getElementById('cad-turno')?.value;
+  const alertEl=document.getElementById('cad-alert-inner');
+  if(!nome||!login||!perfil){alertEl.innerHTML='<div class="alert danger">⚠ Preencha nome, login e perfil.</div>';return;}
+  if(state.usuarios.find(u=>u.login===login)){alertEl.innerHTML='<div class="alert danger">⚠ Login já em uso.</div>';return;}
+  let gs=[];
+  if(perfil==='atendente'){
+    const cbs=document.querySelectorAll('.cad-gestor-cb:checked');
+    gs=[...cbs].map(cb=>parseInt(cb.value));
+    if(!gs.length){alertEl.innerHTML='<div class="alert danger">⚠ Selecione ao menos um gestor.</div>';return;}
+    if(gs.length>2){alertEl.innerHTML='<div class="alert danger">⚠ Máximo 2 gestores.</div>';return;}
+  }
+  alertEl.innerHTML='<div class="alert info">⏳ Salvando...</div>';
+  try{
+    const r=await fetchComTimeout(API+'/usuarios',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nome,login,senha:'123',perfil,turno,primeiroAcesso:true})});
+    if(!r.ok){if(r.status===409){alertEl.innerHTML='<div class="alert danger">⚠ Login já em uso no banco.</div>';return;}throw new Error();}
+    const usuarioSalvo=await r.json();
+    const novoId=usuarioSalvo.id||state.nextId++;
+    state.usuarios.push({id:novoId,nome,login,senha:'123',perfil,turno,primeiroAcesso:true});
+    if(perfil==='atendente'&&gs.length){
+      state.vinculos[novoId]=gs;
+      await Promise.all(gs.map(gId=>fetchComTimeout(API+'/vinculos',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({atendenteId:novoId,gestorId:gId})})));
+    }
+    alertEl.innerHTML='<div class="alert success">✓ Funcionário cadastrado! Senha: 123</div>';
+    setTimeout(()=>renderCadastro(),2000);
+  }catch(e){alertEl.innerHTML='<div class="alert danger">⚠ Erro de conexão.</div>';}
+}
+function renderListaFuncionarios(){
+  const eu=state.usuarioLogado;const p=eu.perfil;
+  let lista=p==='gestor'?state.usuarios.filter(u=>u.id===eu.id||(state.vinculos[u.id]||[]).includes(eu.id)):state.usuarios;
+  document.getElementById('lista-funcionarios').innerHTML=`<div class="table-wrap"><table><thead><tr><th>Nome</th><th>Login</th><th>Perfil</th><th>Turno</th><th>Gestores</th><th>Senha</th>${p!=='atendente'?'<th></th>':''}</tr></thead><tbody>`
+  +lista.map(u=>{const gv=u.perfil==='atendente'?(state.vinculos[u.id]||[]).map(g=>getNome(g)).join(', '):'—';
+    return`<tr><td style="font-size:12px;font-weight:500">${u.nome}</td><td style="font-family:monospace;font-size:11px;color:var(--text3)">${u.login}</td><td><span class="badge ${PERFIL_CLASS[u.perfil]||''}">${PERFIL_LABEL[u.perfil]||u.perfil}</span></td><td style="font-size:12px">${u.turno||'—'}</td><td style="font-size:11px">${gv}</td><td>${u.primeiroAcesso?'<span class="badge warn">padrão</span>':'<span class="badge ok">alterada</span>'}</td>${p!=='atendente'?`<td>${u.id===eu.id?'':'<button class="btn danger sm" onclick="removerFuncionario('+u.id+')">Remover</button>'}</td>`:''}</tr>`;
+  }).join('')+`</tbody></table></div>`;
+}
+function renderVinculos(){
+  const gl=state.usuarios.filter(u=>u.perfil==='gestor');
+  const al=state.usuarios.filter(u=>u.perfil==='atendente');
+  document.getElementById('vinculos-content').innerHTML=gl.length===0?emptyState('🔗','Nenhum gestor cadastrado','')
+    :gl.map(g=>{
+      const ma=al.filter(a=>(state.vinculos[a.id]||[]).includes(g.id));
+      const sv=al.filter(a=>!(state.vinculos[a.id]||[]).includes(g.id));
+      return`<div class="gestor-section">
+        <div class="gestor-section-title">👤 ${g.nome} <span class="badge info">Gestor · ${g.turno||'—'}</span></div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">
+          ${ma.length===0?'<span style="color:var(--text3);font-size:13px">Nenhum atendente vinculado</span>':ma.map(a=>`<span class="vinculo-tag">${a.nome}<button onclick="desatrelar(${a.id},${g.id})">✕</button></span>`).join('')}
+        </div>
+        ${sv.length>0?`<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <select class="form-input" id="vincular-sel-${g.id}" style="flex:1;min-width:180px;padding:7px 10px;font-size:13px">
+            <option value="">Atrelar atendente...</option>
+            ${sv.map(a=>`<option value="${a.id}">${a.nome} (${a.turno||'—'})</option>`).join('')}
+          </select>
+          <button class="btn primary sm" onclick="atrelar(${g.id})">+ Atrelar</button>
+        </div>`:'<div style="font-size:12px;color:var(--text3);margin-top:4px">Todos já vinculados.</div>'}
+      </div>`;
+    }).join('');
+}
+async function atrelar(gId){
+  const sel=document.getElementById('vincular-sel-'+gId);const aId=parseInt(sel?.value);if(!aId)return;
+  if(!state.vinculos[aId])state.vinculos[aId]=[];
+  if(state.vinculos[aId].includes(gId)){alert('Já vinculado.');return;}
+  if(state.vinculos[aId].length>=2){alert('Máximo 2 gestores por atendente.');return;}
+  try{
+    await fetchComTimeout(API+'/vinculos',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({atendenteId:aId,gestorId:gId})});
+    state.vinculos[aId].push(gId);renderVinculos();renderListaFuncionarios();
+  }catch(e){alert('Erro ao criar vínculo.');}
+}
+async function desatrelar(aId,gId){
+  if(!confirm(`Desatrelar ${getNome(aId)} de ${getNome(gId)}?`))return;
+  try{
+    await fetchComTimeout(API+'/vinculos',{method:'DELETE',headers:{'Content-Type':'application/json'},body:JSON.stringify({atendenteId:aId,gestorId:gId})});
+    state.vinculos[aId]=(state.vinculos[aId]||[]).filter(g=>g!==gId);renderVinculos();renderListaFuncionarios();
+  }catch(e){alert('Erro ao remover vínculo.');}
+}
+async function removerFuncionario(id){
+  if(id===state.usuarioLogado?.id){alert('Não pode remover a si mesmo.');return;}
+  if(!confirm('Remover este funcionário?'))return;
+  try{
+    await fetchComTimeout(API+'/usuarios/'+id,{method:'DELETE'});
+    state.usuarios=state.usuarios.filter(u=>u.id!==id);
+    delete state.vinculos[id];
+    Object.keys(state.vinculos).forEach(k=>{state.vinculos[k]=state.vinculos[k].filter(g=>g!==id);});
+    renderCadastro();
+  }catch(e){alert('Erro ao remover.');}
+}
+
+// ================================================================
+// MINHA CONTA
+// ================================================================
+function alterarSenha(){
+  const u=state.usuarioLogado;const atual=document.getElementById('mc-atual').value;const nova=document.getElementById('mc-nova').value;const conf=document.getElementById('mc-confirm').value;
+  if(atual!==u.senha){document.getElementById('mc-alert').innerHTML='<div class="alert danger">⚠ Senha atual incorreta.</div>';return;}
+  if(nova.length<4){document.getElementById('mc-alert').innerHTML='<div class="alert danger">⚠ Mínimo 4 caracteres.</div>';return;}
+  if(nova!==conf){document.getElementById('mc-alert').innerHTML='<div class="alert danger">⚠ Senhas não coincidem.</div>';return;}
+  const uu=state.usuarios.find(x=>x.id===u.id);uu.senha=nova;uu.primeiroAcesso=false;state.usuarioLogado=uu;
+  fetchComTimeout(API+'/usuarios/'+u.id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({senha:nova,primeiroAcesso:false})}).catch(console.error);
+  document.getElementById('mc-atual').value='';document.getElementById('mc-nova').value='';document.getElementById('mc-confirm').value='';
+  document.getElementById('mc-alert').innerHTML='<div class="alert success">✓ Senha alterada!</div>';
+  setTimeout(()=>document.getElementById('mc-alert').innerHTML='',3000);
+}
+</script>
+</body>
+</html>
