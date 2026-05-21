@@ -6,8 +6,28 @@ const { Pool } = require('pg');
 console.log('INICIANDO');
 
 const app = express();
-app.use(cors());
+
+// CORS explícito — aceita qualquer origem (necessário para Vercel + Render)
+app.use(cors({
+  origin: '*',
+  methods: ['GET','POST','PUT','DELETE','OPTIONS'],
+  allowedHeaders: ['Content-Type','Authorization']
+}));
+app.options('*', cors()); // responde preflight OPTIONS em todas as rotas
+
 app.use(express.json());
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }
+});
+
+// KEEP-ALIVE — faz ping no próprio servidor a cada 14 min para evitar hibernar no Render gratuito
+setInterval(() => {
+  require('https').get('https://feedback-sistema.onrender.com/health', () => {})
+    .on('error', () => {});
+}, 14 * 60 * 1000);
+
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -100,14 +120,33 @@ app.post('/usuarios', async (req, res) => {
 });
 
 app.put('/usuarios/:id', async (req, res) => {
-  const { senha, primeiroAcesso } = req.body;
+  const { nome, login, perfil, turno, senha, primeiroAcesso } = req.body;
   try {
     await pool.query(
-      `UPDATE usuarios SET senha=COALESCE($1,senha), primeiro_acesso=COALESCE($2,primeiro_acesso) WHERE id=$3`,
-      [senha||null, primeiroAcesso!==undefined ? primeiroAcesso : null, req.params.id]
+      `UPDATE usuarios SET
+         nome            = COALESCE($1, nome),
+         login           = COALESCE($2, login),
+         perfil          = COALESCE($3, perfil),
+         turno           = COALESCE($4, turno),
+         senha           = COALESCE($5, senha),
+         primeiro_acesso = COALESCE($6, primeiro_acesso)
+       WHERE id = $7`,
+      [
+        nome   || null,
+        login  || null,
+        perfil || null,
+        turno  !== undefined ? turno  : null,
+        senha  || null,
+        primeiroAcesso !== undefined ? primeiroAcesso : null,
+        req.params.id
+      ]
     );
-    res.json({ok:true});
-  } catch(err) { console.error(err); res.status(500).json({erro:'Erro ao atualizar usuário'}); }
+    res.json({ ok: true });
+  } catch(err) {
+    if(err.code==='23505') return res.status(409).json({erro:'Login já em uso'});
+    console.error('PUT /usuarios/:id erro:', err);
+    res.status(500).json({erro:'Erro ao atualizar usuário'});
+  }
 });
 
 app.delete('/usuarios/:id', async (req, res) => {

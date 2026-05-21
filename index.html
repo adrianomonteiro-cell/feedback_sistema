@@ -531,16 +531,8 @@ function syncHide(){
 // FETCH COM TIMEOUT — evita travar indefinidamente
 // ================================================================
 async function fetchComTimeout(url, opts={}, ms=TIMEOUT_MS){
-  const controller=new AbortController();
-  const timer=setTimeout(()=>controller.abort(),ms);
-  try{
-    const r=await fetch(url,{...opts,signal:controller.signal});
-    clearTimeout(timer);
-    return r;
-  }catch(e){
-    clearTimeout(timer);
-    throw e;
-  }
+  const timeout=new Promise((_,reject)=>setTimeout(()=>reject(new Error('timeout')),ms));
+  return Promise.race([fetch(url,opts),timeout]);
 }
 
 // ================================================================
@@ -1098,13 +1090,173 @@ async function cadastrarFuncionario(){
     setTimeout(()=>renderCadastro(),2000);
   }catch(e){alertEl.innerHTML='<div class="alert danger">⚠ Erro de conexão.</div>';}
 }
+// estado dos filtros e visibilidade da tabela
+let _filtroPerfilFunc='';
+let _filtroTurnoFunc='';
+let _tabelaMinimizada=false;
+
 function renderListaFuncionarios(){
   const eu=state.usuarioLogado;const p=eu.perfil;
-  let lista=p==='gestor'?state.usuarios.filter(u=>u.id===eu.id||(state.vinculos[u.id]||[]).includes(eu.id)):state.usuarios;
-  document.getElementById('lista-funcionarios').innerHTML=`<div class="table-wrap"><table><thead><tr><th>Nome</th><th>Login</th><th>Perfil</th><th>Turno</th><th>Gestores</th><th>Senha</th>${p!=='atendente'?'<th></th>':''}</tr></thead><tbody>`
-  +lista.map(u=>{const gv=u.perfil==='atendente'?(state.vinculos[u.id]||[]).map(g=>getNome(g)).join(', '):'—';
-    return`<tr><td style="font-size:12px;font-weight:500">${u.nome}</td><td style="font-family:monospace;font-size:11px;color:var(--text3)">${u.login}</td><td><span class="badge ${PERFIL_CLASS[u.perfil]||''}">${PERFIL_LABEL[u.perfil]||u.perfil}</span></td><td style="font-size:12px">${u.turno||'—'}</td><td style="font-size:11px">${gv}</td><td>${u.primeiroAcesso?'<span class="badge warn">padrão</span>':'<span class="badge ok">alterada</span>'}</td>${p!=='atendente'?`<td>${u.id===eu.id?'':'<button class="btn danger sm" onclick="removerFuncionario('+u.id+')">Remover</button>'}</td>`:''}</tr>`;
-  }).join('')+`</tbody></table></div>`;
+  let lista=p==='gestor'
+    ?state.usuarios.filter(u=>u.id===eu.id||(state.vinculos[u.id]||[]).includes(eu.id))
+    :state.usuarios;
+
+  // Aplica filtros
+  if(_filtroPerfilFunc) lista=lista.filter(u=>u.perfil===_filtroPerfilFunc);
+  if(_filtroTurnoFunc)  lista=lista.filter(u=>u.turno===_filtroTurnoFunc);
+
+  const perfisUnicos=[...new Set(state.usuarios.map(u=>u.perfil))];
+  const turnosUnicos=[...new Set(state.usuarios.map(u=>u.turno).filter(Boolean))];
+
+  const el=document.getElementById('lista-funcionarios');
+  el.innerHTML=`
+    <!-- CONTROLES: filtros + minimizar -->
+    <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-bottom:14px">
+      <div style="flex:1;min-width:120px">
+        <div class="form-label" style="margin-top:0">Perfil</div>
+        <select class="form-input" style="padding:7px 10px;font-size:13px" onchange="_filtroPerfilFunc=this.value;renderListaFuncionarios()">
+          <option value="">Todos</option>
+          ${perfisUnicos.map(pf=>`<option value="${pf}"${_filtroPerfilFunc===pf?' selected':''}>${PERFIL_LABEL[pf]||pf}</option>`).join('')}
+        </select>
+      </div>
+      <div style="flex:1;min-width:120px">
+        <div class="form-label" style="margin-top:0">Turno</div>
+        <select class="form-input" style="padding:7px 10px;font-size:13px" onchange="_filtroTurnoFunc=this.value;renderListaFuncionarios()">
+          <option value="">Todos</option>
+          ${turnosUnicos.map(t=>`<option value="${t}"${_filtroTurnoFunc===t?' selected':''}>${t}</option>`).join('')}
+        </select>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;padding-bottom:2px">
+        <span style="font-size:12px;color:var(--text3)">${lista.length} funcionário(s)</span>
+        <button class="btn sm" onclick="_tabelaMinimizada=!_tabelaMinimizada;renderListaFuncionarios()" style="gap:5px">
+          ${_tabelaMinimizada?'▼ Expandir':'▲ Minimizar'}
+        </button>
+      </div>
+    </div>
+
+    <!-- TABELA -->
+    ${_tabelaMinimizada?'<div style="text-align:center;color:var(--text3);padding:1rem;font-size:13px;border:1px dashed var(--border);border-radius:var(--radius-md)">Tabela minimizada — clique em Expandir para ver</div>':`
+    <div class="table-wrap"><table>
+      <thead><tr>
+        <th>Nome</th><th>Login</th><th>Perfil</th><th>Turno</th><th>Gestores</th><th>Senha</th>
+        ${p!=='atendente'?'<th style="text-align:right">Ações</th>':''}
+      </tr></thead>
+      <tbody>
+      ${lista.length===0?`<tr><td colspan="7" style="text-align:center;color:var(--text3);padding:2rem">Nenhum resultado com esses filtros</td></tr>`
+      :lista.map(u=>{
+        const gv=u.perfil==='atendente'?(state.vinculos[u.id]||[]).map(g=>getNome(g)).join(', '):'—';
+        const acoes=u.id===eu.id?'':
+          `<div style="display:flex;gap:5px;justify-content:flex-end;flex-wrap:wrap">
+            <button class="btn sm" onclick="abrirModalEdicao(${u.id})" title="Editar">✎ Editar</button>
+            <button class="btn sm" onclick="resetarSenha(${u.id})" title="Resetar senha">🔑 Resetar</button>
+            <button class="btn danger sm" onclick="removerFuncionario(${u.id})" title="Remover">✕</button>
+          </div>`;
+        return`<tr>
+          <td style="font-size:12px;font-weight:500">${u.nome}</td>
+          <td style="font-family:monospace;font-size:11px;color:var(--text3)">${u.login}</td>
+          <td><span class="badge ${PERFIL_CLASS[u.perfil]||''}">${PERFIL_LABEL[u.perfil]||u.perfil}</span></td>
+          <td style="font-size:12px">${u.turno||'—'}</td>
+          <td style="font-size:11px">${gv}</td>
+          <td>${u.primeiroAcesso?'<span class="badge warn">padrão</span>':'<span class="badge ok">alterada</span>'}</td>
+          ${p!=='atendente'?`<td>${acoes}</td>`:''}
+        </tr>`;
+      }).join('')}
+      </tbody>
+    </table></div>`}
+
+    <!-- MODAL DE EDIÇÃO (renderizado inline, oculto por padrão) -->
+    <div id="modal-edicao" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;align-items:center;justify-content:center">
+      <div style="background:var(--surface);border-radius:var(--radius-lg);padding:28px;width:100%;max-width:480px;box-shadow:0 20px 60px rgba(0,0,0,.3);margin:1rem">
+        <div style="font-size:16px;font-weight:700;margin-bottom:18px;color:var(--text)">✎ Editar funcionário</div>
+        <div id="modal-edicao-alert"></div>
+        <div class="form-label">Nome completo</div>
+        <input class="form-input" type="text" id="edit-nome">
+        <div class="form-label" style="margin-top:12px">Login</div>
+        <input class="form-input" type="text" id="edit-login">
+        <div class="form-label" style="margin-top:12px">Perfil</div>
+        <select class="form-input" id="edit-perfil">
+          <option value="admin">Admin</option>
+          <option value="master">Master</option>
+          <option value="gestor">Gestor</option>
+          <option value="atendente">Atendente</option>
+        </select>
+        <div class="form-label" style="margin-top:12px">Turno</div>
+        <select class="form-input" id="edit-turno">
+          <option value="">—</option>
+          <option>Manhã</option><option>Tarde</option><option>Noite</option>
+          <option>Madrugada</option><option>Período integral</option>
+        </select>
+        <input type="hidden" id="edit-id">
+        <div style="display:flex;gap:10px;margin-top:20px;justify-content:flex-end">
+          <button class="btn" onclick="fecharModalEdicao()">Cancelar</button>
+          <button class="btn primary" onclick="salvarEdicaoUsuario()">✓ Salvar alterações</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function abrirModalEdicao(id){
+  const u=state.usuarios.find(x=>x.id===id);if(!u)return;
+  document.getElementById('edit-id').value=id;
+  document.getElementById('edit-nome').value=u.nome;
+  document.getElementById('edit-login').value=u.login;
+  document.getElementById('edit-perfil').value=u.perfil;
+  document.getElementById('edit-turno').value=u.turno||'';
+  document.getElementById('modal-edicao-alert').innerHTML='';
+  document.getElementById('modal-edicao').style.display='flex';
+}
+function fecharModalEdicao(){
+  document.getElementById('modal-edicao').style.display='none';
+}
+
+async function salvarEdicaoUsuario(){
+  const id=parseInt(document.getElementById('edit-id').value);
+  const nome=document.getElementById('edit-nome').value.trim();
+  const login=document.getElementById('edit-login').value.trim();
+  const perfil=document.getElementById('edit-perfil').value;
+  const turno=document.getElementById('edit-turno').value;
+  const alertEl=document.getElementById('modal-edicao-alert');
+  if(!nome||!login){alertEl.innerHTML='<div class="alert danger">⚠ Nome e login são obrigatórios.</div>';return;}
+  // Checa login duplicado (exceto o próprio)
+  if(state.usuarios.find(u=>u.login===login&&u.id!==id)){alertEl.innerHTML='<div class="alert danger">⚠ Login já em uso.</div>';return;}
+  alertEl.innerHTML='<div class="alert info">⏳ Salvando...</div>';
+  try{
+    await fetchComTimeout(API+'/usuarios/'+id,{
+      method:'PUT',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({nome,login,perfil,turno})
+    });
+    // Atualiza state local
+    const u=state.usuarios.find(x=>x.id===id);
+    if(u){u.nome=nome;u.login=login;u.perfil=perfil;u.turno=turno;}
+    fecharModalEdicao();
+    renderCadastro();
+  }catch(e){
+    alertEl.innerHTML='<div class="alert danger">⚠ Erro ao salvar. Tente novamente.</div>';
+  }
+}
+
+async function resetarSenha(id){
+  const u=state.usuarios.find(x=>x.id===id);
+  if(!u)return;
+  if(!confirm(`Resetar a senha de "${u.nome}" para 123?`))return;
+  try{
+    await fetchComTimeout(API+'/usuarios/'+id,{
+      method:'PUT',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({senha:'123',primeiroAcesso:true})
+    });
+    u.senha='123';u.primeiroAcesso=true;
+    renderListaFuncionarios();
+    // feedback visual rápido
+    const el=document.getElementById('lista-funcionarios');
+    const banner=document.createElement('div');
+    banner.className='alert success';banner.style.marginBottom='12px';
+    banner.innerHTML=`✓ Senha de ${u.nome} resetada para 123`;
+    el.prepend(banner);
+    setTimeout(()=>banner.remove(),3500);
+  }catch(e){alert('Erro ao resetar senha.');}
 }
 function renderVinculos(){
   const gl=state.usuarios.filter(u=>u.perfil==='gestor');
