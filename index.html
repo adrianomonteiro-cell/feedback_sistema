@@ -568,22 +568,7 @@ function syncOk(msg){
 // ================================================================
 // FUNÇÕES DE CARREGAMENTO DO BANCO
 // ================================================================
-async function carregarUsuarios(){
-
-  const r = await apiFetch(API + '/usuarios');
-
-  if(!r.ok) return;
-
-  const dados = await r.json();
-
-  state.usuarios = dados;
-
-  const maiorId = dados.reduce(
-    (m, u) => Math.max(m, Number(u.id) || 1),
-    1
-  );
-
-  state.nextId = Math.max(state.nextId, maiorId + 1);
+async function carregarUsuarios(){ const r=await apiFetch(API+'/usuarios'); if(!r.ok) return; const dados=await r.json(); const admin={id:1,nome:'Administrador',login:'admin',senha:'admin123',perfil:'admin',turno:'',primeiroAcesso:false}; const filtrado=dados.filter(u=>u.login!=='admin'); const maiorId=filtrado.reduce((m,u)=>Math.max(m,Number(u.id)||1),1); state.usuarios=[admin,...filtrado]; state.nextId=Math.max(state.nextId, maiorId+1); }
 
 }
 async function carregarVinculos(){
