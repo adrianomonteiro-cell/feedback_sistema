@@ -15,7 +15,7 @@
   --transition:.25s cubic-bezier(.4,0,.2,1);
 }
 body[data-theme="light"]{
-  --bg:#f0f4f0;--surface:#fff;--surface2:#f6f9f6;
+  --bg:#f0f4f0;--surface:#fff;--surface2:#f6f9f6;--surface3:#edf2ed;
   --border:#dce8dc;--border2:#c8dcc8;--text:#1a2e1b;--text2:#3d5c3e;--text3:#6b8f6c;
   --sidebar-bg:var(--green-700);--sidebar-text:#d4e8d4;--sidebar-muted:#7aA07b;
   --sidebar-active-bg:var(--green-600);--sidebar-active-text:#fff;
@@ -23,16 +23,16 @@ body[data-theme="light"]{
   --tag-green-bg:var(--green-100);--tag-green-text:var(--green-600);
 }
 body[data-theme="dark"]{
-  --bg:#0f1a10;--surface:#1a271b;--surface2:#1f301f;
+  --bg:#0f1a10;--surface:#1a271b;--surface2:#1f301f;--surface3:#243025;
   --border:#2a3d2b;--border2:#344535;--text:#e2f0e2;--text2:#a8c8a8;--text3:#6a8c6b;
   --sidebar-bg:#111a12;--sidebar-text:#a0c8a0;--sidebar-muted:#4a6a4b;
   --sidebar-active-bg:var(--green-600);--sidebar-active-text:#fff;
   --sidebar-hover:rgba(255,255,255,.06);--topbar-bg:#141f15;
   --tag-green-bg:rgba(59,109,17,.25);--tag-green-text:#7acc40;
 }
-body{font-family:'Outfit',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+body{font-family:'Outfit',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background var(--transition),color var(--transition)}
 .layout{display:flex;min-height:100vh}
-.sidebar{width:var(--sidebar-mini);background:var(--sidebar-bg);display:flex;flex-direction:column;z-index:100;box-shadow:4px 0 24px rgba(0,0,0,.15);overflow:hidden;transition:width var(--transition);flex-shrink:0}
+.sidebar{width:var(--sidebar-mini);background:var(--sidebar-bg);display:flex;flex-direction:column;position:relative;z-index:100;box-shadow:4px 0 24px rgba(0,0,0,.15);overflow:hidden;transition:width var(--transition);flex-shrink:0}
 .sidebar:hover{width:var(--sidebar-w)}
 .sidebar-logo{display:flex;align-items:center;gap:12px;padding:20px 14px 16px;border-bottom:1px solid rgba(255,255,255,.08);min-height:68px;overflow:hidden}
 .logo-icon{width:36px;height:36px;min-width:36px;border-radius:var(--radius-md);background:var(--green-600);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
@@ -65,7 +65,8 @@ body{font-family:'Outfit',system-ui,sans-serif;background:var(--bg);color:var(--
 .theme-btn{padding:5px 10px;border-radius:99px;font-size:12px;font-weight:500;border:none;cursor:pointer;background:transparent;color:var(--text3);transition:all var(--transition);font-family:inherit}
 .theme-btn.active{background:var(--surface);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.1)}
 .page-wrap{flex:1;overflow-y:auto;padding:24px}
-.page-section{display:none}.page-section.active{display:block}
+.page-section{display:none}
+.page-section.active{display:block}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin-bottom:16px}
 .card-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:14px;display:flex;align-items:center;gap:8px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
@@ -128,25 +129,30 @@ textarea.form-input{resize:vertical}
 .score-bar-fill{height:100%;border-radius:5px;transition:width .35s,background .35s}
 .score-total{font-size:22px;font-weight:700;padding:14px;border-radius:var(--radius-md);text-align:center;margin-top:12px;font-family:'JetBrains Mono',monospace}
 .relato-box{background:rgba(26,95,168,.05);border:1px dashed rgba(26,95,168,.3);border-radius:var(--radius-md);padding:14px;margin-top:16px}
-.relato-label{font-size:12px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
+.relato-label{font-size:12px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;display:flex;align-items:center;gap:6px}
 .relato-input{width:100%;min-height:90px;padding:10px 13px;font-size:13px;border-radius:var(--radius-md);border:1px solid rgba(26,95,168,.25);background:var(--surface);color:var(--text);resize:vertical;font-family:inherit;line-height:1.6}
 .relato-input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,95,168,.1)}
-/* PENALIDADE */
-.pen-box{margin-top:16px;border:1.5px solid var(--orange);border-radius:var(--radius-lg);overflow:hidden}
-.pen-header{display:flex;align-items:center;gap:10px;padding:12px 16px;background:rgba(192,80,10,.1);border-bottom:1px solid rgba(192,80,10,.15)}
-body[data-theme="dark"] .pen-header{background:rgba(192,80,10,.15)}
-.pen-header-icon{font-size:18px}
-.pen-header-title{font-size:13px;font-weight:700;color:var(--orange);text-transform:uppercase;letter-spacing:.04em}
-.pen-body{padding:14px 16px;background:var(--orange-bg)}
-body[data-theme="dark"] .pen-body{background:rgba(192,80,10,.05)}
-.pen-radio-row{display:flex;gap:20px;margin-bottom:4px}
-.pen-radio-label{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:15px;font-weight:600}
-.pen-sim-area{margin-top:14px;padding-top:14px;border-top:1px solid rgba(192,80,10,.2)}
-.pen-tipos{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
-.pen-tipo-btn{padding:8px 16px;font-size:13px;font-weight:600;border-radius:var(--radius-md);border:2px solid rgba(192,80,10,.3);background:transparent;color:var(--orange);cursor:pointer;font-family:inherit;transition:all .15s}
-.pen-tipo-btn.ativo{background:var(--orange);color:#fff;border-color:var(--orange);box-shadow:0 3px 10px rgba(192,80,10,.35)}
-.pen-tipo-btn:hover{filter:brightness(.92)}
-/* CANAIS */
+.penalidade-box{margin-top:16px;border:1.5px solid var(--orange);border-radius:var(--radius-lg);overflow:hidden;background:var(--orange-bg)}
+body[data-theme="dark"] .penalidade-box{background:rgba(192,80,10,.08);border-color:rgba(192,80,10,.4)}
+.penalidade-header{display:flex;align-items:center;gap:10px;padding:12px 16px;background:rgba(192,80,10,.12);border-bottom:1px solid rgba(192,80,10,.2)}
+body[data-theme="dark"] .penalidade-header{background:rgba(192,80,10,.15)}
+.penalidade-header-icon{font-size:18px}
+.penalidade-header-title{font-size:13px;font-weight:700;color:var(--orange);text-transform:uppercase;letter-spacing:.05em}
+.penalidade-header-sub{font-size:12px;color:var(--orange);opacity:.75;margin-left:4px}
+.penalidade-body{padding:14px 16px}
+.pen-opcoes{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px}
+.pen-btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;font-size:13px;font-weight:600;border-radius:var(--radius-md);border:2px solid transparent;cursor:pointer;transition:all .15s;font-family:inherit}
+.pen-btn.nao-off{background:rgba(59,109,17,.1);color:var(--green-600);border-color:rgba(59,109,17,.2)}
+.pen-btn.nao-on{background:var(--green-600);color:#fff;border-color:var(--green-600);box-shadow:0 3px 10px rgba(59,109,17,.3)}
+.pen-btn.pen-off{background:rgba(192,80,10,.08);color:var(--orange);border-color:rgba(192,80,10,.25)}
+.pen-btn.pen-on{background:var(--orange);color:#fff;border-color:var(--orange);box-shadow:0 3px 12px rgba(192,80,10,.35)}
+.pen-btn:hover{filter:brightness(.92)}
+.pen-separador{display:flex;align-items:center;gap:8px;margin:10px 0 6px;font-size:11px;font-weight:700;color:var(--orange);text-transform:uppercase;letter-spacing:.06em;opacity:.7}
+.pen-separador::before,.pen-separador::after{content:'';flex:1;height:1px;background:rgba(192,80,10,.2)}
+.pen-resultado{margin-top:12px;display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:var(--radius-md);font-size:13px;font-weight:600}
+.pen-resultado.nao{background:var(--tag-green-bg);color:var(--tag-green-text);border:1px solid rgba(59,109,17,.2)}
+.pen-resultado.sim{background:var(--orange-bg);color:var(--orange);border:1px solid rgba(192,80,10,.3)}
+body[data-theme="dark"] .pen-resultado.sim{background:rgba(192,80,10,.15)}
 .canais-box{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-lg);margin-bottom:16px;overflow:hidden}
 .canais-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;user-select:none;transition:background var(--transition)}
 .canais-header:hover{background:var(--surface2)}
@@ -164,7 +170,6 @@ body[data-theme="dark"] .pen-body{background:rgba(192,80,10,.05)}
 .canal-table tr:last-child td{border-bottom:none}
 .canal-add-row{display:flex;gap:8px;margin-top:10px;align-items:center}
 .canal-add-row .form-input{flex:1}
-/* OUTROS */
 .tab-row{display:flex;gap:4px;margin-bottom:16px;background:var(--surface2);border-radius:var(--radius-md);padding:4px;border:1px solid var(--border)}
 .tab-btn{flex:1;padding:7px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;border:none;background:transparent;color:var(--text3);cursor:pointer;font-family:inherit;transition:all var(--transition)}
 .tab-btn.active{background:var(--surface);color:var(--green-600);font-weight:600;box-shadow:0 1px 4px rgba(0,0,0,.08)}
@@ -189,13 +194,12 @@ body[data-theme="light"] .login-body .form-label{color:var(--text3)}
 body[data-theme="light"] .login-body .form-input{background:var(--surface);border-color:var(--border2);color:var(--text)}
 .login-hint{font-size:12px;color:rgba(255,255,255,.35);text-align:center;margin-top:14px}
 body[data-theme="light"] .login-hint{color:var(--text3)}
-/* sync banner */
-.sync-banner{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#1a2e1b;color:#d4e8d4;font-size:12px;font-weight:500;padding:8px 18px;border-radius:99px;display:flex;align-items:center;gap:8px;box-shadow:0 4px 20px rgba(0,0,0,.3);z-index:500;transition:opacity .4s}
+/* Banner de carregamento em segundo plano */
+.sync-banner{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#1a2e1b;color:#d4e8d4;font-size:12px;font-weight:500;padding:8px 16px;border-radius:99px;display:flex;align-items:center;gap:8px;box-shadow:0 4px 20px rgba(0,0,0,.3);z-index:500;transition:opacity .4s}
 .sync-banner.hidden{opacity:0;pointer-events:none}
 .sync-dot{width:7px;height:7px;border-radius:50%;background:var(--amber);animation:pulse 1s infinite}
 .sync-dot.ok{background:var(--green-500);animation:none}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-/* feedbacks */
 .fb-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:12px;overflow:hidden}
 .fb-card.pendente{border-left:4px solid var(--amber)}
 .fb-card.concluido{border-left:4px solid var(--green-600)}
@@ -212,7 +216,7 @@ body[data-theme="light"] .login-hint{color:var(--text3)}
 .fb-nota{font-size:16px;font-weight:700;font-family:'JetBrains Mono',monospace;padding:4px 10px;border-radius:var(--radius-sm)}
 .fb-chevron{font-size:12px;color:var(--text3);transition:transform var(--transition)}
 .fb-chevron.open{transform:rotate(180deg)}
-.fb-body{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.4,0,.2,1)}
+.fb-body{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.4,0,.2,1)}
 .fb-body.open{max-height:1400px}
 .fb-body-inner{padding:0 18px 18px;border-top:1px solid var(--border)}
 .fb-section-title{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin:14px 0 8px}
@@ -222,6 +226,7 @@ body[data-theme="light"] .login-hint{color:var(--text3)}
 .fb-feedback-existente{font-size:13px;color:var(--text);line-height:1.6;white-space:pre-wrap}
 .fb-concluido-info{background:var(--tag-green-bg);border:1px solid rgba(59,109,17,.2);border-radius:var(--radius-md);padding:12px 14px;font-size:13px;color:var(--tag-green-text);font-weight:500;margin-top:12px}
 .fb-penalidade-tag{display:inline-flex;align-items:center;gap:6px;background:var(--orange-bg);color:var(--orange);font-size:12px;font-weight:600;padding:4px 10px;border-radius:99px;border:1px solid rgba(192,80,10,.3);margin-top:6px}
+body[data-theme="dark"] .fb-penalidade-tag{background:rgba(192,80,10,.15)}
 .filter-row{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-bottom:16px}
 .filter-row .form-input{width:auto;flex:1;min-width:120px;padding:8px 12px}
 .vinculo-tag{display:inline-flex;align-items:center;gap:5px;background:var(--blue-bg);color:var(--blue);font-size:11px;font-weight:600;padding:3px 8px;border-radius:99px;border:1px solid rgba(26,95,168,.2)}
@@ -244,12 +249,13 @@ body[data-theme="light"] .login-hint{color:var(--text3)}
 </head>
 <body data-theme="light">
 
+<!-- Banner de sincronização em segundo plano -->
 <div class="sync-banner hidden" id="sync-banner">
   <div class="sync-dot" id="sync-dot"></div>
-  <span id="sync-msg">Conectando...</span>
+  <span id="sync-msg">Sincronizando dados...</span>
 </div>
 
-<!-- LOGIN -->
+<!-- LOGIN — aparece imediatamente -->
 <div id="login-screen">
   <div class="login-page">
     <div class="login-card">
@@ -318,8 +324,6 @@ body[data-theme="light"] .login-hint{color:var(--text3)}
         </div>
       </div>
       <div class="page-wrap">
-
-        <!-- PAINEL -->
         <div class="page-section active" id="page-dashboard">
           <div class="grid4" id="dash-metrics" style="margin-bottom:16px"></div>
           <div class="grid2">
@@ -328,8 +332,6 @@ body[data-theme="light"] .login-hint{color:var(--text3)}
           </div>
           <div class="card"><div class="card-title">🕐 Últimas avaliações</div><div id="dash-ultimas"></div></div>
         </div>
-
-        <!-- NOVA AVALIAÇÃO -->
         <div class="page-section" id="page-avaliacao">
           <div id="av-alert"></div>
           <div class="card">
@@ -351,39 +353,43 @@ body[data-theme="light"] .login-hint{color:var(--text3)}
             </div>
             <div class="relato-box">
               <div class="relato-label">📄 Relato do atendimento</div>
-              <textarea class="relato-input" id="av-relato" placeholder="Cole ou digite o relato do atendimento..."></textarea>
+              <textarea class="relato-input" id="av-relato" placeholder="Cole ou digite aqui o relato/transcrição do atendimento..."></textarea>
             </div>
-            <!-- PENALIDADE -->
-            <div class="pen-box" style="margin-top:16px">
-              <div class="pen-header">
-                <span class="pen-header-icon">⚠️</span>
-                <span class="pen-header-title">Este atendimento gerou alguma penalidade?</span>
+            <div class="penalidade-box" id="pen-box">
+              <!-- HEADER clicável apenas para fechar quando sim estiver selecionado -->
+              <div class="penalidade-header" style="cursor:default">
+                <span class="penalidade-header-icon">⚠️</span>
+                <span class="penalidade-header-title">Este atendimento gerou alguma penalidade?</span>
               </div>
-              <div class="pen-body">
-                <div class="pen-radio-row">
-                  <label class="pen-radio-label" style="color:var(--green-600)">
-                    <input type="radio" name="pen-radio" id="pen-radio-nao" value="nao" onchange="onPenRadio('nao')" style="width:17px;height:17px;accent-color:var(--green-600)"> Não
+              <div class="penalidade-body">
+                <!-- Radio Não / Sim -->
+                <div style="display:flex;gap:16px;margin-bottom:4px">
+                  <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px;font-weight:600;color:var(--green-600)">
+                    <input type="radio" name="pen-radio" id="pen-radio-nao" value="nao" onchange="onPenRadio('nao')" style="width:17px;height:17px;accent-color:var(--green-600)">
+                    Não
                   </label>
-                  <label class="pen-radio-label" style="color:var(--orange)">
-                    <input type="radio" name="pen-radio" id="pen-radio-sim" value="sim" onchange="onPenRadio('sim')" style="width:17px;height:17px;accent-color:var(--orange)"> Sim
+                  <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px;font-weight:600;color:var(--orange)">
+                    <input type="radio" name="pen-radio" id="pen-radio-sim" value="sim" onchange="onPenRadio('sim')" style="width:17px;height:17px;accent-color:var(--orange)">
+                    Sim
                   </label>
                 </div>
-                <div id="pen-sim-area" style="display:none">
-                  <div class="pen-sim-area">
-                    <div style="font-size:12px;font-weight:700;color:var(--orange);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Qual penalidade?</div>
-                    <div class="pen-tipos">
-                      <button class="pen-tipo-btn" id="pen-verbal" onclick="selecionarPenTipo('verbal')">🗣 Advertência Verbal</button>
-                      <button class="pen-tipo-btn" id="pen-escrita" onclick="selecionarPenTipo('escrita')">📝 Advertência Escrita</button>
-                      <button class="pen-tipo-btn" id="pen-suspensao" onclick="selecionarPenTipo('suspensao')">🚫 Suspensão</button>
-                    </div>
-                    <div class="form-label" style="color:var(--orange)">Observação sobre a penalidade</div>
-                    <textarea class="form-input" id="pen-obs" rows="2" placeholder="Descreva o motivo da penalidade..." style="border-color:rgba(192,80,10,.35);margin-top:6px"></textarea>
+                <!-- Área expandida só quando SIM -->
+                <div id="pen-sim-area" style="display:none;margin-top:12px;border-top:1px solid rgba(192,80,10,.2);padding-top:12px">
+                  <div style="font-size:12px;font-weight:700;color:var(--orange);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Qual penalidade?</div>
+                  <div style="display:flex;gap:10px;flex-wrap:wrap">
+                    <button class="pen-btn pen-off" id="pen-verbal" onclick="selecionarTipoPenalidade('verbal')">🗣 Advertência Verbal</button>
+                    <button class="pen-btn pen-off" id="pen-escrita" onclick="selecionarTipoPenalidade('escrita')">📝 Advertência Escrita</button>
+                    <button class="pen-btn pen-off" id="pen-suspensao" onclick="selecionarTipoPenalidade('suspensao')">🚫 Suspensão</button>
+                  </div>
+                  <div style="margin-top:12px">
+                    <div style="font-size:12px;font-weight:600;color:var(--orange);margin-bottom:5px;text-transform:uppercase;letter-spacing:.04em">Observação sobre a penalidade</div>
+                    <textarea id="pen-obs" class="form-input" rows="2" placeholder="Descreva o motivo da penalidade..." style="border-color:rgba(192,80,10,.35);resize:vertical;font-size:13px"></textarea>
                   </div>
                 </div>
+                <div id="pen-resultado" class="hidden" style="margin-top:10px"></div>
               </div>
             </div>
           </div>
-          <!-- CANAIS -->
           <div class="canais-box">
             <div class="canais-header" onclick="toggleCanais()">
               <div class="canais-header-left"><span style="font-size:16px">📡</span><span class="canais-header-title">Gerenciar canais</span><div class="canais-chips-preview" id="canais-chips-preview"></div></div>
@@ -394,11 +400,10 @@ body[data-theme="light"] .login-hint{color:var(--text3)}
               <div class="canal-add-row"><input class="form-input" type="text" id="canal-novo-input" placeholder="Nome do novo canal..."><button class="btn primary sm" onclick="adicionarCanal()">+ Adicionar</button></div>
             </div>
           </div>
-          <!-- QUESITOS -->
           <div class="card">
             <div class="card-title" style="justify-content:space-between">
               <span>📝 Quesitos de avaliação</span>
-              <button class="btn sm primary" onclick="marcarTodosSim()">✓ Marcar todos como SIM</button>
+              <button class="btn sm primary" onclick="marcarTodosSimm()">✓ Marcar todos como SIM</button>
             </div>
             <div id="quesitos-list"></div>
             <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px">
@@ -410,8 +415,6 @@ body[data-theme="light"] .login-hint{color:var(--text3)}
           </div>
           <div style="text-align:right;margin-top:4px"><button class="btn primary" style="padding:11px 28px;font-size:15px" onclick="salvarAvaliacao()">✓ Salvar avaliação</button></div>
         </div>
-
-        <!-- FEEDBACKS -->
         <div class="page-section" id="page-feedbacks">
           <div id="fb-readonly-banner" class="readonly-banner hidden">👁 Você está visualizando seus feedbacks em modo somente leitura.</div>
           <div class="grid4" id="fb-metrics" style="margin-bottom:16px"></div>
@@ -422,8 +425,6 @@ body[data-theme="light"] .login-hint{color:var(--text3)}
           </div>
           <div id="fb-lista"></div>
         </div>
-
-        <!-- HISTÓRICO -->
         <div class="page-section" id="page-historico">
           <div id="hist-readonly-banner" class="readonly-banner hidden">👁 Você está visualizando seu histórico em modo somente leitura.</div>
           <div class="card" style="display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap">
@@ -432,8 +433,6 @@ body[data-theme="light"] .login-hint{color:var(--text3)}
           </div>
           <div id="historico-table"></div>
         </div>
-
-        <!-- RELATÓRIOS -->
         <div class="page-section" id="page-relatorios">
           <div id="rel-readonly-banner" class="readonly-banner hidden">👁 Você está visualizando seu relatório em modo somente leitura.</div>
           <div class="tab-row">
@@ -451,20 +450,13 @@ body[data-theme="light"] .login-hint{color:var(--text3)}
           <div id="rel-turno" class="hidden"><div id="rel-turno-content"></div></div>
           <div id="rel-geral" class="hidden"><div id="rel-geral-content"></div></div>
         </div>
-
-        <!-- CADASTROS -->
         <div class="page-section" id="page-cadastro">
           <div id="cad-form-area"></div>
-          <div class="card">
-            <div class="card-title">👥 Funcionários cadastrados</div>
-            <div id="lista-funcionarios"></div>
-          </div>
+          <div class="card"><div class="card-title">👥 Funcionários cadastrados</div><div id="lista-funcionarios"></div></div>
           <div id="vinculos-area" class="hidden">
             <div class="card"><div class="card-title">🔗 Vínculos gestor ↔ atendente</div><div id="vinculos-content"></div></div>
           </div>
         </div>
-
-        <!-- MINHA CONTA -->
         <div class="page-section" id="page-minha-conta">
           <div class="card" style="max-width:460px">
             <div class="card-title">🔒 Alterar senha</div>
@@ -478,7 +470,6 @@ body[data-theme="light"] .login-hint{color:var(--text3)}
             <div style="margin-top:16px"><button class="btn primary" onclick="alterarSenha()">Atualizar senha</button></div>
           </div>
         </div>
-
       </div>
     </div>
   </div>
@@ -489,6 +480,7 @@ body[data-theme="light"] .login-hint{color:var(--text3)}
 // CONFIGURAÇÃO
 // ================================================================
 const API = 'https://feedback-sistema.onrender.com';
+const TIMEOUT_MS = 60000; // 60s para acordar o Render
 
 const QUESITOS=[
   {nome:'Sabe interromper',max:5},{nome:'Questionamentos necessários',max:7},
@@ -507,81 +499,96 @@ const ANO_ATUAL=new Date().getFullYear();
 const PERFIL_LABEL={admin:'Admin',master:'Master',gestor:'Gestor',atendente:'Atendente'};
 const PERFIL_CLASS={admin:'perfil-admin',master:'perfil-master',gestor:'perfil-gestor',atendente:'perfil-atendente'};
 const PEN_LABEL={nao:'Sem penalidade',verbal:'Advertência Verbal',escrita:'Advertência Escrita',suspensao:'Suspensão'};
-const PEN_ICON={verbal:'🗣',escrita:'📝',suspensao:'🚫'};
+const PEN_ICON={nao:'✓',verbal:'🗣',escrita:'📝',suspensao:'🚫'};
 
-// ── variáveis de formulário ──
 let respostas=new Array(QUESITOS.length).fill(null);
 let observacoes=new Array(QUESITOS.length).fill('');
-let penalidade='';   // '' | 'nao' | 'sim'
-let penTipo='';      // '' | 'verbal' | 'escrita' | 'suspensao'
+let penalidade='';
 let editingCanalIdx=null;
 let canaisAberto=false;
 let fbAbertos={};
-let bancoPronto=false;
-let _filtroPerfilFunc='';
-let _filtroTurnoFunc='';
-let _tabelaMinimizada=false;
+let bancoPronto=false; // flag: banco já respondeu?
 
-// ================================================================
-// STATE — ÚNICO PONTO DE VERDADE (vem do banco, nunca fixo)
-// ================================================================
+// STATE — admin fixo, resto vem do banco
 let state={
-  usuarios:[
-    // admin fixo em memória — nunca depende do banco
-    {id:1,nome:'Administrador',login:'admin',senha:'admin123',perfil:'admin',turno:'',primeiroAcesso:false}
-  ],
+  canais:[],
   vinculos:{},
-  canais:[],       // carregado do banco
-  avaliacoes:[],   // carregado do banco
-  feedbacks:{},    // carregado do banco
+  usuarios:[{id:1,nome:'Administrador',login:'admin',senha:'admin123',perfil:'admin',turno:'',primeiroAcesso:false}],
+  avaliacoes:[],
+  feedbacks:{},
   nextId:2,
   usuarioLogado:null
 };
 
 // ================================================================
-// FETCH — sem AbortController para evitar DataCloneError
-// ================================================================
-function apiFetch(url, opts){
-  const timeout=new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),60000));
-  return Promise.race([fetch(url, opts||{}), timeout]);
-}
-
-// ================================================================
-// SYNC BANNER
+// SYNC BANNER — mostra progresso sem bloquear a tela
 // ================================================================
 function syncShow(msg){
   const b=document.getElementById('sync-banner');
   const d=document.getElementById('sync-dot');
   const m=document.getElementById('sync-msg');
   if(b)b.classList.remove('hidden');
-  if(d)d.classList.remove('ok');
+  if(d){d.classList.remove('ok');}
   if(m)m.textContent=msg;
 }
 function syncOk(msg){
+  const b=document.getElementById('sync-banner');
   const d=document.getElementById('sync-dot');
   const m=document.getElementById('sync-msg');
   if(d)d.classList.add('ok');
   if(m)m.textContent=msg;
-  setTimeout(()=>document.getElementById('sync-banner')?.classList.add('hidden'),3000);
+  setTimeout(()=>b&&b.classList.add('hidden'),3000);
+}
+function syncHide(){
+  const b=document.getElementById('sync-banner');
+  if(b)b.classList.add('hidden');
 }
 
 // ================================================================
-// FUNÇÕES DE CARREGAMENTO DO BANCO
+// FETCH COM TIMEOUT — evita travar indefinidamente
+// ================================================================
+async function fetchComTimeout(url, opts={}, ms=TIMEOUT_MS){
+  const timeout=new Promise((_,reject)=>setTimeout(()=>reject(new Error('timeout')),ms));
+  return Promise.race([fetch(url,opts),timeout]);
+}
+
+// ================================================================
+// CARREGAMENTO EM SEGUNDO PLANO — não bloqueia o login
 // ================================================================
 async function carregarUsuarios(){
-  const r=await apiFetch(API+'/usuarios');
-  if(!r.ok) return;
+  const r=await fetchComTimeout(API+'/usuarios');
+  if(!r.ok)return;
   const dados=await r.json();
   const admin={id:1,nome:'Administrador',login:'admin',senha:'admin123',perfil:'admin',turno:'',primeiroAcesso:false};
   const filtrado=dados.filter(u=>u.login!=='admin');
   const maiorId=filtrado.reduce((m,u)=>Math.max(m,Number(u.id)||1),1);
   state.usuarios=[admin,...filtrado];
-  state.nextId=Math.max(state.nextId, maiorId+1);
+  state.nextId=Math.max(state.nextId,maiorId+1);
 }
 
+async function carregarCanais(){
+  try{
+    const r=await fetchComTimeout(API+'/canais');
+    if(!r.ok)return;
+    const dados=await r.json();
+    state.canais=dados.map(c=>({id:c.id,nome:c.nome}));
+    if(state.canais.length===0){
+      const padroes=['FUNCI','SCSP','ILUMINACAO','VETMOVEL'];
+      for(const nome of padroes){
+        try{
+          const rp=await fetchComTimeout(API+'/canais',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nome})});
+          if(rp.ok){const d=await rp.json();state.canais.push({id:d.id,nome:d.nome});}
+        }catch(e){state.canais.push({id:null,nome});}
+      }
+    }
+  }catch(e){
+    console.error('carregarCanais:',e);
+    state.canais=[{id:null,nome:'FUNCI'},{id:null,nome:'SCSP'},{id:null,nome:'ILUMINACAO'},{id:null,nome:'VETMOVEL'}];
+  }
+}
 async function carregarVinculos(){
-  const r=await apiFetch(API+'/vinculos');
-  if(!r.ok) return;
+  const r=await fetchComTimeout(API+'/vinculos');
+  if(!r.ok)return;
   const dados=await r.json();
   state.vinculos={};
   Object.entries(dados).forEach(([aId,gs])=>{
@@ -589,89 +596,69 @@ async function carregarVinculos(){
   });
 }
 
-async function carregarCanais(){
-  const r=await apiFetch(API+'/canais');
-  if(!r.ok) return;
-  const dados=await r.json();
-  state.canais=dados; // [{id, nome}]
-  // Se banco vazio, insere padrões
-  if(state.canais.length===0){
-    const padroes=['FUNCI','SCSP','ILUMINAÇÃO','VETMOVEL'];
-    for(const nome of padroes){
-      try{
-        const rp=await apiFetch(API+'/canais',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nome})});
-        if(rp.ok){const d=await rp.json();state.canais.push(d);}
-      }catch(e){state.canais.push({id:null,nome});}
-    }
-  }
-}
-
 async function carregarAvaliacoes(){
-  const r=await apiFetch(API+'/avaliacoes');
-  if(!r.ok) return;
+  const r=await fetchComTimeout(API+'/avaliacoes');
+  if(!r.ok)return;
   const dados=await r.json();
   state.avaliacoes=dados.map(a=>({
-    ...a,
-    id:Number(a.id),
-    atendenteId:Number(a.atendenteId),
-    gestorId:Number(a.gestorId),
-    nota:parseFloat(a.nota)
+    ...a,id:Number(a.id),atendenteId:Number(a.atendenteId),
+    gestorId:Number(a.gestorId),nota:parseFloat(a.nota)
   }));
   const maiorId=state.avaliacoes.reduce((m,a)=>Math.max(m,a.id),0);
-  state.nextId=Math.max(state.nextId, maiorId+1);
+  state.nextId=Math.max(state.nextId,maiorId+1);
 }
 
 async function carregarFeedbacks(){
-  const r=await apiFetch(API+'/feedbacks');
-  if(!r.ok) return;
+  const r=await fetchComTimeout(API+'/feedbacks');
+  if(!r.ok)return;
   const dados=await r.json();
   state.feedbacks={};
   Object.entries(dados).forEach(([avId,fb])=>{
     state.feedbacks[Number(avId)]=fb;
   });
-  // Garante feedback pendente para avaliações sem registro
   state.avaliacoes.forEach(a=>{
-    if(!state.feedbacks[a.id]){
+    if(!state.feedbacks[a.id])
       state.feedbacks[a.id]={avaliacaoId:a.id,texto:'',status:'pendente',gestorId:null,dataConclusao:null};
-    }
   });
 }
 
-// Carrega TUDO em background — login não bloqueia
+// Inicia carregamento em background SEM bloquear o login
 async function inicializarBackground(){
   syncShow('Conectando ao servidor...');
-  // Acorda o Render (ping com retry)
-  let online=false;
-  for(let t=1;t<=18;t++){
-    try{
-      syncShow(`Aguardando servidor... (${t}/18)`);
-      const r=await Promise.race([
-        fetch(API+'/health'),
-        new Promise((_,rej)=>setTimeout(()=>rej(new Error('t')),5000))
-      ]);
-      if(r.ok){online=true;break;}
-    }catch(e){ await new Promise(r=>setTimeout(r,5000)); }
-  }
-  if(!online){ syncOk('⚠ Servidor offline'); return; }
 
+  // PASSO 1 — acorda o Render com pings repetidos (até 90s)
+  let serverOnline = false;
+  for(let tentativa=1; tentativa<=18; tentativa++){
+    try{
+      syncShow(`Aguardando servidor... (${tentativa}/18)`);
+      const r = await Promise.race([
+        fetch(API+'/health'),
+        new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),5000))
+      ]);
+      if(r.ok){ serverOnline=true; break; }
+    }catch(e){
+      // servidor ainda dormindo — espera 5s e tenta de novo
+      await new Promise(r=>setTimeout(r,5000));
+    }
+  }
+
+  if(!serverOnline){
+    console.warn('Servidor não respondeu após 90s');
+    syncOk('⚠ Servidor offline — usando dados locais');
+    return;
+  }
+
+  // PASSO 2 — servidor acordou, carrega todos os dados
   syncShow('Carregando dados...');
   try{
-    // Carrega tudo em paralelo
-    await Promise.all([
-      carregarUsuarios(),
-      carregarVinculos(),
-      carregarCanais(),
-      carregarAvaliacoes()
-    ]);
-    // Feedbacks após avaliações (depende dos IDs)
+    await Promise.all([carregarUsuarios(),carregarVinculos(),carregarAvaliacoes(),carregarCanais()]);
     await carregarFeedbacks();
     bancoPronto=true;
     syncOk('✓ Dados sincronizados');
-    // Atualiza UI se já estiver logado
     if(state.usuarioLogado){
       updateFbCountNav();
-      const pg=document.querySelector('.page-section.active')?.id?.replace('page-','');
-      if(pg) showPage(pg,null);
+      const paginaAtiva=document.querySelector('.page-section.active')?.id?.replace('page-','');
+      if(paginaAtiva)showPage(paginaAtiva,null);
     }
   }catch(e){
     console.error('Erro ao carregar banco:',e);
@@ -679,6 +666,7 @@ async function inicializarBackground(){
   }
 }
 
+// Inicia IMEDIATAMENTE em background (sem await na tela)
 inicializarBackground();
 
 // ================================================================
@@ -689,34 +677,23 @@ function getNome(id){const u=state.usuarios.find(x=>x.id===id);return u?u.nome:'
 function getIni(nome){return nome.split(' ').map(p=>p[0]).slice(0,2).join('').toUpperCase();}
 function getBadge(n){n=parseFloat(n);if(n>=90)return`<span class="badge ok">✓ ${n.toFixed(1)}</span>`;if(n>=75)return`<span class="badge warn">▲ ${n.toFixed(1)}</span>`;return`<span class="badge danger">✗ ${n.toFixed(1)}</span>`;}
 function getNota(n){n=parseFloat(n);const c=n>=90?'var(--green-600)':n>=75?'var(--amber)':'var(--red)';const bg=n>=90?'rgba(59,109,17,.1)':n>=75?'var(--amber-bg)':'var(--red-bg)';return`<span class="fb-nota" style="color:${c};background:${bg}">${n.toFixed(0)}</span>`;}
-function getPenBadge(a){
-  if(!a.penalidade||a.penalidade==='nao') return '';
-  const tipo=a.penTipo||a.penalidade;
-  const label=PEN_LABEL[tipo]||tipo;
-  const icon=PEN_ICON[tipo]||'⚠️';
-  return`<span class="badge orange">${icon} ${label}</span>`;
-}
+function getPenBadge(p){if(!p||p==='nao')return'';return`<span class="badge orange">${PEN_ICON[p]||'⚠️'} ${PEN_LABEL[p]||p}</span>`;}
 function mediaAvs(avs){if(!avs.length)return null;return avs.reduce((s,a)=>s+a.nota,0)/avs.length;}
 function escapeHtml(t){return(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function calcTotal(){return respostas.reduce((s,r,i)=>s+(r===true?QUESITOS[i].max:0),0);}
 function meuPerfil(){return state.usuarioLogado?.perfil||'';}
 function emptyState(icon,title,sub){return`<div class="empty-state"><div class="empty-icon">${icon}</div><div class="empty-title">${title}</div><div class="empty-sub">${sub||''}</div></div>`;}
-function cNome(c){return typeof c==='object'?c.nome:c;}
-function cId(c){return typeof c==='object'?c.id:null;}
-
 function atendentesVisiveis(){
   const eu=state.usuarioLogado;if(!eu)return[];
-  if(eu.perfil==='admin'||eu.perfil==='master') return state.usuarios.filter(u=>u.perfil==='atendente');
-  if(eu.perfil==='gestor') return state.usuarios.filter(u=>u.perfil==='atendente'&&(state.vinculos[u.id]||[]).includes(eu.id));
-  if(eu.perfil==='atendente') return[eu];
-  return[];
+  if(eu.perfil==='admin'||eu.perfil==='master')return state.usuarios.filter(u=>u.perfil==='atendente');
+  if(eu.perfil==='gestor')return state.usuarios.filter(u=>u.perfil==='atendente'&&(state.vinculos[u.id]||[]).includes(eu.id));
+  if(eu.perfil==='atendente')return[eu];return[];
 }
 function avaliacoesVisiveis(){
   const eu=state.usuarioLogado;if(!eu)return[];
-  if(eu.perfil==='admin'||eu.perfil==='master') return state.avaliacoes;
+  if(eu.perfil==='admin'||eu.perfil==='master')return state.avaliacoes;
   if(eu.perfil==='gestor'){const meus=atendentesVisiveis().map(a=>a.id);return state.avaliacoes.filter(a=>meus.includes(a.atendenteId)||a.gestorId===eu.id);}
-  if(eu.perfil==='atendente') return state.avaliacoes.filter(a=>a.atendenteId===eu.id);
-  return[];
+  if(eu.perfil==='atendente')return state.avaliacoes.filter(a=>a.atendenteId===eu.id);return[];
 }
 function fbPendCountVisiveis(){return avaliacoesVisiveis().filter(a=>state.feedbacks[a.id]?.status==='pendente').length;}
 function updateFbCountNav(){const c=fbPendCountVisiveis();const el=document.getElementById('fb-count-nav');if(el){el.textContent=c;el.classList.toggle('hidden',c===0);}}
@@ -724,50 +701,31 @@ function updateFbCountNav(){const c=fbPendCountVisiveis();const el=document.getE
 // ================================================================
 // PENALIDADE
 // ================================================================
-function onPenRadio(val){
+function selecionarPenalidade(val){
   penalidade=val;
-  const area=document.getElementById('pen-sim-area');
-  if(val==='sim'){area.style.display='block';}
-  else{area.style.display='none';penTipo='';resetPenTipos();}
-}
-function selecionarPenTipo(tipo){
-  penTipo=tipo;
-  ['verbal','escrita','suspensao'].forEach(t=>{
-    const b=document.getElementById('pen-'+t);
-    if(b) b.classList.toggle('ativo', t===tipo);
+  ['pen-nao','pen-verbal','pen-escrita','pen-suspensao'].forEach(id=>{
+    const btn=document.getElementById(id);if(!btn)return;
+    if(id==='pen-nao')btn.className='pen-btn '+(val==='nao'?'nao-on':'nao-off');
+    else btn.className='pen-btn '+(btn.id==='pen-'+val?'pen-on':'pen-off');
   });
-}
-function resetPenTipos(){
-  ['verbal','escrita','suspensao'].forEach(t=>{
-    const b=document.getElementById('pen-'+t);
-    if(b) b.classList.remove('ativo');
-  });
+  const res=document.getElementById('pen-resultado');
+  if(val){res.classList.remove('hidden');if(val==='nao'){res.className='pen-resultado nao';res.innerHTML='✓ Sem penalidade registrada';}else{res.className='pen-resultado sim';res.innerHTML=`⚠️ Penalidade: <strong>${PEN_LABEL[val]}</strong>`;}}
+  else res.classList.add('hidden');
 }
 function resetPenalidade(){
-  penalidade='';penTipo='';
-  const nao=document.getElementById('pen-radio-nao');
-  const sim=document.getElementById('pen-radio-sim');
-  if(nao) nao.checked=false;
-  if(sim) sim.checked=false;
-  const area=document.getElementById('pen-sim-area');
-  if(area) area.style.display='none';
-  const obs=document.getElementById('pen-obs');
-  if(obs) obs.value='';
-  resetPenTipos();
+  penalidade='';
+  ['pen-nao','pen-verbal','pen-escrita','pen-suspensao'].forEach(id=>{const b=document.getElementById(id);if(b)b.className=id==='pen-nao'?'pen-btn nao-off':'pen-btn pen-off';});
+  const r=document.getElementById('pen-resultado');if(r)r.classList.add('hidden');
 }
 
 // ================================================================
 // TEMA / NAVEGAÇÃO
 // ================================================================
 function setTheme(t){document.body.setAttribute('data-theme',t);document.getElementById('btn-light').classList.toggle('active',t==='light');document.getElementById('btn-dark').classList.toggle('active',t==='dark');}
-
 const PAGE_INFO={
-  dashboard:{title:'Painel',sub:'Visão geral'},
-  avaliacao:{title:'Nova avaliação',sub:'Preencha todos os campos'},
-  feedbacks:{title:'Feedbacks',sub:'Aplique e acompanhe feedbacks'},
-  historico:{title:'Histórico',sub:'Consulte avaliações anteriores'},
-  relatorios:{title:'Relatórios',sub:'Métricas e desempenho'},
-  cadastro:{title:'Cadastros',sub:'Gerencie funcionários e vínculos'},
+  dashboard:{title:'Painel',sub:'Visão geral'},avaliacao:{title:'Nova avaliação',sub:'Preencha todos os campos'},
+  feedbacks:{title:'Feedbacks',sub:'Aplique e acompanhe feedbacks'},historico:{title:'Histórico',sub:'Consulte avaliações anteriores'},
+  relatorios:{title:'Relatórios',sub:'Métricas e desempenho'},cadastro:{title:'Cadastros',sub:'Gerencie funcionários e vínculos'},
   'minha-conta':{title:'Minha conta',sub:'Alterar senha'}
 };
 function showPage(name,el){
@@ -778,13 +736,13 @@ function showPage(name,el){
   const info=PAGE_INFO[name]||{title:name,sub:''};
   document.getElementById('topbar-title').textContent=info.title;
   document.getElementById('topbar-sub').textContent=info.sub;
-  if(name==='dashboard')   renderDashboard();
-  if(name==='avaliacao')   renderFormAvaliacao();
-  if(name==='feedbacks')   renderFeedbacksPage();
-  if(name==='historico')   {populateFiltrosHist();renderHistorico();}
-  if(name==='relatorios')  {setupRelatorios();renderRelInd();}
-  if(name==='cadastro')    renderCadastro();
-  if(name==='minha-conta') document.getElementById('mc-alert').innerHTML='';
+  if(name==='dashboard')renderDashboard();
+  if(name==='avaliacao')renderFormAvaliacao();
+  if(name==='feedbacks')renderFeedbacksPage();
+  if(name==='historico'){populateFiltrosHist();renderHistorico();}
+  if(name==='relatorios'){setupRelatorios();renderRelInd();}
+  if(name==='cadastro')renderCadastro();
+  if(name==='minha-conta')document.getElementById('mc-alert').innerHTML='';
 }
 function configurarMenu(){
   const p=meuPerfil();
@@ -800,31 +758,33 @@ async function fazerLogin(){
   const login=document.getElementById('login-user').value.trim();
   const senha=document.getElementById('login-pass').value;
   const btn=document.getElementById('btn-entrar');
-  // Se banco não carregou e não é admin, espera até 30s
-  if(!bancoPronto && login!=='admin'){
-    btn.textContent='⏳ Aguardando...';btn.disabled=true;
-    let t=0;while(!bancoPronto&&t<30){await new Promise(r=>setTimeout(r,1000));t++;}
+
+  // Se banco ainda não carregou, espera até 30s antes de negar
+  if(!bancoPronto && login !== 'admin'){
+    btn.textContent='⏳ Aguardando banco...';btn.disabled=true;
+    syncShow('Aguardando servidor acordar...');
+    let tentativas=0;
+    while(!bancoPronto && tentativas<30){
+      await new Promise(r=>setTimeout(r,1000));
+      tentativas++;
+    }
     btn.textContent='Entrar';btn.disabled=false;
   }
+
   const u=state.usuarios.find(u=>u.login===login&&u.senha===senha);
   if(!u){document.getElementById('login-alert').innerHTML='<div class="alert danger">⚠ Usuário ou senha incorretos.</div>';return;}
-  state.usuarioLogado=u;
-  document.getElementById('login-alert').innerHTML='';
-  if(u.primeiroAcesso){
-    document.getElementById('login-screen').classList.add('hidden');
-    document.getElementById('change-pass-screen').classList.remove('hidden');
-  } else entrarNoSistema();
+  state.usuarioLogado=u;document.getElementById('login-alert').innerHTML='';
+  if(u.primeiroAcesso){document.getElementById('login-screen').classList.add('hidden');document.getElementById('change-pass-screen').classList.remove('hidden');}
+  else entrarNoSistema();
 }
+
 function salvarNovaSenha(){
-  const nova=document.getElementById('cp-new').value;
-  const conf=document.getElementById('cp-confirm').value;
+  const nova=document.getElementById('cp-new').value;const conf=document.getElementById('cp-confirm').value;
   if(nova.length<4){document.getElementById('cp-alert').innerHTML='<div class="alert danger">Mínimo 4 caracteres.</div>';return;}
   if(nova!==conf){document.getElementById('cp-alert').innerHTML='<div class="alert danger">Senhas não coincidem.</div>';return;}
-  const u=state.usuarios.find(x=>x.id===state.usuarioLogado.id);
-  u.senha=nova;u.primeiroAcesso=false;state.usuarioLogado=u;
-  apiFetch(API+'/usuarios/'+u.id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({senha:nova,primeiroAcesso:false})}).catch(console.error);
-  document.getElementById('change-pass-screen').classList.add('hidden');
-  entrarNoSistema();
+  const u=state.usuarios.find(x=>x.id===state.usuarioLogado.id);u.senha=nova;u.primeiroAcesso=false;state.usuarioLogado=u;
+  fetchComTimeout(API+'/usuarios/'+u.id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({senha:nova,primeiroAcesso:false})}).catch(console.error);
+  document.getElementById('change-pass-screen').classList.add('hidden');entrarNoSistema();
 }
 function entrarNoSistema(){
   document.getElementById('login-screen').classList.add('hidden');
@@ -835,22 +795,23 @@ function entrarNoSistema(){
   document.getElementById('s-nome').textContent=u.nome;
   document.getElementById('s-role').textContent=PERFIL_LABEL[u.perfil]||u.perfil;
   configurarMenu();updateFbCountNav();
-  if(u.perfil==='atendente') showPage('feedbacks',document.getElementById('nav-feedbacks'));
+  if(u.perfil==='atendente')showPage('feedbacks',document.getElementById('nav-feedbacks'));
   else renderDashboard();
 }
-function fazerLogout(){
-  state.usuarioLogado=null;
-  document.getElementById('main-screen').classList.add('hidden');
-  document.getElementById('login-screen').classList.remove('hidden');
-  document.getElementById('login-user').value='';
-  document.getElementById('login-pass').value='';
-}
+function fazerLogout(){state.usuarioLogado=null;document.getElementById('main-screen').classList.add('hidden');document.getElementById('login-screen').classList.remove('hidden');document.getElementById('login-user').value='';document.getElementById('login-pass').value='';}
 
 // ================================================================
 // CANAIS
 // ================================================================
 function toggleCanais(){canaisAberto=!canaisAberto;document.getElementById('canais-body').classList.toggle('open',canaisAberto);document.getElementById('canais-chevron').classList.toggle('open',canaisAberto);document.getElementById('canais-chips-preview').style.display=canaisAberto?'none':'flex';}
-function renderChipsPreview(){const el=document.getElementById('canais-chips-preview');if(!el)return;el.innerHTML=state.canais.map(c=>`<span class="canal-chip-mini">${cNome(c)}</span>`).join('');}
+// helpers de canais — nome extraído do objeto
+function cNome(c){return typeof c==='object'?c.nome:c;}
+function cId(c){return typeof c==='object'?c.id:null;}
+
+function renderChipsPreview(){
+  const el=document.getElementById('canais-chips-preview');if(!el)return;
+  el.innerHTML=state.canais.map(c=>`<span class="canal-chip-mini">${cNome(c)}</span>`).join('');
+}
 function syncCanalSelect(){
   const sel=document.getElementById('av-canal');if(!sel)return;
   const cur=sel.value;
@@ -860,43 +821,65 @@ function renderCanalTabela(){
   const tbody=document.getElementById('canal-tbody');if(!tbody)return;
   tbody.innerHTML=state.canais.map((c,i)=>{
     const nome=cNome(c);
-    if(editingCanalIdx===i) return`<tr><td style="color:var(--text3);width:28px">${i+1}</td><td><input class="form-input" type="text" id="canal-edit-input" value="${nome}" style="padding:5px 8px;font-size:13px"></td><td><div style="display:flex;gap:6px;justify-content:flex-end"><button class="btn primary xs" onclick="salvarEdicaoCanal(${i})">Salvar</button><button class="btn xs" onclick="cancelarEdicao()">Cancelar</button></div></td></tr>`;
-    return`<tr><td style="color:var(--text3);width:28px">${i+1}</td><td style="font-weight:500">${nome}</td><td><div style="display:flex;gap:6px;justify-content:flex-end"><button class="btn sm" onclick="editarCanal(${i})">✎</button><button class="btn danger xs" onclick="excluirCanal(${i})">✕</button></div></td></tr>`;
+    if(editingCanalIdx===i)return`<tr>
+      <td style="color:var(--text3);width:28px">${i+1}</td>
+      <td><input class="form-input" type="text" id="canal-edit-input" value="${nome}" style="padding:5px 8px;font-size:13px"></td>
+      <td><div style="display:flex;gap:6px;justify-content:flex-end">
+        <button class="btn primary xs" onclick="salvarEdicaoCanal(${i})">Salvar</button>
+        <button class="btn xs" onclick="cancelarEdicao()">Cancelar</button>
+      </div></td></tr>`;
+    return`<tr>
+      <td style="color:var(--text3);width:28px">${i+1}</td>
+      <td style="font-weight:500">${nome}</td>
+      <td><div style="display:flex;gap:6px;justify-content:flex-end">
+        <button class="btn sm" onclick="editarCanal(${i})">✎</button>
+        <button class="btn danger xs" onclick="excluirCanal(${i})">✕</button>
+      </div></td></tr>`;
   }).join('');
   syncCanalSelect();renderChipsPreview();
 }
+
 async function adicionarCanal(){
   const inp=document.getElementById('canal-novo-input');
   const nome=(inp.value||'').trim().toUpperCase();
   if(!nome)return;
   if(state.canais.map(c=>cNome(c).toLowerCase()).includes(nome.toLowerCase())){alert('Canal já existe.');return;}
   try{
-    const r=await apiFetch(API+'/canais',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nome})});
+    const r=await fetchComTimeout(API+'/canais',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nome})});
     if(r.status===409){alert('Canal já existe no banco.');return;}
     const d=await r.json();
-    state.canais.push(d);inp.value='';renderCanalTabela();
-  }catch(e){state.canais.push({id:null,nome});inp.value='';renderCanalTabela();}
+    state.canais.push({id:d.id,nome:d.nome});
+    inp.value='';renderCanalTabela();
+  }catch(e){
+    // fallback: salva em memória
+    state.canais.push({id:null,nome});inp.value='';renderCanalTabela();
+  }
 }
+
 async function excluirCanal(i){
   if(state.canais.length<=1){alert('Mantenha ao menos um canal.');return;}
   const c=state.canais[i];
   if(!confirm(`Excluir "${cNome(c)}"?`))return;
   try{
-    if(cId(c)) await apiFetch(API+'/canais/'+cId(c),{method:'DELETE'});
+    if(cId(c)) await fetchComTimeout(API+'/canais/'+cId(c),{method:'DELETE'});
     state.canais.splice(i,1);editingCanalIdx=null;renderCanalTabela();
   }catch(e){state.canais.splice(i,1);editingCanalIdx=null;renderCanalTabela();}
 }
+
 function editarCanal(i){editingCanalIdx=i;renderCanalTabela();setTimeout(()=>document.getElementById('canal-edit-input')?.focus(),50);}
+
 async function salvarEdicaoCanal(i){
   const inp=document.getElementById('canal-edit-input');
   const novo=(inp?inp.value:'').trim().toUpperCase();if(!novo)return;
   const c=state.canais[i];
   try{
-    if(cId(c)) await apiFetch(API+'/canais/'+cId(c),{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({nome:novo})});
+    if(cId(c)) await fetchComTimeout(API+'/canais/'+cId(c),{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({nome:novo})});
     state.canais[i]={id:cId(c),nome:novo};editingCanalIdx=null;renderCanalTabela();
   }catch(e){state.canais[i]={id:cId(c),nome:novo};editingCanalIdx=null;renderCanalTabela();}
 }
+
 function cancelarEdicao(){editingCanalIdx=null;renderCanalTabela();}
+
 
 // ================================================================
 // DASHBOARD
@@ -916,11 +899,11 @@ function renderDashboard(){
   document.getElementById('dash-pendentes').innerHTML=ats.length===0?emptyState('👥','Nenhum atendente cadastrado',''):ats.map(a=>{const f=cnt[a.id]||0;const falt=4-f;const pct=(f/4)*100;return`<div class="pend-item"><div style="min-width:0;flex:1"><div style="font-weight:500;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${a.nome}</div><div class="progress-bar" style="width:120px"><div class="progress-fill" style="width:${pct}%;background:${falt>0?'var(--amber)':'var(--green-600)'}"></div></div></div><span class="badge ${falt===0?'ok':falt<=2?'warn':'danger'}">${f}/4</span></div>`;}).join('');
   const fbList=avsVis.filter(a=>state.feedbacks[a.id]?.status==='pendente').slice(0,5);
   document.getElementById('dash-fb-pendentes').innerHTML=fbList.length===0?'<div style="text-align:center;color:var(--text3);padding:1rem;font-size:13px">✓ Nenhum feedback pendente!</div>':fbList.map(a=>`<div class="pend-item"><div><div style="font-weight:500;font-size:13px">${getNome(a.atendenteId)}</div><div style="font-size:12px;color:var(--text3)">${new Date(a.data).toLocaleDateString('pt-BR')} · ${a.protocolo||'—'}</div></div><span class="badge warn">Pendente</span></div>`).join('');
-  document.getElementById('dash-ultimas').innerHTML=avsVis.length===0?emptyState('📋','Nenhuma avaliação realizada',''):`<div class="table-wrap"><table><thead><tr><th>Atendente</th><th>Data</th><th>Protocolo</th><th>Nota</th><th>Penalidade</th><th>Feedback</th></tr></thead><tbody>`+[...avsVis].reverse().slice(0,8).map(a=>`<tr><td style="font-size:12px">${getNome(a.atendenteId)}</td><td>${new Date(a.data).toLocaleDateString('pt-BR')}</td><td style="font-family:monospace;font-size:12px">${a.protocolo||'—'}</td><td>${getBadge(a.nota)}</td><td>${getPenBadge(a)||'—'}</td><td>${state.feedbacks[a.id]?.status==='concluido'?'<span class="badge ok">✓</span>':'<span class="badge warn">Pend.</span>'}</td></tr>`).join('')+`</tbody></table></div>`;
+  document.getElementById('dash-ultimas').innerHTML=avsVis.length===0?emptyState('📋','Nenhuma avaliação realizada','Registre avaliações em Nova avaliação'):`<div class="table-wrap"><table><thead><tr><th>Atendente</th><th>Data</th><th>Protocolo</th><th>Nota</th><th>Penalidade</th><th>Feedback</th></tr></thead><tbody>`+[...avsVis].reverse().slice(0,8).map(a=>`<tr><td style="font-size:12px">${getNome(a.atendenteId)}</td><td>${new Date(a.data).toLocaleDateString('pt-BR')}</td><td style="font-family:monospace;font-size:12px">${a.protocolo||'—'}</td><td>${getBadge(a.nota)}</td><td>${a.penalidade&&a.penalidade!=='nao'?getPenBadge(a.penalidade):'—'}</td><td>${state.feedbacks[a.id]?.status==='concluido'?'<span class="badge ok">✓</span>':'<span class="badge warn">Pend.</span>'}</td></tr>`).join('')+`</tbody></table></div>`;
 }
 
 // ================================================================
-// QUESITOS
+// QUESITOS + MARCAR TODOS
 // ================================================================
 function buildQuesitos(){
   document.getElementById('quesitos-list').innerHTML=QUESITOS.map((q,i)=>`
@@ -942,7 +925,9 @@ function buildQuesitos(){
       </div>
     </div></div>`).join('');
 }
-function marcarTodosSim(){QUESITOS.forEach((_,i)=>{if(respostas[i]!==true)marcar(i,true);});}
+function marcarTodosSimm(){
+  QUESITOS.forEach((_,i)=>{ if(respostas[i]!==true) marcar(i,true); });
+}
 function marcar(i,val){
   const ta=document.getElementById('obs-'+i);if(ta)observacoes[i]=ta.value;
   respostas[i]=(respostas[i]===val)?null:val;
@@ -975,19 +960,12 @@ function renderFormAvaliacao(){
   document.getElementById('av-gestor').innerHTML='<option value="">Selecionar...</option>'+gl.map(g=>`<option value="${g.id}"${g.id===eu.id?' selected':''}>${g.nome}</option>`).join('');
   document.getElementById('av-atendente').innerHTML='<option value="">Selecionar...</option>'+ats.map(a=>`<option value="${a.id}">${a.nome}</option>`).join('');
   ['av-data','av-duracao','av-protocolo','av-relato'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-  document.getElementById('av-canal').value='';
-  document.getElementById('av-turno').value='';
-  resetPenalidade();
-  editingCanalIdx=null;canaisAberto=false;
-  document.getElementById('canais-body').classList.remove('open');
-  document.getElementById('canais-chevron').classList.remove('open');
-  renderCanalTabela();
-  respostas=new Array(QUESITOS.length).fill(null);
-  observacoes=new Array(QUESITOS.length).fill('');
-  buildQuesitos();updateTotal();
-  document.getElementById('av-alert').innerHTML='';
+  document.getElementById('av-canal').value='';document.getElementById('av-turno').value='';
+  resetPenalidade();editingCanalIdx=null;canaisAberto=false;
+  document.getElementById('canais-body').classList.remove('open');document.getElementById('canais-chevron').classList.remove('open');
+  renderCanalTabela();respostas=new Array(QUESITOS.length).fill(null);observacoes=new Array(QUESITOS.length).fill('');
+  buildQuesitos();updateTotal();document.getElementById('av-alert').innerHTML='';
 }
-
 async function salvarAvaliacao(){
   coletarTodasObs();
   const gId=parseInt(document.getElementById('av-gestor').value);
@@ -995,70 +973,34 @@ async function salvarAvaliacao(){
   const data=document.getElementById('av-data').value;
   const canal=document.getElementById('av-canal').value;
   const turno=document.getElementById('av-turno').value;
-
-  if(!gId||!aId||!data||!canal||!turno){
-    document.getElementById('av-alert').innerHTML='<div class="alert danger">⚠ Preencha todos os campos obrigatórios.</div>';return;
-  }
-  if(respostas.some(r=>r===null)){
-    document.getElementById('av-alert').innerHTML='<div class="alert danger">⚠ Responda todos os 18 quesitos.</div>';return;
-  }
-  if(!penalidade){
-    document.getElementById('av-alert').innerHTML='<div class="alert danger">⚠ Informe se houve alguma penalidade (Não ou Sim).</div>';return;
-  }
-  if(penalidade==='sim'&&!penTipo){
-    document.getElementById('av-alert').innerHTML='<div class="alert danger">⚠ Selecione o tipo de penalidade.</div>';return;
-  }
-
+  if(!gId||!aId||!data||!canal||!turno){document.getElementById('av-alert').innerHTML='<div class="alert danger">⚠ Preencha todos os campos obrigatórios.</div>';return;}
+  if(respostas.some(r=>r===null)){document.getElementById('av-alert').innerHTML='<div class="alert danger">⚠ Responda todos os 18 quesitos.</div>';return;}
+  if(!penalidade){document.getElementById('av-alert').innerHTML='<div class="alert danger">⚠ Informe se houve alguma penalidade.</div>';return;}
   const nota=calcTotal();
   const relato=document.getElementById('av-relato').value.trim();
-  const penObs=document.getElementById('pen-obs')?.value||'';
   const obsReg=observacoes.map((o,i)=>({quesito:QUESITOS[i].nome,obs:o.trim()})).filter(x=>x.obs);
-
   document.getElementById('av-alert').innerHTML='<div class="alert info">⏳ Salvando avaliação...</div>';
-
   try{
-    // Salva avaliação no banco
-    const r=await apiFetch(API+'/avaliacoes',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        atendenteId:aId,gestorId:gId,data,
-        duracao:document.getElementById('av-duracao').value||'',
-        protocolo:document.getElementById('av-protocolo').value||'',
-        canal,turno,nota,relato,
-        penalidade:penalidade==='nao'?'nao':'sim',
-        penTipo:penTipo||'',
-        penObs:penObs||'',
-        observacoes:obsReg
-      })
-    });
-    if(!r.ok) throw new Error('Erro ao salvar avaliação');
+    const r=await fetchComTimeout(API+'/avaliacoes',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({atendenteId:aId,gestorId:gId,data,
+        duracao:document.getElementById('av-duracao').value,
+        protocolo:document.getElementById('av-protocolo').value,
+        canal,turno,nota,relato,penalidade,observacoes:obsReg})});
+    if(!r.ok)throw new Error('erro');
     const {id:novoId}=await r.json();
-
-    // Cria feedback pendente no banco
-    await apiFetch(API+'/feedbacks',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({avaliacaoId:novoId,texto:'',status:'pendente',gestorId:null,dataConclusao:null})
-    });
-
-    // Atualiza state local
-    const novaAv={
-      id:novoId,atendenteId:aId,gestorId:gId,data,
-      duracao:document.getElementById('av-duracao').value||'',
-      protocolo:document.getElementById('av-protocolo').value||'',
-      canal,turno,nota,relato,
-      penalidade:penalidade==='nao'?'nao':'sim',
-      penTipo:penTipo||'',penObs:penObs||'',
-      observacoes:obsReg
-    };
+    await fetchComTimeout(API+'/feedbacks',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({avaliacaoId:novoId,texto:'',status:'pendente',gestorId:null,dataConclusao:null})});
+    const novaAv={id:novoId,atendenteId:aId,gestorId:gId,data,
+      duracao:document.getElementById('av-duracao').value,
+      protocolo:document.getElementById('av-protocolo').value,
+      canal,turno,nota,relato,penalidade,observacoes:obsReg};
     state.avaliacoes.push(novaAv);
     state.feedbacks[novoId]={avaliacaoId:novoId,texto:'',status:'pendente',gestorId:null,dataConclusao:null};
-
     buildAnoSelect();updateFbCountNav();
-    const penMsg=penalidade==='sim'&&penTipo?` · ${PEN_LABEL[penTipo]||penTipo}`:'';
+    const penMsg=penalidade!=='nao'?` · ⚠️ ${PEN_LABEL[penalidade]}`:'';
     document.getElementById('av-alert').innerHTML=`<div class="alert success">✓ Avaliação salva! Nota: ${nota}/100${penMsg}</div>`;
     setTimeout(()=>renderFormAvaliacao(),2500);
   }catch(e){
-    console.error(e);
     document.getElementById('av-alert').innerHTML='<div class="alert danger">⚠ Erro ao salvar. Verifique a conexão.</div>';
   }
 }
@@ -1096,20 +1038,17 @@ function renderFeedbacks(){
   if(status)avs=avs.filter(a=>state.feedbacks[a.id]?.status===status);
   if(!avs.length){document.getElementById('fb-lista').innerHTML=emptyState('💬','Nenhum feedback encontrado','As avaliações registradas aparecerão aqui');return;}
   document.getElementById('fb-lista').innerHTML=avs.map(a=>{
-    const fb=state.feedbacks[a.id];
-    const isPend=fb?.status==='pendente';
-    const nomeAt=getNome(a.atendenteId);
-    const nomeGestor=getNome(a.gestorId);
-    const isOpen=fbAbertos[a.id]||false;
-    const podeEditar=!isAt;
-    const temPen=a.penalidade==='sim'&&a.penTipo;
+    const fb=state.feedbacks[a.id];const isPend=fb?.status==='pendente';
+    const nomeAt=getNome(a.atendenteId);const nomeGestor=getNome(a.gestorId);
+    const isOpen=fbAbertos[a.id]||false;const podeEditar=!isAt;
+    const temPen=a.penalidade&&a.penalidade!=='nao';
     const detalhe=`<div class="fb-detalhe">
       <span>${new Date(a.data).toLocaleDateString('pt-BR')}</span>
       <span class="fb-detalhe-sep">·</span><span>Gestor: <strong>${nomeGestor}</strong></span>
       <span class="fb-detalhe-sep">·</span><span>${a.canal}</span>
       <span class="fb-detalhe-sep">·</span><span>${a.turno}</span>
       <span class="fb-detalhe-sep">·</span><span class="fb-protocolo-tag">📋 ${a.protocolo||'—'}</span>
-    </div>${temPen?`<div style="margin-top:5px"><span class="fb-penalidade-tag">${PEN_ICON[a.penTipo]||'⚠️'} ${PEN_LABEL[a.penTipo]||a.penTipo}${a.penObs?` — ${a.penObs}`:''}</span></div>`:''}`;
+    </div>${temPen?`<div style="margin-top:5px"><span class="fb-penalidade-tag">${PEN_ICON[a.penalidade]} ${PEN_LABEL[a.penalidade]}</span></div>`:''}`;
     return`<div class="fb-card ${isPend?'pendente':'concluido'}">
       <div class="fb-header" onclick="toggleFb(${a.id})">
         <div class="fb-header-info"><div class="fb-avatar">${getIni(nomeAt)}</div><div class="fb-meta"><div class="fb-atendente">${nomeAt}</div>${detalhe}</div></div>
@@ -1120,13 +1059,13 @@ function renderFeedbacks(){
           ${a.relato?`<div class="fb-section-title">📄 Relato</div><div class="fb-relato-box">${escapeHtml(a.relato)}</div>`:''}
           ${a.observacoes?.length?`<div class="fb-section-title">⚠ Pontos de atenção</div>${a.observacoes.map(o=>`<div class="fb-obs-item"><div style="font-weight:600;color:var(--red);font-size:12px;margin-bottom:3px">${o.quesito}</div><div>${o.obs}</div></div>`).join('')}`:''}
           <div class="fb-section-title">💬 Feedback do avaliador</div>
-          ${isPend&&podeEditar
-            ?`<div class="fb-feedback-box"><textarea class="form-input" id="fb-texto-${a.id}" style="min-height:80px;resize:vertical" placeholder="Registre o feedback para ${nomeAt}...">${fb?.texto||''}</textarea></div>
-               <div style="display:flex;justify-content:flex-end;margin-top:12px"><button class="btn primary" onclick="concluirFeedback(${a.id})">✅ Feedback concluído</button></div>`
-            :isPend&&!podeEditar
-            ?`<div class="fb-feedback-box" style="color:var(--text3);font-style:italic;font-size:13px">Aguardando feedback do gestor...</div>`
-            :`<div class="fb-feedback-box"><div class="fb-feedback-existente">${escapeHtml(fb?.texto||'(sem texto)')}</div></div>
-              <div class="fb-concluido-info">✓ Feedback aplicado por ${getNome(fb.gestorId)} em ${fb.dataConclusao?new Date(fb.dataConclusao).toLocaleDateString('pt-BR'):'—'}</div>`}
+          ${isPend&&podeEditar?
+            `<div class="fb-feedback-box"><textarea class="form-input" id="fb-texto-${a.id}" style="min-height:80px;resize:vertical" placeholder="Registre o feedback para ${nomeAt}...">${fb?.texto||''}</textarea></div>
+             <div style="display:flex;justify-content:flex-end;margin-top:12px"><button class="btn primary" onclick="concluirFeedback(${a.id})">✅ Feedback concluído</button></div>`
+          :isPend&&!podeEditar?
+            `<div class="fb-feedback-box" style="color:var(--text3);font-style:italic;font-size:13px">Aguardando feedback do gestor...</div>`
+          :`<div class="fb-feedback-box"><div class="fb-feedback-existente">${escapeHtml(fb?.texto||'(sem texto)')}</div></div>
+            <div class="fb-concluido-info">✓ Feedback aplicado por ${getNome(fb.gestorId)} em ${fb.dataConclusao?new Date(fb.dataConclusao).toLocaleDateString('pt-BR'):'—'}</div>`}
         </div>
       </div>
     </div>`;
@@ -1134,12 +1073,11 @@ function renderFeedbacks(){
 }
 function toggleFb(id){fbAbertos[id]=!fbAbertos[id];document.getElementById('fbbody-'+id)?.classList.toggle('open',fbAbertos[id]);document.getElementById('fbchev-'+id)?.classList.toggle('open',fbAbertos[id]);}
 async function concluirFeedback(avId){
-  const ta=document.getElementById('fb-texto-'+avId);
-  const texto=(ta?ta.value:'').trim();
+  const ta=document.getElementById('fb-texto-'+avId);const texto=(ta?ta.value:'').trim();
   if(!texto){alert('Digite o feedback antes de concluir.');ta?.focus();return;}
   const agora=new Date().toISOString();
   try{
-    await apiFetch(API+'/feedbacks',{method:'POST',headers:{'Content-Type':'application/json'},
+    await fetchComTimeout(API+'/feedbacks',{method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({avaliacaoId:avId,texto,status:'concluido',gestorId:state.usuarioLogado?.id||null,dataConclusao:agora})});
     state.feedbacks[avId]={avaliacaoId:avId,texto,status:'concluido',gestorId:state.usuarioLogado?.id||null,dataConclusao:agora};
     fbAbertos[avId]=false;updateFbCountNav();renderFbMetrics();renderFeedbacks();
@@ -1164,8 +1102,7 @@ function renderHistorico(){
   if(aId)avs=avs.filter(a=>a.atendenteId===aId);
   if(mes)avs=avs.filter(a=>new Date(a.data).getMonth()+1===mes);
   avs.reverse();
-  document.getElementById('historico-table').innerHTML=avs.length===0
-    ?emptyState('📂','Nenhuma avaliação encontrada','')
+  document.getElementById('historico-table').innerHTML=avs.length===0?emptyState('📂','Nenhuma avaliação encontrada','')
     :`<div class="table-wrap"><table><thead><tr><th>Atendente</th><th>Gestor</th><th>Data</th><th>Canal</th><th>Turno</th><th>Protocolo</th><th>Nota</th><th>Penalidade</th><th>Feedback</th></tr></thead><tbody>`
     +avs.map(a=>`<tr>
       <td style="font-size:12px">${getNome(a.atendenteId)}</td>
@@ -1174,7 +1111,7 @@ function renderHistorico(){
       <td>${a.canal}</td><td>${a.turno}</td>
       <td style="font-family:monospace;font-size:11px">${a.protocolo||'—'}</td>
       <td>${getBadge(a.nota)}</td>
-      <td>${a.penalidade==='sim'&&a.penTipo?`<span class="badge orange">${PEN_ICON[a.penTipo]||'⚠️'} ${PEN_LABEL[a.penTipo]}</span>`:'<span class="badge ok" style="font-size:10px">Sem pen.</span>'}</td>
+      <td>${a.penalidade&&a.penalidade!=='nao'?getPenBadge(a.penalidade):'<span class="badge ok" style="font-size:10px">Sem</span>'}</td>
       <td>${state.feedbacks[a.id]?.status==='concluido'?'<span class="badge ok">✓</span>':'<span class="badge warn">Pend.</span>'}</td>
     </tr>`).join('')+`</tbody></table></div>`;
 }
@@ -1192,20 +1129,8 @@ function setupRelatorios(){
   else{ra.disabled=false;ra.innerHTML='<option value="">Selecionar...</option>'+atendentesVisiveis().map(a=>`<option value="${a.id}">${a.nome}</option>`).join('');}
   buildAnoSelect();
 }
-function buildAnoSelect(){
-  const sel=document.getElementById('rel-ano');if(!sel)return;
-  const set=new Set(avaliacoesVisiveis().map(a=>new Date(a.data).getFullYear()));
-  set.add(ANO_ATUAL);
-  sel.innerHTML=[...set].sort((a,b)=>b-a).map(a=>`<option value="${a}"${a===ANO_ATUAL?' selected':''}>${a}</option>`).join('');
-}
-function showRel(type,btn){
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
-  document.getElementById('rel-individual').classList.toggle('hidden',type!=='individual');
-  document.getElementById('rel-turno').classList.toggle('hidden',type!=='turno');
-  document.getElementById('rel-geral').classList.toggle('hidden',type!=='geral');
-  if(type==='turno')renderRelTurno();
-  if(type==='geral')renderRelGeral();
-}
+function buildAnoSelect(){const sel=document.getElementById('rel-ano');if(!sel)return;const set=new Set(avaliacoesVisiveis().map(a=>new Date(a.data).getFullYear()));set.add(ANO_ATUAL);sel.innerHTML=[...set].sort((a,b)=>b-a).map(a=>`<option value="${a}"${a===ANO_ATUAL?' selected':''}>${a}</option>`).join('');}
+function showRel(type,btn){document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.getElementById('rel-individual').classList.toggle('hidden',type!=='individual');document.getElementById('rel-turno').classList.toggle('hidden',type!=='turno');document.getElementById('rel-geral').classList.toggle('hidden',type!=='geral');if(type==='turno')renderRelTurno();if(type==='geral')renderRelGeral();}
 function renderRelInd(){
   const eu=state.usuarioLogado;
   const aId=eu.perfil==='atendente'?eu.id:(parseInt(document.getElementById('rel-atendente')?.value)||0);
@@ -1214,22 +1139,12 @@ function renderRelInd(){
   if(!aId){el.innerHTML=emptyState('📊','Selecione um atendente','');return;}
   const avsAno=avaliacoesVisiveis().filter(a=>a.atendenteId===aId&&new Date(a.data).getFullYear()===ano);
   const mMap={};avsAno.forEach(a=>{const m=new Date(a.data).getMonth();if(!mMap[m])mMap[m]=[];mMap[m].push(a);});
-  const mt=Object.keys(mMap).length;
-  const mm=Object.values(mMap).map(a=>mediaAvs(a)).filter(x=>x!==null);
-  const ma=mm.length?(mm.reduce((s,x)=>s+x,0)/mm.length).toFixed(1):'—';
-  let rows='';
-  for(let m=0;m<12;m++){const avs=mMap[m]||[];const med=avs.length?(avs.reduce((s,a)=>s+a.nota,0)/avs.length).toFixed(1):null;const f=Math.max(0,4-avs.length);rows+=`<tr><td>${MESES[m]}</td><td>${avs.length}/4</td><td>${med?getBadge(parseFloat(med)):'<span style="color:var(--text3)">—</span>'}</td><td>${f>0?`<span class="badge warn">${f} pend.</span>`:'<span class="badge ok">✓</span>'}</td></tr>`;}
+  const mt=Object.keys(mMap).length;const mm=Object.values(mMap).map(a=>mediaAvs(a)).filter(x=>x!==null);const ma=mm.length?(mm.reduce((s,x)=>s+x,0)/mm.length).toFixed(1):'—';
+  let rows='';for(let m=0;m<12;m++){const avs=mMap[m]||[];const med=avs.length?(avs.reduce((s,a)=>s+a.nota,0)/avs.length).toFixed(1):null;const f=Math.max(0,4-avs.length);rows+=`<tr><td>${MESES[m]}</td><td>${avs.length}/4</td><td>${med?getBadge(parseFloat(med)):'<span style="color:var(--text3)">—</span>'}</td><td>${f>0?`<span class="badge warn">${f} pend.</span>`:'<span class="badge ok">✓</span>'}</td></tr>`;}
   el.innerHTML=`<div class="grid3" style="margin-bottom:16px"><div class="metric-card"><div class="metric-label">Total</div><div class="metric-value">${avsAno.length}</div></div><div class="metric-card"><div class="metric-label">Meses</div><div class="metric-value">${mt}</div></div><div class="metric-card"><div class="metric-label">Média anual</div><div class="metric-value">${ma}</div></div></div><div class="table-wrap"><table><thead><tr><th>Mês</th><th>Avaliações</th><th>Média</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table></div>`;
 }
-function renderRelTurno(){
-  const rows=TURNOS.map(t=>{const ats=atendentesVisiveis().filter(a=>a.turno===t);const avs=avaliacoesVisiveis().filter(a=>a.turno===t);const m=mediaAvs(avs);return`<tr><td>${t}</td><td>${ats.length}</td><td>${avs.length}</td><td>${m!==null?getBadge(m):'—'}</td></tr>`;}).join('');
-  document.getElementById('rel-turno-content').innerHTML=`<div class="table-wrap"><table><thead><tr><th>Turno</th><th>Atendentes</th><th>Avaliações</th><th>Média</th></tr></thead><tbody>${rows}</tbody></table></div>`;
-}
-function renderRelGeral(){
-  const rows=atendentesVisiveis().map(a=>{const avs=avaliacoesVisiveis().filter(av=>av.atendenteId===a.id);const m=mediaAvs(avs);const meses=new Set(avs.map(av=>new Date(av.data).getMonth()+'-'+new Date(av.data).getFullYear())).size;return`<tr><td style="font-size:12px;font-weight:500">${a.nome}</td><td>${a.turno||'—'}</td><td>${avs.length}</td><td>${meses}</td><td>${m!==null?getBadge(m):'—'}</td></tr>`;}).join('');
-  const tg=mediaAvs(avaliacoesVisiveis());
-  document.getElementById('rel-geral-content').innerHTML=`<div class="metric-card" style="margin-bottom:16px"><div class="metric-label">Média geral</div><div class="metric-value">${tg!==null?tg.toFixed(1):'—'}</div></div><div class="table-wrap"><table><thead><tr><th>Atendente</th><th>Turno</th><th>Avaliações</th><th>Meses</th><th>Média</th></tr></thead><tbody>${rows||'<tr><td colspan="5" style="text-align:center;color:var(--text3);padding:2rem">Nenhuma avaliação ainda</td></tr>'}</tbody></table></div>`;
-}
+function renderRelTurno(){const rows=TURNOS.map(t=>{const ats=atendentesVisiveis().filter(a=>a.turno===t);const avs=avaliacoesVisiveis().filter(a=>a.turno===t);const m=mediaAvs(avs);return`<tr><td>${t}</td><td>${ats.length}</td><td>${avs.length}</td><td>${m!==null?getBadge(m):'—'}</td></tr>`;}).join('');document.getElementById('rel-turno-content').innerHTML=`<div class="table-wrap"><table><thead><tr><th>Turno</th><th>Atendentes</th><th>Avaliações</th><th>Média</th></tr></thead><tbody>${rows}</tbody></table></div>`;}
+function renderRelGeral(){const rows=atendentesVisiveis().map(a=>{const avs=avaliacoesVisiveis().filter(av=>av.atendenteId===a.id);const m=mediaAvs(avs);const meses=new Set(avs.map(av=>new Date(av.data).getMonth()+'-'+new Date(av.data).getFullYear())).size;return`<tr><td style="font-size:12px;font-weight:500">${a.nome}</td><td>${a.turno||'—'}</td><td>${avs.length}</td><td>${meses}</td><td>${m!==null?getBadge(m):'—'}</td></tr>`;}).join('');const tg=mediaAvs(avaliacoesVisiveis());document.getElementById('rel-geral-content').innerHTML=`<div class="metric-card" style="margin-bottom:16px"><div class="metric-label">Média geral</div><div class="metric-value">${tg!==null?tg.toFixed(1):'—'}</div></div><div class="table-wrap"><table><thead><tr><th>Atendente</th><th>Turno</th><th>Avaliações</th><th>Meses</th><th>Média</th></tr></thead><tbody>${rows||'<tr><td colspan="5" style="text-align:center;color:var(--text3);padding:2rem">Nenhuma avaliação ainda</td></tr>'}</tbody></table></div>`;}
 
 // ================================================================
 // CADASTROS
@@ -1237,11 +1152,10 @@ function renderRelGeral(){
 function renderCadastro(){
   const eu=state.usuarioLogado;const p=eu.perfil;
   const perfisPermitidos=[];
-  if(p==='admin') perfisPermitidos.push('admin','master','gestor','atendente');
-  else if(p==='master') perfisPermitidos.push('gestor','atendente');
-  else if(p==='gestor') perfisPermitidos.push('atendente');
-  const formArea=document.getElementById('cad-form-area');
-  const vinculosArea=document.getElementById('vinculos-area');
+  if(p==='admin')perfisPermitidos.push('admin','master','gestor','atendente');
+  else if(p==='master')perfisPermitidos.push('gestor','atendente');
+  else if(p==='gestor')perfisPermitidos.push('atendente');
+  const formArea=document.getElementById('cad-form-area');const vinculosArea=document.getElementById('vinculos-area');
   if(!perfisPermitidos.length){formArea.innerHTML='';vinculosArea.classList.add('hidden');renderListaFuncionarios();return;}
   formArea.innerHTML=`
     <div id="cad-alert-inner"></div>
@@ -1265,15 +1179,9 @@ function renderCadastro(){
   renderListaFuncionarios();
 }
 function onChangeCadPerfil(){
-  const pf=document.getElementById('cad-perfil')?.value;
-  const wrapper=document.getElementById('cad-vinculos-wrapper');if(!wrapper)return;
-  if(pf==='atendente'){
-    wrapper.style.display='block';
-    const gl=state.usuarios.filter(u=>u.perfil==='gestor');
-    document.getElementById('cad-gestores-checkboxes').innerHTML=gl.length===0
-      ?'<span style="color:var(--text3);font-size:13px">Nenhum gestor cadastrado.</span>'
-      :gl.map(g=>`<label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px"><input type="checkbox" class="cad-gestor-cb" value="${g.id}" style="width:16px;height:16px"> ${g.nome} <span class="badge info">${g.turno||'—'}</span></label>`).join('');
-  } else wrapper.style.display='none';
+  const pf=document.getElementById('cad-perfil')?.value;const wrapper=document.getElementById('cad-vinculos-wrapper');if(!wrapper)return;
+  if(pf==='atendente'){wrapper.style.display='block';const gl=state.usuarios.filter(u=>u.perfil==='gestor');document.getElementById('cad-gestores-checkboxes').innerHTML=gl.length===0?'<span style="color:var(--text3);font-size:13px">Nenhum gestor cadastrado.</span>':gl.map(g=>`<label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px"><input type="checkbox" class="cad-gestor-cb" value="${g.id}" style="width:16px;height:16px"> ${g.nome} <span class="badge info">${g.turno||'—'}</span></label>`).join('');}
+  else wrapper.style.display='none';
 }
 async function cadastrarFuncionario(){
   const nome=document.getElementById('cad-nome')?.value.trim();
@@ -1292,33 +1200,40 @@ async function cadastrarFuncionario(){
   }
   alertEl.innerHTML='<div class="alert info">⏳ Salvando...</div>';
   try{
-    const r=await apiFetch(API+'/usuarios',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nome,login,senha:'123',perfil,turno,primeiroAcesso:true})});
-    if(!r.ok){
-      if(r.status===409){alertEl.innerHTML='<div class="alert danger">⚠ Login já em uso no banco.</div>';return;}
-      throw new Error();
-    }
-    const salvo=await r.json();
-    const novoId=salvo.id||state.nextId++;
+    const r=await fetchComTimeout(API+'/usuarios',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nome,login,senha:'123',perfil,turno,primeiroAcesso:true})});
+    if(!r.ok){if(r.status===409){alertEl.innerHTML='<div class="alert danger">⚠ Login já em uso no banco.</div>';return;}throw new Error();}
+    const usuarioSalvo=await r.json();
+    const novoId=usuarioSalvo.id||state.nextId++;
     state.usuarios.push({id:novoId,nome,login,senha:'123',perfil,turno,primeiroAcesso:true});
     if(perfil==='atendente'&&gs.length){
       state.vinculos[novoId]=gs;
-      await Promise.all(gs.map(gId=>apiFetch(API+'/vinculos',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({atendenteId:novoId,gestorId:gId})})));
+      await Promise.all(gs.map(gId=>fetchComTimeout(API+'/vinculos',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({atendenteId:novoId,gestorId:gId})})));
     }
     alertEl.innerHTML='<div class="alert success">✓ Funcionário cadastrado! Senha: 123</div>';
     setTimeout(()=>renderCadastro(),2000);
   }catch(e){alertEl.innerHTML='<div class="alert danger">⚠ Erro de conexão.</div>';}
 }
+// estado dos filtros e visibilidade da tabela
+let _filtroPerfilFunc='';
+let _filtroTurnoFunc='';
+let _tabelaMinimizada=false;
 
-let _filtroPerfilFunc='',_filtroTurnoFunc='',_tabelaMinimizada=false;
 function renderListaFuncionarios(){
   const eu=state.usuarioLogado;const p=eu.perfil;
-  let lista=p==='gestor'?state.usuarios.filter(u=>u.id===eu.id||(state.vinculos[u.id]||[]).includes(eu.id)):state.usuarios;
+  let lista=p==='gestor'
+    ?state.usuarios.filter(u=>u.id===eu.id||(state.vinculos[u.id]||[]).includes(eu.id))
+    :state.usuarios;
+
+  // Aplica filtros
   if(_filtroPerfilFunc) lista=lista.filter(u=>u.perfil===_filtroPerfilFunc);
   if(_filtroTurnoFunc)  lista=lista.filter(u=>u.turno===_filtroTurnoFunc);
+
   const perfisUnicos=[...new Set(state.usuarios.map(u=>u.perfil))];
   const turnosUnicos=[...new Set(state.usuarios.map(u=>u.turno).filter(Boolean))];
+
   const el=document.getElementById('lista-funcionarios');
   el.innerHTML=`
+    <!-- CONTROLES: filtros + minimizar -->
     <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-bottom:14px">
       <div style="flex:1;min-width:120px">
         <div class="form-label" style="margin-top:0">Perfil</div>
@@ -1336,55 +1251,72 @@ function renderListaFuncionarios(){
       </div>
       <div style="display:flex;align-items:center;gap:8px;padding-bottom:2px">
         <span style="font-size:12px;color:var(--text3)">${lista.length} funcionário(s)</span>
-        <button class="btn sm" onclick="_tabelaMinimizada=!_tabelaMinimizada;renderListaFuncionarios()">
+        <button class="btn sm" onclick="_tabelaMinimizada=!_tabelaMinimizada;renderListaFuncionarios()" style="gap:5px">
           ${_tabelaMinimizada?'▼ Expandir':'▲ Minimizar'}
         </button>
       </div>
     </div>
-    ${_tabelaMinimizada
-      ?'<div style="text-align:center;color:var(--text3);padding:1rem;font-size:13px;border:1px dashed var(--border);border-radius:var(--radius-md)">Tabela minimizada</div>'
-      :`<div class="table-wrap"><table>
-        <thead><tr><th>Nome</th><th>Login</th><th>Perfil</th><th>Turno</th><th>Gestores</th><th>Senha</th>${p!=='atendente'?'<th style="text-align:right">Ações</th>':''}</tr></thead>
-        <tbody>
-        ${lista.length===0
-          ?`<tr><td colspan="7" style="text-align:center;color:var(--text3);padding:2rem">Nenhum resultado</td></tr>`
-          :lista.map(u=>{
-            const gv=u.perfil==='atendente'?(state.vinculos[u.id]||[]).map(g=>getNome(g)).join(', '):'—';
-            const acoes=u.id===eu.id?'':`<div style="display:flex;gap:5px;justify-content:flex-end">
-              <button class="btn sm" onclick="abrirModalEdicao(${u.id})">✎ Editar</button>
-              <button class="btn sm" onclick="resetarSenha(${u.id})">🔑 Resetar</button>
-              <button class="btn danger sm" onclick="removerFuncionario(${u.id})">✕</button>
-            </div>`;
-            return`<tr>
-              <td style="font-size:12px;font-weight:500">${u.nome}</td>
-              <td style="font-family:monospace;font-size:11px;color:var(--text3)">${u.login}</td>
-              <td><span class="badge ${PERFIL_CLASS[u.perfil]||''}">${PERFIL_LABEL[u.perfil]||u.perfil}</span></td>
-              <td style="font-size:12px">${u.turno||'—'}</td>
-              <td style="font-size:11px">${gv}</td>
-              <td>${u.primeiroAcesso?'<span class="badge warn">padrão</span>':'<span class="badge ok">alterada</span>'}</td>
-              ${p!=='atendente'?`<td>${acoes}</td>`:''}
-            </tr>`;
-          }).join('')}
-        </tbody>
-      </table></div>
-      <!-- MODAL EDIÇÃO -->
-      <div id="modal-edicao" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;align-items:center;justify-content:center">
-        <div style="background:var(--surface);border-radius:var(--radius-lg);padding:28px;width:100%;max-width:480px;box-shadow:0 20px 60px rgba(0,0,0,.3);margin:1rem">
-          <div style="font-size:16px;font-weight:700;margin-bottom:18px">✎ Editar funcionário</div>
-          <div id="modal-edicao-alert"></div>
-          <div class="form-label">Nome completo</div><input class="form-input" type="text" id="edit-nome">
-          <div class="form-label" style="margin-top:12px">Login</div><input class="form-input" type="text" id="edit-login">
-          <div class="form-label" style="margin-top:12px">Perfil</div>
-          <select class="form-input" id="edit-perfil"><option value="admin">Admin</option><option value="master">Master</option><option value="gestor">Gestor</option><option value="atendente">Atendente</option></select>
-          <div class="form-label" style="margin-top:12px">Turno</div>
-          <select class="form-input" id="edit-turno"><option value="">—</option><option>Manhã</option><option>Tarde</option><option>Noite</option><option>Madrugada</option><option>Período integral</option></select>
-          <input type="hidden" id="edit-id">
-          <div style="display:flex;gap:10px;margin-top:20px;justify-content:flex-end">
-            <button class="btn" onclick="fecharModalEdicao()">Cancelar</button>
-            <button class="btn primary" onclick="salvarEdicaoUsuario()">✓ Salvar</button>
-          </div>
+
+    <!-- TABELA -->
+    ${_tabelaMinimizada?'<div style="text-align:center;color:var(--text3);padding:1rem;font-size:13px;border:1px dashed var(--border);border-radius:var(--radius-md)">Tabela minimizada — clique em Expandir para ver</div>':`
+    <div class="table-wrap"><table>
+      <thead><tr>
+        <th>Nome</th><th>Login</th><th>Perfil</th><th>Turno</th><th>Gestores</th><th>Senha</th>
+        ${p!=='atendente'?'<th style="text-align:right">Ações</th>':''}
+      </tr></thead>
+      <tbody>
+      ${lista.length===0?`<tr><td colspan="7" style="text-align:center;color:var(--text3);padding:2rem">Nenhum resultado com esses filtros</td></tr>`
+      :lista.map(u=>{
+        const gv=u.perfil==='atendente'?(state.vinculos[u.id]||[]).map(g=>getNome(g)).join(', '):'—';
+        const acoes=u.id===eu.id?'':
+          `<div style="display:flex;gap:5px;justify-content:flex-end;flex-wrap:wrap">
+            <button class="btn sm" onclick="abrirModalEdicao(${u.id})" title="Editar">✎ Editar</button>
+            <button class="btn sm" onclick="resetarSenha(${u.id})" title="Resetar senha">🔑 Resetar</button>
+            <button class="btn danger sm" onclick="removerFuncionario(${u.id})" title="Remover">✕</button>
+          </div>`;
+        return`<tr>
+          <td style="font-size:12px;font-weight:500">${u.nome}</td>
+          <td style="font-family:monospace;font-size:11px;color:var(--text3)">${u.login}</td>
+          <td><span class="badge ${PERFIL_CLASS[u.perfil]||''}">${PERFIL_LABEL[u.perfil]||u.perfil}</span></td>
+          <td style="font-size:12px">${u.turno||'—'}</td>
+          <td style="font-size:11px">${gv}</td>
+          <td>${u.primeiroAcesso?'<span class="badge warn">padrão</span>':'<span class="badge ok">alterada</span>'}</td>
+          ${p!=='atendente'?`<td>${acoes}</td>`:''}
+        </tr>`;
+      }).join('')}
+      </tbody>
+    </table></div>`}
+
+    <!-- MODAL DE EDIÇÃO (renderizado inline, oculto por padrão) -->
+    <div id="modal-edicao" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;align-items:center;justify-content:center">
+      <div style="background:var(--surface);border-radius:var(--radius-lg);padding:28px;width:100%;max-width:480px;box-shadow:0 20px 60px rgba(0,0,0,.3);margin:1rem">
+        <div style="font-size:16px;font-weight:700;margin-bottom:18px;color:var(--text)">✎ Editar funcionário</div>
+        <div id="modal-edicao-alert"></div>
+        <div class="form-label">Nome completo</div>
+        <input class="form-input" type="text" id="edit-nome">
+        <div class="form-label" style="margin-top:12px">Login</div>
+        <input class="form-input" type="text" id="edit-login">
+        <div class="form-label" style="margin-top:12px">Perfil</div>
+        <select class="form-input" id="edit-perfil">
+          <option value="admin">Admin</option>
+          <option value="master">Master</option>
+          <option value="gestor">Gestor</option>
+          <option value="atendente">Atendente</option>
+        </select>
+        <div class="form-label" style="margin-top:12px">Turno</div>
+        <select class="form-input" id="edit-turno">
+          <option value="">—</option>
+          <option>Manhã</option><option>Tarde</option><option>Noite</option>
+          <option>Madrugada</option><option>Período integral</option>
+        </select>
+        <input type="hidden" id="edit-id">
+        <div style="display:flex;gap:10px;margin-top:20px;justify-content:flex-end">
+          <button class="btn" onclick="fecharModalEdicao()">Cancelar</button>
+          <button class="btn primary" onclick="salvarEdicaoUsuario()">✓ Salvar alterações</button>
         </div>
-      </div>`}`;
+      </div>
+    </div>
+  `;
 }
 
 function abrirModalEdicao(id){
@@ -1397,7 +1329,10 @@ function abrirModalEdicao(id){
   document.getElementById('modal-edicao-alert').innerHTML='';
   document.getElementById('modal-edicao').style.display='flex';
 }
-function fecharModalEdicao(){document.getElementById('modal-edicao').style.display='none';}
+function fecharModalEdicao(){
+  document.getElementById('modal-edicao').style.display='none';
+}
+
 async function salvarEdicaoUsuario(){
   const id=parseInt(document.getElementById('edit-id').value);
   const nome=document.getElementById('edit-nome').value.trim();
@@ -1405,31 +1340,51 @@ async function salvarEdicaoUsuario(){
   const perfil=document.getElementById('edit-perfil').value;
   const turno=document.getElementById('edit-turno').value;
   const alertEl=document.getElementById('modal-edicao-alert');
-  if(!nome||!login){alertEl.innerHTML='<div class="alert danger">⚠ Nome e login obrigatórios.</div>';return;}
+  if(!nome||!login){alertEl.innerHTML='<div class="alert danger">⚠ Nome e login são obrigatórios.</div>';return;}
+  // Checa login duplicado (exceto o próprio)
   if(state.usuarios.find(u=>u.login===login&&u.id!==id)){alertEl.innerHTML='<div class="alert danger">⚠ Login já em uso.</div>';return;}
   alertEl.innerHTML='<div class="alert info">⏳ Salvando...</div>';
   try{
-    await apiFetch(API+'/usuarios/'+id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({nome,login,perfil,turno})});
+    await fetchComTimeout(API+'/usuarios/'+id,{
+      method:'PUT',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({nome,login,perfil,turno})
+    });
+    // Atualiza state local
     const u=state.usuarios.find(x=>x.id===id);
     if(u){u.nome=nome;u.login=login;u.perfil=perfil;u.turno=turno;}
-    fecharModalEdicao();renderCadastro();
-  }catch(e){alertEl.innerHTML='<div class="alert danger">⚠ Erro ao salvar.</div>';}
-}
-async function resetarSenha(id){
-  const u=state.usuarios.find(x=>x.id===id);if(!u)return;
-  if(!confirm(`Resetar senha de "${u.nome}" para 123?`))return;
-  try{
-    await apiFetch(API+'/usuarios/'+id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({senha:'123',primeiroAcesso:true})});
-    u.senha='123';u.primeiroAcesso=true;
-    renderListaFuncionarios();
-  }catch(e){alert('Erro ao resetar senha.');}
+    fecharModalEdicao();
+    renderCadastro();
+  }catch(e){
+    alertEl.innerHTML='<div class="alert danger">⚠ Erro ao salvar. Tente novamente.</div>';
+  }
 }
 
+async function resetarSenha(id){
+  const u=state.usuarios.find(x=>x.id===id);
+  if(!u)return;
+  if(!confirm(`Resetar a senha de "${u.nome}" para 123?`))return;
+  try{
+    await fetchComTimeout(API+'/usuarios/'+id,{
+      method:'PUT',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({senha:'123',primeiroAcesso:true})
+    });
+    u.senha='123';u.primeiroAcesso=true;
+    renderListaFuncionarios();
+    // feedback visual rápido
+    const el=document.getElementById('lista-funcionarios');
+    const banner=document.createElement('div');
+    banner.className='alert success';banner.style.marginBottom='12px';
+    banner.innerHTML=`✓ Senha de ${u.nome} resetada para 123`;
+    el.prepend(banner);
+    setTimeout(()=>banner.remove(),3500);
+  }catch(e){alert('Erro ao resetar senha.');}
+}
 function renderVinculos(){
   const gl=state.usuarios.filter(u=>u.perfil==='gestor');
   const al=state.usuarios.filter(u=>u.perfil==='atendente');
-  document.getElementById('vinculos-content').innerHTML=gl.length===0
-    ?emptyState('🔗','Nenhum gestor cadastrado','')
+  document.getElementById('vinculos-content').innerHTML=gl.length===0?emptyState('🔗','Nenhum gestor cadastrado','')
     :gl.map(g=>{
       const ma=al.filter(a=>(state.vinculos[a.id]||[]).includes(g.id));
       const sv=al.filter(a=>!(state.vinculos[a.id]||[]).includes(g.id));
@@ -1438,33 +1393,30 @@ function renderVinculos(){
         <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">
           ${ma.length===0?'<span style="color:var(--text3);font-size:13px">Nenhum atendente vinculado</span>':ma.map(a=>`<span class="vinculo-tag">${a.nome}<button onclick="desatrelar(${a.id},${g.id})">✕</button></span>`).join('')}
         </div>
-        ${sv.length>0
-          ?`<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-              <select class="form-input" id="vincular-sel-${g.id}" style="flex:1;min-width:180px;padding:7px 10px;font-size:13px">
-                <option value="">Atrelar atendente...</option>
-                ${sv.map(a=>`<option value="${a.id}">${a.nome} (${a.turno||'—'})</option>`).join('')}
-              </select>
-              <button class="btn primary sm" onclick="atrelar(${g.id})">+ Atrelar</button>
-            </div>`
-          :'<div style="font-size:12px;color:var(--text3);margin-top:4px">Todos já vinculados.</div>'}
+        ${sv.length>0?`<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <select class="form-input" id="vincular-sel-${g.id}" style="flex:1;min-width:180px;padding:7px 10px;font-size:13px">
+            <option value="">Atrelar atendente...</option>
+            ${sv.map(a=>`<option value="${a.id}">${a.nome} (${a.turno||'—'})</option>`).join('')}
+          </select>
+          <button class="btn primary sm" onclick="atrelar(${g.id})">+ Atrelar</button>
+        </div>`:'<div style="font-size:12px;color:var(--text3);margin-top:4px">Todos já vinculados.</div>'}
       </div>`;
     }).join('');
 }
 async function atrelar(gId){
-  const sel=document.getElementById('vincular-sel-'+gId);
-  const aId=parseInt(sel?.value);if(!aId)return;
+  const sel=document.getElementById('vincular-sel-'+gId);const aId=parseInt(sel?.value);if(!aId)return;
   if(!state.vinculos[aId])state.vinculos[aId]=[];
   if(state.vinculos[aId].includes(gId)){alert('Já vinculado.');return;}
   if(state.vinculos[aId].length>=2){alert('Máximo 2 gestores por atendente.');return;}
   try{
-    await apiFetch(API+'/vinculos',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({atendenteId:aId,gestorId:gId})});
+    await fetchComTimeout(API+'/vinculos',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({atendenteId:aId,gestorId:gId})});
     state.vinculos[aId].push(gId);renderVinculos();renderListaFuncionarios();
   }catch(e){alert('Erro ao criar vínculo.');}
 }
 async function desatrelar(aId,gId){
   if(!confirm(`Desatrelar ${getNome(aId)} de ${getNome(gId)}?`))return;
   try{
-    await apiFetch(API+'/vinculos',{method:'DELETE',headers:{'Content-Type':'application/json'},body:JSON.stringify({atendenteId:aId,gestorId:gId})});
+    await fetchComTimeout(API+'/vinculos',{method:'DELETE',headers:{'Content-Type':'application/json'},body:JSON.stringify({atendenteId:aId,gestorId:gId})});
     state.vinculos[aId]=(state.vinculos[aId]||[]).filter(g=>g!==gId);renderVinculos();renderListaFuncionarios();
   }catch(e){alert('Erro ao remover vínculo.');}
 }
@@ -1472,7 +1424,7 @@ async function removerFuncionario(id){
   if(id===state.usuarioLogado?.id){alert('Não pode remover a si mesmo.');return;}
   if(!confirm('Remover este funcionário?'))return;
   try{
-    await apiFetch(API+'/usuarios/'+id,{method:'DELETE'});
+    await fetchComTimeout(API+'/usuarios/'+id,{method:'DELETE'});
     state.usuarios=state.usuarios.filter(u=>u.id!==id);
     delete state.vinculos[id];
     Object.keys(state.vinculos).forEach(k=>{state.vinculos[k]=state.vinculos[k].filter(g=>g!==id);});
@@ -1484,19 +1436,13 @@ async function removerFuncionario(id){
 // MINHA CONTA
 // ================================================================
 function alterarSenha(){
-  const u=state.usuarioLogado;
-  const atual=document.getElementById('mc-atual').value;
-  const nova=document.getElementById('mc-nova').value;
-  const conf=document.getElementById('mc-confirm').value;
+  const u=state.usuarioLogado;const atual=document.getElementById('mc-atual').value;const nova=document.getElementById('mc-nova').value;const conf=document.getElementById('mc-confirm').value;
   if(atual!==u.senha){document.getElementById('mc-alert').innerHTML='<div class="alert danger">⚠ Senha atual incorreta.</div>';return;}
   if(nova.length<4){document.getElementById('mc-alert').innerHTML='<div class="alert danger">⚠ Mínimo 4 caracteres.</div>';return;}
   if(nova!==conf){document.getElementById('mc-alert').innerHTML='<div class="alert danger">⚠ Senhas não coincidem.</div>';return;}
-  const uu=state.usuarios.find(x=>x.id===u.id);
-  uu.senha=nova;uu.primeiroAcesso=false;state.usuarioLogado=uu;
-  apiFetch(API+'/usuarios/'+u.id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({senha:nova,primeiroAcesso:false})}).catch(console.error);
-  document.getElementById('mc-atual').value='';
-  document.getElementById('mc-nova').value='';
-  document.getElementById('mc-confirm').value='';
+  const uu=state.usuarios.find(x=>x.id===u.id);uu.senha=nova;uu.primeiroAcesso=false;state.usuarioLogado=uu;
+  fetchComTimeout(API+'/usuarios/'+u.id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({senha:nova,primeiroAcesso:false})}).catch(console.error);
+  document.getElementById('mc-atual').value='';document.getElementById('mc-nova').value='';document.getElementById('mc-confirm').value='';
   document.getElementById('mc-alert').innerHTML='<div class="alert success">✓ Senha alterada!</div>';
   setTimeout(()=>document.getElementById('mc-alert').innerHTML='',3000);
 }
